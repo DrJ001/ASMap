@@ -3,6 +3,6 @@
 \.github
 cache$
 figure$
-MSToutput\.txt$
+^MSToutput\.txt$
 ^LICENSE\.md$
 ^LICENSE$
