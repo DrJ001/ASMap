@@ -1,0 +1,8 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+\.github
+cache$
+figure$
+MSToutput\.txt$
+^LICENSE\.md$
+^LICENSE$
