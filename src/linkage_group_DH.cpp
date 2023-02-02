@@ -123,7 +123,7 @@ void linkage_group::dump_distance_matrix() {
   Rprintf("matrix dimension: %d\n", pair_wise_distances.size());
   for (unsigned int ii = 0; ii < pair_wise_distances.size(); ii++) {
     for (unsigned int jj = 0; jj < pair_wise_distances[ii].size(); jj++) {
-      sprintf(buffer, "%.2f ", pair_wise_distances[ii][jj]);
+      snprintf(buffer, 20, "%.2f ", pair_wise_distances[ii][jj]);
       Rprintf("%s",buffer);
     }
     Rprintf("\n");

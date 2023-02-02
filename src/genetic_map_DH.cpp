@@ -191,7 +191,7 @@ void genetic_map::dump_distance_matrix() {
   Rprintf("matrix dimension: %d\n", pair_wise_distances.size());
   for (unsigned int ii = 0; ii < pair_wise_distances.size(); ii++) {
     for (unsigned int jj = 0; jj < pair_wise_distances[ii].size(); jj++) {
-      sprintf(buffer, "%.2f ", pair_wise_distances[ii][jj]);
+      snprintf(buffer, 20, "%.2f ", pair_wise_distances[ii][jj]);
       Rprintf("%s", buffer);
     }
     Rprintf("\n");
@@ -491,9 +491,9 @@ void genetic_map::write_output(SEXP &map)
 	char buffer1[100];
 	char buffer2[100];
 	char buffer3[100];
-	sprintf(buffer1,"%.3f",lowerbounds[ii]);
-	sprintf(buffer2,"%.3f",upperbounds[ii]);
-	sprintf(buffer3,"%.3f",approx_bounds[ii]);
+	snprintf(buffer1, 20, "%.3f",lowerbounds[ii]);
+	snprintf(buffer2, 20, "%.3f",upperbounds[ii]);
+	snprintf(buffer3, 20, "%.3f",approx_bounds[ii]);
 	Rprintf(";lowerbound: %s upperbound: %s", buffer1, buffer2);
 	Rprintf(" cost after initialization: %s\n", buffer3);
 	Rprintf("group lg %d\n", ii);
@@ -521,7 +521,7 @@ void genetic_map::write_output(SEXP &map)
 	     iter2++) {
 	  if(trace) {
 	    char buffer[100];
-	    sprintf(buffer, "%.3f", cum_dist);
+	    snprintf(buffer, 20, "%.3f", cum_dist);
 	    Rprintf("%s\t%s\n",marker_names[*iter2].c_str(),buffer);
 	  }
 	  P_dist[kount]=cum_dist;
