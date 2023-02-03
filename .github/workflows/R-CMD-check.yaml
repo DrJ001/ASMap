@@ -21,8 +21,8 @@ jobs:
         config:
           - {os: macOS-latest,   r: 'release'}
           - {os: windows-latest, r: 'devel'}
-          - {os: windows-latest, r: '4.2'}
-          - {os: windows-latest, r: '4.1'}
+          - {os: windows-latest, r: 'release'}
+          - {os: windows-latest, r: 'oldrel'}
           - {os: windows-latest, r: '3.6'}
           - {os: ubuntu-22.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}
           - {os: ubuntu-22.04,   r: 'oldrel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"}
@@ -49,7 +49,7 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
 
-      - uses: r-lib/actions/setup-pandoc@v2
+      # - uses: r-lib/actions/setup-pandoc@v2
 
       - name: Query dependencies
         run: |
@@ -74,6 +74,17 @@ jobs:
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
 
+      - name: Install TinyTex for vignettes
+        # if: runner.os == 'Windows' && runner.r == "release"
+        uses: r-lib/actions/setup-tinytex@v2
+        env:
+          # install full prebuilt version
+          TINYTEX_INSTALLER: TinyTeX
+
+      - name: Install additional LaTeX packages
+        run: |
+          tlmgr install tocloft
+
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
@@ -83,7 +94,7 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--ignore-vignettes"), error_on = "warning", check_dir = "check")
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
       - name: Upload check results
