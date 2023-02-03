@@ -74,8 +74,8 @@ knit_hooks$set(source=function(x,options){
 %%% logos go here ...
 
 \begin{tabular}{lcr}
-\includegraphics[height = 1.8cm]{SAGI} & &
-\includegraphics[height = 1.5cm]{GRDC_LOGO_2015_inline}
+\includegraphics[height = 1.8cm]{SAGI-STH} & \includegraphics[height = 1.8cm]{UoA} &
+\includegraphics[height = 1.8cm]{GRDC}
 \end{tabular}\\[5mm]
 
 \huge

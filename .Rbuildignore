@@ -1,8 +1,12 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-\.github
+\.github$
+\.gitignore$
+\.git$
 cache$
 figure$
 ^MSToutput\.txt$
 ^LICENSE\.md$
 ^LICENSE$
+^doc$
+^Meta$
