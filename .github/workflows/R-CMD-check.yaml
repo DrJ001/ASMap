@@ -81,6 +81,10 @@ jobs:
           # install full prebuilt version
           TINYTEX_INSTALLER: TinyTeX
 
+     - name: Install additional LaTeX packages
+        run: |
+          tlmgr install tocloft
+
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
