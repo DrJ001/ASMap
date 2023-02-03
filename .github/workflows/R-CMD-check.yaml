@@ -81,7 +81,7 @@ jobs:
           # install full prebuilt version
           TINYTEX_INSTALLER: TinyTeX
 
-     - name: Install additional LaTeX packages
+      - name: Install additional LaTeX packages
         run: |
           tlmgr install tocloft
 
