@@ -19,7 +19,13 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: |
-          R -q -e 'pak::pkg_install(c("deps::.", any::rcmdcheck"), dependencies = TRUE)'
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache-version: 2
+          extra-packages: |
+            any::rcmdcheck
 
       - uses: r-lib/actions/check-r-package@v2
+        with:
+          args: 'c("--compact-vignettes=gs+qpdf", "--as-cran")'
+          check-dir: '"check"'
