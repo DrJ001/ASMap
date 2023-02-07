@@ -103,17 +103,3 @@ jobs:
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
-
-  rhub-check:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/r-hub/containers/clang16:latest
-
-    steps:
-    - actions/checkout@v3
-
-    - name: Install dependencies
-      run: |
-        R -q -e 'pak::pkg_install(c("deps::.", any::rcmdcheck"), dependencies = TRUE)'
-
-    - uses: r-lib/actions/check-r-package@v2
