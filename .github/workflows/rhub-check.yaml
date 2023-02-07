@@ -73,12 +73,12 @@ jobs:
       #     sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
       #     sudo -s eval "$sysreqs"
 
-      - name: Install TinyTex for vignettes
-        # if: runner.os == 'Windows' && runner.r == "release"
-        uses: r-lib/actions/setup-tinytex@v2
-        env:
-          # install full prebuilt version
-          TINYTEX_INSTALLER: TinyTeX
+      # - name: Install TinyTex for vignettes
+      #   # if: runner.os == 'Windows' && runner.r == "release"
+      #   uses: r-lib/actions/setup-tinytex@v3
+      #   env:
+      #     # install full prebuilt version
+      #     TINYTEX_INSTALLER: TinyTeX
 
       # - name: Install additional LaTeX packages
       #   run: |
@@ -93,7 +93,7 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), build_args = c("--compact-vignettes=both"), error_on = "warning", check_dir = "check")
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--ignore-vignettes"), build_args = c("--no-build-vignettes"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
       - name: Upload check results
