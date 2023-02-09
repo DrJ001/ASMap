@@ -18,11 +18,12 @@
 #include <queue>
 #include <utility>
 #include <set>
-#include <Rdefines.h>
 #include <R.h>
 #include <algorithm>
 #include "constants.h"
 #include "MSTOpt.h"
+#include <Rdefines.h>
+#include <Rinternals.h>
 
 using namespace std;
 

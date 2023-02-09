@@ -317,11 +317,11 @@ void linkage_group_DH::revert_suspicious_data(){
   if(suspicious_data.size() != suspicious_data_backup.size())
     Rf_error("suspicious_data.size() != suspicious_data_backup.size()\n");
   //assert(suspicious_data.size() == suspicious_data_backup.size());
-    for (unsigned int ii = 0; ii < suspicious_data.size(); ii++){
-        int marker_id = suspicious_data[ii].first;
-        int indi_id = suspicious_data[ii].second;
-        raw_data[marker_id][indi_id] = suspicious_data_backup[ii];
-    }
+      for (unsigned int ii = 0; ii < suspicious_data.size(); ii++){
+          int marker_id = suspicious_data[ii].first;
+          int indi_id = suspicious_data[ii].second;
+          raw_data[marker_id][indi_id] = suspicious_data_backup[ii];
+      }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////

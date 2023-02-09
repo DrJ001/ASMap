@@ -253,6 +253,7 @@ pull.map(test3)
 test4 <- mstmap(mapDH, bychr = FALSE, dist.fun = "kosambi",
                 trace = TRUE, mvest.bc = TRUE, detectBadData = TRUE)
 pull.map(test4)
+unlink("MSToutput.txt")
 
 }
 \keyword{misc}

@@ -12,10 +12,11 @@
 
 //#include <cassert>
 #include <vector>
-#include <Rdefines.h>
 #include <R.h>
 #include "linkage_group_DH.h"
 #include "MSTOpt.h"
+#include <Rdefines.h>
+#include <Rinternals.h>
 
 using namespace std;
 
@@ -49,30 +50,30 @@ class RIL_dist_cal{
         void count_class();
         void upper_bound();
         void lower_bound();
-        
+
         void expected_CDEFG(double delta,
                             double& C,
                             double& D,
                             double& E,
                             double& F,
-                            double& G) const; 
-                            
+                            double& G) const;
+
         double squared_error(double delta) const;
-        
+
         double find_opt_delta() const;
-        
+
         // ----------------------------
         // private data members section
         // ----------------------------
-        
+
         // generation_index_ should be set to 1 for F1 generation, 2 to F2 generation and so on...
         int generation_index_;
-        
+
         int num_of_individuals_;
         int num_of_eff_individuals_;
         const vector<allel_state>& marker1_;
         const vector<allel_state>& marker2_;
-        
+
         double CC_;
         double DD_;
         double EE_;
@@ -83,26 +84,26 @@ class RIL_dist_cal{
 
 class linkage_group_RIL: public linkage_group {
     public:
-        linkage_group_RIL(int _number_of_bins, 
+        linkage_group_RIL(int _number_of_bins,
                           int _number_of_individuals,
                           int _generation_index,
                           DF* _df,
-                          const vector<vector<allel_state> >& _raw_data, 
-                          const vector<int>& _current_order, 
+                          const vector<vector<allel_state> >& _raw_data,
+                          const vector<int>& _current_order,
                           const vector<pair<int,int> >& _missing_data);
         ~linkage_group_RIL();
-        
+
         void dump(SEXP &map) const;
-    
+
         void order_markers();
-        
+
     private:
 
         /*Calculate the pair_wise distance*/
         void calculate_pair_wise_distance();
-        
+
         void estimate_missing_data();
-        
+
         // ----------------------------
         // private data members section
         // ----------------------------
