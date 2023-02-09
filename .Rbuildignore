@@ -7,6 +7,8 @@ cache$
 figure$
 ^MSToutput\.txt$
 ^LICENSE\.md$
+^cran-comments\.md$
+^check_rhub\.R$
 ^LICENSE$
 ^doc$
 ^Meta$
