@@ -8,9 +8,9 @@
  */
 #include <string>
 #include <sstream>
+#include "genetic_map_DH.h"
 #include <Rdefines.h>
 #include <Rinternals.h>
-#include "genetic_map_DH.h"
 
 SEXP ielem(SEXP list, int i);
 SEXP elem(SEXP list, const char *str);

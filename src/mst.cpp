@@ -1,10 +1,10 @@
 #include <cstdlib>
 #include <R.h>
-#include <Rdefines.h>
 #include "constants.h"
 #include "linkage_group_DH.h"
 #include "genetic_map_DH.h"
 #include "genetic_map_RIL.h"
+#include <Rdefines.h>
 
 
 SEXP elem(SEXP list, const char *str);
