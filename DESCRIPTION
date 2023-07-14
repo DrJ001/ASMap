@@ -1,7 +1,7 @@
 Package: ASMap
 Type: Package
 Title: Linkage Map Construction using the MSTmap Algorithm
-Version: 1.0-5
+Version: 1.0-6
 Date: 2023-02-02
 Author: Julian Taylor <julian.taylor@adelaide.edu.au>, David Butler
     <dbutler@uow.edu.au>.

@@ -82,10 +82,10 @@ int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
     objective_function = OBJF_CM;
   }
   //raw_mapping_data_file >> number_of_loci;
-  number_of_loci = length(row_names);
+  number_of_loci = Rf_length(row_names);
 
   //raw_mapping_data_file >> number_of_individual;
-  number_of_individual = length(names);
+  number_of_individual = Rf_length(names);
 
   // added by yonghui on Mar 7th
   // read in the individual names
@@ -779,8 +779,8 @@ void genetic_map_DH::generate_map(SEXP &map)
   for (int ii = 0 ; ii < number_of_connected_components; ii++)
     {
       SET_VECTOR_ELT(map,ii,newnode=NEW_LIST(2));
-      lNames = PROTECT(allocVector(STRSXP, length(newnode)));
-      for(int nn=0; nn < length(newnode); nn++)
+      lNames = PROTECT(allocVector(STRSXP, Rf_length(newnode)));
+      for(int nn=0; nn < Rf_length(newnode); nn++)
 	SET_STRING_ELT(lNames, nn, mkChar(comp[nn]));
       setAttrib(newnode, R_NamesSymbol, lNames);
       UNPROTECT(1);

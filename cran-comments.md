@@ -1,25 +1,18 @@
-## Resubmission
+## Submission
 
-This resubmission is  because the previous version was uploaded with the incorrect comments.
-This version fixes breaking changes introduced by version 1.0.8 of predictmeans, to be submitted to CRAN shortly.
+This submission is because the previous version was archived due to compilation errors under clang17. These have been fixed.
 
 ## Test environments
-* Local Windows 10 install, R 4.2.2
-* Ubuntu 22.04 (Virtual Machine), R 4.2.2
-* Rhub `check_for_cran()`
+* Local Windows 10 install, R 4.3.1
+* Ubuntu 22.04 (Virtual Machine), R 4.3.1
+* Rhub clang17 image, R-devel
 * Github Actions:
     - macOS: r-release
     - windows: r-devel, r-release, r-oldrel
     - ubuntu 22.04: r-release, r-oldrel
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
-
-There was 1 NOTE:
-
-* checking package dependencies ... NOTE
-  Packages which this enhances but not available for checking:
-    'asreml', 'ARTool', 'sommer'
+There were no ERRORs, WARNINGs or NOTEs.
 
   
   

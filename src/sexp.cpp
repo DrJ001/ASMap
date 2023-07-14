@@ -6,7 +6,7 @@ SEXP elem(SEXP list, const char *str)
   int i;
 
   names = getAttrib(list, R_NamesSymbol);
-  for(i = 0; i < length(list); i++)
+  for(i = 0; i < Rf_length(list); i++)
     if(strcmp(CHAR(STRING_ELT(names,i)), str) == 0) {
       elmt = VECTOR_ELT(list,i);
       break;
