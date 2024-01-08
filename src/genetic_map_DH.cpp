@@ -188,7 +188,7 @@ void genetic_map::condense_markers_into_bins()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void genetic_map::dump_distance_matrix() {
   char buffer[10];
-  Rprintf("matrix dimension: %d\n", pair_wise_distances.size());
+  Rprintf("matrix dimension: %lu\n", pair_wise_distances.size());
   for (unsigned int ii = 0; ii < pair_wise_distances.size(); ii++) {
     for (unsigned int jj = 0; jj < pair_wise_distances[ii].size(); jj++) {
       snprintf(buffer, 10, "%.2f ", pair_wise_distances[ii][jj]);
@@ -230,7 +230,7 @@ void genetic_map::dump()
     Rprintf("the number of connected components %d\n", number_of_connected_components);
     for (int ii = 0 ; ii < number_of_connected_components; ii++)
       {
-	Rprintf("%d,",(connected_components[ii]).size());
+	Rprintf("%lu,",(connected_components[ii]).size());
       }
     Rprintf("\n");
   }
@@ -467,14 +467,14 @@ void genetic_map::write_output(SEXP &map)
   Rprintf("The size of the linkage groups are: ");
   for (int ii = 0 ; ii < number_of_connected_components ; ii++)
     {
-      Rprintf("%d\t",(connected_components[ii]).size());
+      Rprintf("%lu\t",(connected_components[ii]).size());
     }
   Rprintf("\n");
 
   Rprintf("The number of bins in each linkage group: ");
   for (int ii = 0 ; ii < number_of_connected_components; ii++)
     {
-      Rprintf("%d\t",(lg_bins_condensed[ii]).size());
+      Rprintf("%lu\t",(lg_bins_condensed[ii]).size());
     }
   Rprintf("\n");
 
