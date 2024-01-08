@@ -17,7 +17,7 @@ MSTOpt::MSTOpt(const vector<vector<double> > & _pair_wise_distances, int _num_bi
   : pair_wise_distances(_pair_wise_distances), number_of_bins(_num_bins) {
   verbose_ = kMSTVerbose;
   if((int)pair_wise_distances.size() != (int)number_of_bins)
-    Rf_error("pair_wise_distances.size() %lu != number_of_bins %d\n",
+    Rf_error("pair_wise_distances.size() %zu != number_of_bins %d\n",
 	     pair_wise_distances.size(),number_of_bins);
   //assert(pair_wise_distances.size() == number_of_bins);
   nested_level_ = nested_level;
@@ -590,7 +590,7 @@ double MSTOpt::new_serialization()
 
     vector<pair<int,int> > crt_path(number_of_bins,make_pair(-1,-1));
     if(verbose_){
-      Rprintf("the length of the longest path: %lu\n", longest_path.size());
+      Rprintf("the length of the longest path: %zu\n", longest_path.size());
     }
     int header;
     header = longest_path[0];

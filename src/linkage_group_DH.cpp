@@ -120,7 +120,7 @@ void linkage_group::bad_genotypes(vector<pair<int,int> >& bad_genotypes) const{
 void linkage_group::dump_distance_matrix() {
   char buffer[10];
   Rprintf("distance matrix within linkage_group\n");
-  Rprintf("matrix dimension: %lu\n", pair_wise_distances.size());
+  Rprintf("matrix dimension: %zu\n", pair_wise_distances.size());
   for (unsigned int ii = 0; ii < pair_wise_distances.size(); ii++) {
     for (unsigned int jj = 0; jj < pair_wise_distances[ii].size(); jj++) {
       snprintf(buffer, 10, "%.2f ", pair_wise_distances[ii][jj]);
