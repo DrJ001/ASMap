@@ -8,6 +8,8 @@ Maintainer: Julian Taylor <julian.taylor@adelaide.edu.au>
 Imports: fields, RColorBrewer, gtools
 Depends: R (>= 3.0.0), qtl, lattice
 Suggests: knitr, formatR, digest
+URL: https://github.com/DrJ001/ASMap
+BugReports: https://github.com/DrJ001/ASMap/issues
 VignetteBuilder: knitr
 Description: Functions for Accurate and Speedy linkage map construction, manipulation and diagnosis of Doubled Haploid, Backcross and Recombinant Inbred 'R/qtl' objects. This includes extremely fast linkage map clustering and optimal marker ordering using 'MSTmap' (see Wu et al.,2008).
 License: GPL (>= 2)
