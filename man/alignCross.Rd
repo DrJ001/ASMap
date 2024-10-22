@@ -16,7 +16,7 @@ A \pkg{qtl} cross \code{object} with any class structure.
 }
 \item{chr}{
 A character string of linkage group names or a logical vector equal to
-the length of the number of linkage groups (see \code{\link{subset.cross}}).
+the length of the number of linkage groups (see \code{\link{qtl::subset.cross}}).
 }
 \item{maps}{
 A named list of \pkg{qtl} cross objects or \code{data.frame} objects

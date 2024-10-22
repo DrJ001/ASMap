@@ -36,8 +36,8 @@ genetic_map::~genetic_map() {
 //////////////////////////////////////////////////////////////////////////////
 int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
 
-  SEXP names = PROTECT(getAttrib(data, R_NamesSymbol));
-  SEXP row_names = PROTECT(getAttrib(data, install("row.names")));
+  SEXP names = PROTECT(Rf_getAttrib(data, R_NamesSymbol));
+  SEXP row_names = PROTECT(Rf_getAttrib(data, install("row.names")));
   string tmp_str;
   extern int trace;
 
@@ -105,7 +105,7 @@ int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
       string SNP_jj;
       ostringstream sstr;
       //raw_mapping_data_file >> SNP_jj;
-      if(!isNumeric(ielem(data,jj))) {
+      if(!Rf_isNumeric(ielem(data,jj))) {
 	SNP_jj = CHAR(STRING_ELT(ielem(data,jj),ii));
 	if ((SNP_jj == "a") or (SNP_jj == "A")) { // homozygous A
 	  marker_data[jj] = "A";
@@ -129,7 +129,7 @@ int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
 	}
       }
       else {
-	sstr << REAL(coerceVector(ielem(data,jj),REALSXP))[ii];
+	sstr << REAL(Rf_coerceVector(ielem(data,jj),REALSXP))[ii];
 	marker_data[jj] = sstr.str();
       }
     }
@@ -459,7 +459,7 @@ void genetic_map::write_output(SEXP &map)
 
   // map allocated & protected in generate_map
   // unprotect at end here
-  PROTECT(iNames=allocVector(STRSXP,individual_names.size()));
+  PROTECT(iNames=Rf_allocVector(STRSXP,individual_names.size()));
   for(unsigned int jj = 0; jj < individual_names.size(); jj++)
     SET_STRING_ELT(iNames, jj, mkChar(individual_names[jj].c_str()));
 
@@ -774,7 +774,7 @@ void genetic_map_DH::generate_map(SEXP &map)
   distance_between_adjacent_pairs.resize(number_of_connected_components);
 
   // unprotect in write_output
-  PROTECT(map = allocVector(VECSXP,number_of_connected_components));
+  PROTECT(map = Rf_allocVector(VECSXP,number_of_connected_components));
 
   for (int ii = 0 ; ii < number_of_connected_components; ii++)
     {
