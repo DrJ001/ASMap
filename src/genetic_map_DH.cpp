@@ -6,6 +6,7 @@
  *  Copyright 2007 __MyCompanyName__. All rights reserved.
  *
  */
+#define R_NO_REMAP
 #include <string>
 #include <sstream>
 #include "genetic_map_DH.h"
@@ -480,8 +481,8 @@ void genetic_map::write_output(SEXP &map)
 
   for (int ii = 0 ; ii < number_of_connected_components; ii++)
     {
-      PROTECT(dist=allocVector(REALSXP,(connected_components[ii]).size()));
-      PROTECT(mNames=allocVector(STRSXP,(connected_components[ii]).size()));
+      PROTECT(dist=Rf_allocVector(REALSXP,(connected_components[ii]).size()));
+      PROTECT(mNames=Rf_allocVector(STRSXP,(connected_components[ii]).size()));
       node = VECTOR_ELT(map,ii);
       SET_VECTOR_ELT(node,0,dist);
       P_dist = REAL(VECTOR_ELT(node,0));
@@ -537,8 +538,8 @@ void genetic_map::write_output(SEXP &map)
 
       if(trace) Rprintf(";ENDOFGROUP\n\n");
       setAttrib(dist, R_NamesSymbol, mNames);
-      PROTECT(dimnames = allocVector(VECSXP, 2));
-      PROTECT(cNames=allocVector(STRSXP,rownames.size()));
+      PROTECT(dimnames = Rf_allocVector(VECSXP, 2));
+      PROTECT(cNames=Rf_allocVector(STRSXP,rownames.size()));
       for(unsigned int jj = 0; jj < rownames.size(); jj++)
 	SET_STRING_ELT(cNames, jj, mkChar(rownames[jj].c_str()));
       SET_VECTOR_ELT(dimnames,0,cNames);
@@ -779,7 +780,7 @@ void genetic_map_DH::generate_map(SEXP &map)
   for (int ii = 0 ; ii < number_of_connected_components; ii++)
     {
       SET_VECTOR_ELT(map,ii,newnode=NEW_LIST(2));
-      lNames = PROTECT(allocVector(STRSXP, Rf_length(newnode)));
+      lNames = PROTECT(Rf_allocVector(STRSXP, Rf_length(newnode)));
       for(int nn=0; nn < Rf_length(newnode); nn++)
 	SET_STRING_ELT(lNames, nn, mkChar(comp[nn]));
       setAttrib(newnode, R_NamesSymbol, lNames);

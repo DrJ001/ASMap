@@ -212,12 +212,12 @@ void genetic_map_RIL::generate_map(SEXP &map)
   distance_between_adjacent_pairs.resize(number_of_connected_components);
 
   // unprotect in write_output
-  PROTECT(map = allocVector(VECSXP,number_of_connected_components));
+  PROTECT(map = Rf_allocVector(VECSXP,number_of_connected_components));
 
   for (int ii = 0 ; ii < number_of_connected_components; ii++)
     {
      SET_VECTOR_ELT(map,ii,newnode=NEW_LIST(2));
-      lNames = PROTECT(allocVector(STRSXP, Rf_length(newnode)));
+      lNames = PROTECT(Rf_allocVector(STRSXP, Rf_length(newnode)));
       for(int nn=0; nn < Rf_length(newnode); nn++)
 	SET_STRING_ELT(lNames, nn, mkChar(comp[nn]));
       setAttrib(newnode, R_NamesSymbol, lNames);
