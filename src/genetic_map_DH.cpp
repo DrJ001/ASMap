@@ -537,14 +537,14 @@ void genetic_map::write_output(SEXP &map)
       }
 
       if(trace) Rprintf(";ENDOFGROUP\n\n");
-      setAttrib(dist, R_NamesSymbol, mNames);
+      Rf_setAttrib(dist, R_NamesSymbol, mNames);
       PROTECT(dimnames = Rf_allocVector(VECSXP, 2));
       PROTECT(cNames=Rf_allocVector(STRSXP,rownames.size()));
       for(unsigned int jj = 0; jj < rownames.size(); jj++)
 	SET_STRING_ELT(cNames, jj, mkChar(rownames[jj].c_str()));
       SET_VECTOR_ELT(dimnames,0,cNames);
       SET_VECTOR_ELT(dimnames,1,iNames);
-      setAttrib(VECTOR_ELT(node,1),R_DimNamesSymbol,dimnames);
+      Rf_setAttrib(VECTOR_ELT(node,1),R_DimNamesSymbol,dimnames);
       UNPROTECT(4);
     }
   UNPROTECT(2); //iNames, map
@@ -783,7 +783,7 @@ void genetic_map_DH::generate_map(SEXP &map)
       lNames = PROTECT(Rf_allocVector(STRSXP, Rf_length(newnode)));
       for(int nn=0; nn < Rf_length(newnode); nn++)
 	SET_STRING_ELT(lNames, nn, mkChar(comp[nn]));
-      setAttrib(newnode, R_NamesSymbol, lNames);
+      Rf_setAttrib(newnode, R_NamesSymbol, lNames);
       UNPROTECT(1);
 
       linkage_group_DH * current_linkage_group = construct_linkage_group(ii);

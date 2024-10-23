@@ -219,8 +219,8 @@ void genetic_map_RIL::generate_map(SEXP &map)
      SET_VECTOR_ELT(map,ii,newnode=NEW_LIST(2));
       lNames = PROTECT(Rf_allocVector(STRSXP, Rf_length(newnode)));
       for(int nn=0; nn < Rf_length(newnode); nn++)
-	SET_STRING_ELT(lNames, nn, mkChar(comp[nn]));
-      setAttrib(newnode, R_NamesSymbol, lNames);
+	SET_STRING_ELT(lNames, nn, Rf_mkChar(comp[nn]));
+      Rf_setAttrib(newnode, R_NamesSymbol, lNames);
       UNPROTECT(1);
 
       linkage_group_RIL * current_linkage_group = construct_linkage_group(ii);
