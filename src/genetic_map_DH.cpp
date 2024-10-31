@@ -37,8 +37,8 @@ genetic_map::~genetic_map() {
 //////////////////////////////////////////////////////////////////////////////
 int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
 
-  SEXP names = PROTECT(Rf_getAttrib(data, R_NamesSymbol));
-  SEXP row_names = PROTECT(Rf_getAttrib(data, install("row.names")));
+  SEXP names = Rf_protect(Rf_getAttrib(data, R_NamesSymbol));
+  SEXP row_names = Rf_protect(Rf_getAttrib(data, Rf_install("row.names")));
   string tmp_str;
   extern int trace;
 
@@ -462,7 +462,7 @@ void genetic_map::write_output(SEXP &map)
   // unprotect at end here
   PROTECT(iNames=Rf_allocVector(STRSXP,individual_names.size()));
   for(unsigned int jj = 0; jj < individual_names.size(); jj++)
-    SET_STRING_ELT(iNames, jj, mkChar(individual_names[jj].c_str()));
+    SET_STRING_ELT(iNames, jj, Rf_mkChar(individual_names[jj].c_str()));
 
   Rprintf("Number of linkage groups: %d\n", number_of_connected_components);
   Rprintf("The size of the linkage groups are: ");
@@ -508,7 +508,7 @@ void genetic_map::write_output(SEXP &map)
 	   iter2++) {
 	if(trace) Rprintf("%s\t%s\n",marker_names[*iter2].c_str(),"0.000");
 	P_dist[kount]=0.0e0;
-	SET_STRING_ELT(mNames, kount, mkChar(marker_names[*iter2].c_str()));
+	SET_STRING_ELT(mNames, kount, Rf_mkChar(marker_names[*iter2].c_str()));
 	++kount;
       }
       double cum_dist = 0.0;
@@ -526,7 +526,7 @@ void genetic_map::write_output(SEXP &map)
 	    Rprintf("%s\t%s\n",marker_names[*iter2].c_str(),buffer);
 	  }
 	  P_dist[kount]=cum_dist;
-	  SET_STRING_ELT(mNames, kount, mkChar(marker_names[*iter2].c_str()));
+	  SET_STRING_ELT(mNames, kount, Rf_mkChar(marker_names[*iter2].c_str()));
 	  ++kount;
 	}
       }
@@ -541,7 +541,7 @@ void genetic_map::write_output(SEXP &map)
       PROTECT(dimnames = Rf_allocVector(VECSXP, 2));
       PROTECT(cNames=Rf_allocVector(STRSXP,rownames.size()));
       for(unsigned int jj = 0; jj < rownames.size(); jj++)
-	SET_STRING_ELT(cNames, jj, mkChar(rownames[jj].c_str()));
+	SET_STRING_ELT(cNames, jj, Rf_mkChar(rownames[jj].c_str()));
       SET_VECTOR_ELT(dimnames,0,cNames);
       SET_VECTOR_ELT(dimnames,1,iNames);
       Rf_setAttrib(VECTOR_ELT(node,1),R_DimNamesSymbol,dimnames);
@@ -782,7 +782,7 @@ void genetic_map_DH::generate_map(SEXP &map)
       SET_VECTOR_ELT(map,ii,newnode=NEW_LIST(2));
       lNames = PROTECT(Rf_allocVector(STRSXP, Rf_length(newnode)));
       for(int nn=0; nn < Rf_length(newnode); nn++)
-	SET_STRING_ELT(lNames, nn, mkChar(comp[nn]));
+	SET_STRING_ELT(lNames, nn, Rf_mkChar(comp[nn]));
       Rf_setAttrib(newnode, R_NamesSymbol, lNames);
       UNPROTECT(1);
 
