@@ -67,11 +67,9 @@ jobs:
         with:
           token: ${{ secrets.RHUB_TOKEN }}
           job-config: ${{ matrix.config.job-config }}
+
       - name: Install TinyTex for vignettes
         uses: r-lib/actions/setup-tinytex@v2
-        with:
-          token: ${{ secrets.RHUB_TOKEN }}
-          job-config: ${{ matrix.config.job-config }}
         env:
           # install full prebuilt version
           TINYTEX_INSTALLER: TinyTeX
@@ -79,6 +77,7 @@ jobs:
       - name: Install additional LaTeX packages
         run: |
           tlmgr install tocloft
+
       - uses: r-hub/actions/run-check@v1
         with:
           token: ${{ secrets.RHUB_TOKEN }}
@@ -107,9 +106,6 @@ jobs:
 
       - name: Install TinyTex for vignettes
         uses: r-lib/actions/setup-tinytex@v2
-        with:
-          token: ${{ secrets.RHUB_TOKEN }}
-          job-config: ${{ matrix.config.job-config }}
         env:
           # install full prebuilt version
           TINYTEX_INSTALLER: TinyTeX
