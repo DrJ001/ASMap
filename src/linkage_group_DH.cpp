@@ -435,7 +435,7 @@ void linkage_group_DH::dump(SEXP &map) const {
     }
   }
   // labels in data order
-  SET_VECTOR_ELT(map, 1, allocMatrix(REALSXP, number_of_bins,number_of_individuals ));
+  SET_VECTOR_ELT(map, 1, Rf_allocMatrix(REALSXP, number_of_bins,number_of_individuals ));
   x = REAL(VECTOR_ELT(map,1));
   for (int ii = 0 ; ii < number_of_bins; ii++)
     {

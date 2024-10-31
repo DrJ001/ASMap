@@ -107,7 +107,7 @@ Linkage Map Construction and Diagnosis. Journal of Statistical Software,
 Julian Taylor
 }
 \seealso{
-\code{\link{qtl::plotRF}}
+\code{\link[qtl]{plotRF}}
 }
 \examples{
 
