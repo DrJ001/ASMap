@@ -10,6 +10,13 @@ name: R-hub
 run-name: "${{ github.event.inputs.id }}: ${{ github.event.inputs.name || format('Manually run by {0}', github.triggering_actor) }}"
 
 on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       config:
@@ -60,6 +67,21 @@ jobs:
         with:
           token: ${{ secrets.RHUB_TOKEN }}
           job-config: ${{ matrix.config.job-config }}
+      - name: Install TinyTex for vignettes
+        uses: r-lib/actions/setup-tinytex@v2
+        with:
+          token: ${{ secrets.RHUB_TOKEN }}
+          job-config: ${{ matrix.config.job-config }}
+        env:
+          # install full prebuilt version
+          TINYTEX_INSTALLER: TinyTeX
+
+      - name: Install additional LaTeX packages
+        with:
+          token: ${{ secrets.RHUB_TOKEN }}
+          job-config: ${{ matrix.config.job-config }}
+        run: |
+          tlmgr install tocloft
       - uses: r-hub/actions/run-check@v1
         with:
           token: ${{ secrets.RHUB_TOKEN }}
