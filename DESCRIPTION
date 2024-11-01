@@ -2,9 +2,14 @@ Package: ASMap
 Type: Package
 Title: Linkage Map Construction using the MSTmap Algorithm
 Version: 1.0-8
-Author: Julian Taylor <julian.taylor@adelaide.edu.au>, David Butler
-    <dbutler@uow.edu.au>.
-Maintainer: Julian Taylor <julian.taylor@adelaide.edu.au>
+Authors@R: c(person(given = "Julian",
+                    family = "Taylor",
+                    role = c("aut", "cre"),
+                    email = "julian.taylor@adelaide.edu.au"),
+             person(given = "David",
+                    family = "Butler.",
+                    role = "aut",
+                    email = "dbutler@uow.edu.au"))
 Imports: fields, RColorBrewer, gtools
 Depends: R (>= 3.0.0), qtl, lattice
 Suggests: knitr, formatR, digest
