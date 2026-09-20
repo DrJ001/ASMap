@@ -1,7 +1,7 @@
 Package: ASMap
 Type: Package
 Title: Linkage Map Construction using the MSTmap Algorithm
-Version: 1.0-8
+Version: 1.1-0
 Authors@R: c(person(given = "Julian",
                     family = "Taylor",
                     role = c("aut", "cre"),
