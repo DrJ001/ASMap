@@ -3,7 +3,7 @@
 %\VignetteEngine{knitr::knitr}
 
 \usepackage[knit]{SAGI}
-\usepackage{tabu}
+\usepackage{tabularx}
 \usepackage[normalem]{ulem}
 
 %% SAGI style must be preloaded first
@@ -93,9 +93,9 @@ University of Adelaide, Waite Campus\\
 PMB 1, Glen Osmond, SA, 5064\\
 email: julian.taylor@adelaide.edu.au\\[8mm]
 
-\begin{tabu} to \textwidth {lXr}
+\begin{tabularx}{\textwidth}{lXr}
 \includegraphics[height = 1.5cm]{UoA}  & & \today
-\end{tabu}\\[5mm]
+\end{tabularx}\\[5mm]
 \HRule
 \end{flushright}
 
