@@ -12,3 +12,10 @@ cache
 
 /doc/
 /Meta/
+
+# Editor backup files
+*~
+
+# Local dev scratch / assistant config
+CLAUDE.md
+check.R

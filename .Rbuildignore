@@ -14,3 +14,6 @@ figure$
 ^Meta$
 ^CRAN-SUBMISSION$
 ^\.github$
+^CLAUDE\.md$
+^check\.R$
+.*~$
