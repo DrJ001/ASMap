@@ -45,9 +45,9 @@ This is expected, as the package is being resubmitted following archival.
 * checking examples ... NOTE
 Examples with CPU (user + system) or elapsed time > 5s
              user system elapsed
-mstmap.cross 0.69   1.58    5.86
+mstmap.cross 0.99   2.49    5.67
 ```
 
-The elapsed time for this example is dominated by file I/O, as the underlying
-MSTmap algorithm reads and writes temporary files. Combined user and system
-CPU time is under 2.5 seconds.
+Only the elapsed time exceeds the threshold, and it is dominated by file I/O,
+as the underlying MSTmap algorithm reads and writes temporary files. Combined
+user and system CPU time remains well below 5 seconds.
