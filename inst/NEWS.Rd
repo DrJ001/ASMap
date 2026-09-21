@@ -1,5 +1,25 @@
 \name{news}
 \title{Release information for ASMap}
+\section{Changes in version 1.1-0}{
+\subsection{README}{
+  \itemize{
+    \item This release restores \pkg{ASMap} to CRAN following the
+    archiving of version 1.0-8. There are no user visible changes to the
+    functionality of the package.
+  }
+}
+\subsection{BUG FIXES}{
+  \itemize{
+    \item The package vignette used the \code{tabu} LaTeX package, which
+    is no longer maintained and is incompatible with current versions of
+    the \code{array} package. Re-building the vignette therefore failed
+    with an \dQuote{Undefined control sequence} error, which led to the
+    archiving of version 1.0-8 on CRAN. The vignette now uses
+    \code{tabularx} from the standard LaTeX \code{tools} bundle, which
+    provides the same functionality.
+  }
+}
+}
 \section{Changes in version 1.0-x}{
 \subsection{README}{
   \itemize{
