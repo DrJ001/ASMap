@@ -16,6 +16,10 @@ cache
 # Editor backup files
 *~
 
+# testthat debugging residue from failed snapshot comparisons
+tests/testthat/_problems/
+tests/testthat/_snaps/*.new.md
+
 # Local dev scratch / assistant config
 CLAUDE.md
 check.R
