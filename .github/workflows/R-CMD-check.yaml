@@ -51,17 +51,20 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
-          # "always" (rather than "true") is required so that macOS also
-          # resolves binaries via Posit Package Manager. CRAN's macOS builder
-          # now zstd-compresses some .tgz binaries, which pak cannot extract
-          # ("unknown archive type"). See r-lib/pkgdepends#485. PPM still
-          # serves gzip, so this is a stopgap until pkgdepends adds zstd
-          # support, after which "true" can be restored.
-          use-public-rspm: always
+          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          # knitr and xfun are built from source because CRAN's macOS builder
+          # now zstd-compresses newly built .tgz binaries, which pak cannot
+          # extract ("unknown archive type", see r-lib/pkgdepends#485). As of
+          # 2026-09 these are the only two packages in our dependency tree
+          # affected; both are pure R, so a source install is cheap and safe.
+          # Remove these once pkgdepends supports zstd archives.
+          extra-packages: |
+            any::rcmdcheck
+            knitr=?source
+            xfun=?source
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
