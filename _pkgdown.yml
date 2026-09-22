@@ -1,0 +1,90 @@
+url: https://drj001.github.io/ASMap/
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#1a6b9f"
+    base_font: {google: "Source Sans 3"}
+    code_font: {google: "Source Code Pro"}
+
+home:
+  title: Accurate and Speedy Linkage Map Construction
+  description: >
+    Linkage map construction, manipulation and diagnosis for doubled haploid,
+    backcross and recombinant inbred populations, using the MSTmap algorithm.
+
+navbar:
+  structure:
+    left: [reference, articles]
+    right: [search, github]
+
+authors:
+  Julian Taylor:
+    href: https://github.com/DrJ001
+
+reference:
+
+- title: Construction
+  desc: >
+    Linkage group clustering, optimal marker ordering and genetic distance
+    estimation in a single pass, using the MSTmap algorithm. Both functions are
+    methods of the `mstmap()` generic and share the full set of MSTmap
+    parameters, differing only in their input.
+  contents:
+  - mstmap.cross
+  - mstmap.data.frame
+
+- title: Pre-construction
+  desc: >
+    Diagnosis and curation of genotypes and markers before a map is built.
+- subtitle: Genotype diagnostics
+  contents:
+  - statGen
+  - profileGen
+  - genClones
+  - fixClones
+- subtitle: Marker and interval diagnostics
+  contents:
+  - statMark
+  - profileMark
+  - pValue
+- subtitle: Setting markers aside
+  desc: >
+    Pull markers of a given type out of the map and hold them in the cross
+    object, rather than discarding them permanently.
+  contents:
+  - pullCross
+  - pp.init
+
+- title: Post-construction
+  desc: >
+    Interpretation, display and manipulation of a constructed linkage map.
+- subtitle: Display
+  contents:
+  - heatMap
+  - alignCross
+- subtitle: Reintroducing markers
+  contents:
+  - pushCross
+- subtitle: Map manipulation
+  contents:
+  - breakCross
+  - mergeCross
+  - combineMap
+  - subsetCross
+  - quickEst
+
+- title: Datasets
+  desc: >
+    Constructed and unconstructed marker sets used throughout the documentation.
+    These are not lazy-loaded, so an explicit `data()` call is required.
+  contents:
+  - mapDH
+  - mapDHf
+  - mapBC
+  - mapBCu
+  - mapF2
+
+- title: Package
+  contents:
+  - ASMap-package

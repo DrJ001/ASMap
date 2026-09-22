@@ -24,3 +24,6 @@ tests/testthat/_snaps/*.new.md
 CLAUDE.md
 check.R
 scratch/
+
+# pkgdown site, built locally for preview and by CI for deployment
+docs/

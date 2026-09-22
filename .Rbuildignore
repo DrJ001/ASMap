@@ -18,3 +18,7 @@ figure$
 ^check\.R$
 ^scratch$
 .*~$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^vignettes/articles$
