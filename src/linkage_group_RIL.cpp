@@ -51,14 +51,26 @@ void RIL_dist_cal::count_class(){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void RIL_dist_cal::upper_bound(){
-    double R = (DD_ + EE_ + FG_) / (CC_ + DD_ + EE_ + FG_);
+    double total = CC_ + DD_ + EE_ + FG_;
+    // total equals num_of_eff_individuals_, which is zero when the two markers
+    // share no scored individuals. Treat that as unlinked instead of 0/0.
+    if (total <= 0.0) {
+        delta_upper_bound_ = 0.5;
+        return;
+    }
+    double R = (DD_ + EE_ + FG_) / total;
     delta_upper_bound_ = R / (2 - 2 * R);
     if (delta_upper_bound_ > 0.5) delta_upper_bound_ = 0.5;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void RIL_dist_cal::lower_bound(){
-    double R = DD_ / (CC_ + DD_ + EE_ + FG_);
+    double total = CC_ + DD_ + EE_ + FG_;
+    if (total <= 0.0) {
+        delta_lower_bound_ = 0.5;
+        return;
+    }
+    double R = DD_ / total;
     delta_lower_bound_ = R / (2 - 2 * R);
     if (delta_lower_bound_ > 0.5) delta_lower_bound_ = 0.5;
 }

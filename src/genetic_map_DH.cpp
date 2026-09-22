@@ -27,6 +27,10 @@ genetic_map::genetic_map() {
     total_number_of_missing_obs = 0;
     objective_function = OBJF_COUNT;
     detect_bad_data = false;
+    // Assigned in read_raw_mapping_data once the distance function is known.
+    // Initialised here so that it is never dereferenced or deleted
+    // uninitialised if that assignment does not happen.
+    df_ = NULL;
 }
 //////////////////////////////////////////////////////////////////////////////
 
@@ -56,6 +60,8 @@ int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
     df_ = new DF_Haldane();
   else if (distance_function == KOSAMBI)
     df_ = new DF_Kosambi();
+  else
+    Rf_error("unrecognised distance function: '%s'\n", distance_function.c_str());
 
   //raw_mapping_data_file >> clustering_prob_cut_off;
   clustering_prob_cut_off = REAL(elem(Plist, "cut_off_p_value"))[0];
@@ -122,11 +128,9 @@ int genetic_map::read_raw_mapping_data(SEXP &Plist, SEXP &data) {
 	  marker_data[jj] = "-";
 	}
 	else {
-	Rf_error("unrecognzed marker at line  %d marker: %s   column %d\n",
+	// Rf_error does not return, so nothing may follow it here.
+	Rf_error("unrecognised marker at line  %d marker: %s   column %d\n",
 		ii+1,marker_name_ii.c_str(),jj + 1);
-	//assert(false); // crash the program on error
-	UNPROTECT(2);
-	return -1;
 	}
       }
       else {

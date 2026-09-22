@@ -38,6 +38,13 @@ extern "C" SEXP mst(SEXP Plist, SEXP data)
   barley->generate_map(map);
   barley->write_output(map);
 
+  // Release the working set (raw genotype data and the n x n distance matrix),
+  // which was previously leaked on every call. Deleting a C++ object performs
+  // no R allocation, so this cannot trigger a garbage collection of 'map'.
+  // Note that an Rf_error raised above longjmps past this point; making the
+  // error paths leak free requires R_UnwindProtect and is left for later.
+  delete barley;
+
   return(map);
 }
 

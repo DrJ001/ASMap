@@ -90,7 +90,9 @@ class genetic_map{
 
      public:
         genetic_map();
-        ~genetic_map();
+        // Virtual: instances are owned and deleted through a genetic_map*
+        // (see mst.cpp), so the derived destructor must run.
+        virtual ~genetic_map();
 
         /*return 0 if the function finishes successfully*/
         int read_raw_mapping_data(SEXP &Plist, SEXP &data);

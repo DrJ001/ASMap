@@ -44,6 +44,30 @@
     cross reference in a \code{statMark} error message.
   }
 }
+\subsection{INTERNAL CHANGES}{
+  \itemize{
+    \item Two memory leaks in the MSTmap C++ code have been repaired. A
+    working array in the marker relocation step was allocated on every
+    call and never released, and the object holding the genotype data
+    and the pairwise distance matrix was never released at the end of a
+    map construction. For a linkage group of \eqn{n} markers the latter
+    retained an \eqn{n \times n} matrix of doubles per call. The base
+    class destructor is now virtual, as the object is owned through a
+    base class pointer.
+    \item The distance function member is now initialised, and an
+    unrecognised distance function is reported rather than leading to
+    the use and release of an uninitialised pointer.
+    \item Corrected undefined behaviour when testing whether a genotype
+    string is numeric, which passed a possibly negative \code{char} to
+    \code{isdigit}.
+    \item Added a guard, equivalent to the one already used for doubled
+    haploid populations, for the case where two markers in a RIL
+    population share no scored individuals. This previously divided by
+    zero and propagated \code{NaN} into the distance matrix.
+    \item These changes do not alter the linkage maps produced. Marker
+    orders and genetic distances are unchanged on all bundled datasets.
+  }
+}
 }
 \section{Changes in version 1.0-x}{
 \subsection{README}{

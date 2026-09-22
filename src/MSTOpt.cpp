@@ -395,10 +395,11 @@ bool MSTOpt::dis_locate()
 
   /* first is a pointer to previous element, second is the pointer to the next element*/
 
-  //DB 10 Oct 2013
-  pair<int,int> *crt_order = NULL;
-  if(crt_order != NULL) delete crt_order;
-  crt_order = new pair<int,int> [number_of_bins];
+  // Held in a vector so that it is released on every exit path, including the
+  // longjmp taken by Rf_error. The previous raw array was never freed, and the
+  // guarded delete above it was dead code (the pointer had just been set to
+  // NULL) and used the wrong form for an array allocation.
+  vector<pair<int,int> > crt_order(number_of_bins);
 
   for (int ii = 0 ; ii < number_of_bins -1 ; ii++)
     {

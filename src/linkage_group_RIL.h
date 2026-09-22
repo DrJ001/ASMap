@@ -43,6 +43,14 @@ class RIL_dist_cal{
             lower_bound();
         };
         double Dist() const {
+            // Two markers with no individuals scored for both carry no
+            // information about linkage. Treat them as unlinked, which mirrors
+            // the guard already present on the DH path, rather than dividing
+            // by zero and propagating NaN into the distance matrix, where it
+            // would silently corrupt every subsequent comparison.
+            if (num_of_eff_individuals_ == 0) {
+                return 0.5 * num_of_individuals_;
+            }
             double opt_delta = find_opt_delta();
             return opt_delta * num_of_individuals_;
         };
