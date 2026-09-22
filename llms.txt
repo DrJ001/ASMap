@@ -801,3 +801,9 @@ documentation. These are not lazy-loaded, so an explicit
   : Additional functions for linkage map construction and manipulation
   of R/qtl objects.
 
+# Articles
+
+### All vignettes
+
+- [Efficient linkage map construction using
+  R/ASMap](https://drj001.github.io/ASMap/articles/asmapvignette.md):
