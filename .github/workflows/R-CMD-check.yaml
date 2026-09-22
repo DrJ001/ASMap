@@ -51,31 +51,26 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
+          # Posit Package Manager is used for Linux and Windows, where it
+          # provides binaries and is much faster than building from source.
+          #
+          # macOS is pinned to CRAN. PPM's macOS arm64 build of dotCall64
+          # references the LLVM OpenMP runtime and so fails to load on a GitHub
+          # runner ("symbol not found in flat namespace
+          # '___kmpc_for_static_fini'"); CRAN's build of the same version does
+          # not. dotCall64 is a dependency of spam and hence of fields, which
+          # ASMap imports. Setting this explicitly also makes the job immune to
+          # further changes in which platforms the moving v2 tag routes to PPM.
+          use-public-rspm: ${{ runner.os == 'macOS' && 'false' || 'true' }}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          # Two source installs work around upstream binary problems:
-          #
-          # knitr, xfun: CRAN's macOS builder now zstd-compresses newly built
-          #   .tgz binaries, which pak cannot extract ("unknown archive type",
-          #   see r-lib/pkgdepends#485). As of 2026-09 these are the only two
-          #   affected packages in our dependency tree; both are pure R.
-          #
-          # dotCall64 (macOS only): Posit Package Manager's macOS arm64 build
-          #   references the LLVM OpenMP runtime, so it fails to load on a
-          #   GitHub runner with "symbol not found in flat namespace
-          #   '___kmpc_for_static_fini'". CRAN's build of the same version does
-          #   not, and neither does a source build using the CRAN macOS
-          #   toolchain. dotCall64 is a dependency of spam and hence fields.
-          #   Verified that PPM's spam, qtl, lattice and gtools are unaffected.
-          #
-          # Both can be removed once the upstream issues are resolved.
-          extra-packages: |
-            any::rcmdcheck
-            knitr=?source
-            xfun=?source
-            ${{ runner.os == 'macOS' && 'dotCall64=?source' || '' }}
+          # The knitr and xfun source installs that were needed here have been
+          # removed. CRAN briefly published zstd-compressed macOS .tgz binaries,
+          # which pak cannot extract (r-lib/pkgdepends#485), but has since
+          # rebuilt them as gzip. Verified on 2026-09-22 that none of the 45
+          # packages in the recursive dependency set is zstd compressed.
+          extra-packages: any::rcmdcheck
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
