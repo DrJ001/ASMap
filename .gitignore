@@ -27,3 +27,10 @@ scratch/
 
 # pkgdown site, built locally for preview and by CI for deployment
 docs/
+
+# Local render artifacts from the online articles. MSToutput.txt is written
+# by any chunk using trace = TRUE.
+vignettes/articles/*.html
+vignettes/articles/*_files/
+vignettes/articles/*_cache/
+MSToutput.txt
