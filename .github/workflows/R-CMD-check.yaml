@@ -55,16 +55,27 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          # knitr and xfun are built from source because CRAN's macOS builder
-          # now zstd-compresses newly built .tgz binaries, which pak cannot
-          # extract ("unknown archive type", see r-lib/pkgdepends#485). As of
-          # 2026-09 these are the only two packages in our dependency tree
-          # affected; both are pure R, so a source install is cheap and safe.
-          # Remove these once pkgdepends supports zstd archives.
+          # Two source installs work around upstream binary problems:
+          #
+          # knitr, xfun: CRAN's macOS builder now zstd-compresses newly built
+          #   .tgz binaries, which pak cannot extract ("unknown archive type",
+          #   see r-lib/pkgdepends#485). As of 2026-09 these are the only two
+          #   affected packages in our dependency tree; both are pure R.
+          #
+          # dotCall64 (macOS only): Posit Package Manager's macOS arm64 build
+          #   references the LLVM OpenMP runtime, so it fails to load on a
+          #   GitHub runner with "symbol not found in flat namespace
+          #   '___kmpc_for_static_fini'". CRAN's build of the same version does
+          #   not, and neither does a source build using the CRAN macOS
+          #   toolchain. dotCall64 is a dependency of spam and hence fields.
+          #   Verified that PPM's spam, qtl, lattice and gtools are unaffected.
+          #
+          # Both can be removed once the upstream issues are resolved.
           extra-packages: |
             any::rcmdcheck
             knitr=?source
             xfun=?source
+            ${{ runner.os == 'macOS' && 'dotCall64=?source' || '' }}
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
