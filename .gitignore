@@ -23,3 +23,4 @@ tests/testthat/_snaps/*.new.md
 # Local dev scratch / assistant config
 CLAUDE.md
 check.R
+scratch/

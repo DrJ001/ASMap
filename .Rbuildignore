@@ -16,4 +16,5 @@ figure$
 ^\.github$
 ^CLAUDE\.md$
 ^check\.R$
+^scratch$
 .*~$
