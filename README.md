@@ -15,18 +15,10 @@
 ## Overview
 
 **ASMap** is a linkage map construction, manipulation and diagnosis toolkit for
-biparental populations, built around the **MSTmap** algorithm of
+biparental populations, built around the efficient **MSTmap** algorithm of
 [Wu *et al.* (2008)](https://doi.org/10.1371/journal.pgen.1000212). MSTmap uses the
 minimum spanning tree of a graph to cluster markers into linkage groups **and**
 optimally order the markers within each group, in a single pass.
-
-This is the package's central advantage. Conventional approaches order markers in two
-stages - a non-exhaustive initial order such as SERIATION or RECORD, followed by a
-brute-force "rippling" step that checks all order permutations within a sliding
-marker window. Rippling is prohibitively slow for large linkage groups and often has
-to be repeated. ASMap replaces both stages with one algorithm, reducing map
-construction from an overnight job to a few seconds, which makes construction an
-interactive, diagnostic-driven process.
 
 | Pillar | Functions | Description |
 |---|---|---|
@@ -374,8 +366,6 @@ heatMap(x, chr, mark, what = c("both", "lod", "rf"), lmax = 12, rmin = 0,
 | `markDiagonal` | If `TRUE`, borders are drawn around the diagonal elements. Default `FALSE` |
 | `color` | Colour spectrum, defaulting to a reversed `RColorBrewer` `"Spectral"` palette |
 | `...` | Additional arguments, largely passed to `fields::image.plot()`. **Avoid `legend.args`**, which is used internally |
-
-![Heat map of pairwise recombination fractions (upper triangle) and LOD scores of linkage (lower triangle) for a constructed barley backcross map](man/figures/README-heatmap.png)
 
 ### Linkage group identity and orientation - `alignCross()`
 
