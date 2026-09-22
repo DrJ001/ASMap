@@ -1,22 +1,16 @@
 \name{news}
 \title{Release information for ASMap}
-\section{Changes in version 1.1-0}{
+\section{Changes in version 1.1-1}{
 \subsection{README}{
   \itemize{
-    \item This release restores \pkg{ASMap} to CRAN following the
-    archiving of version 1.0-8. There are no user visible changes to the
-    functionality of the package.
+    \item This release corrects a number of latent defects that were
+    found while adding a regression test suite to the package. Several of
+    them prevented documented functionality from being used at all. The
+    linkage maps produced by \pkg{ASMap} are unchanged.
   }
 }
 \subsection{BUG FIXES}{
   \itemize{
-    \item The package vignette used the \code{tabu} LaTeX package, which
-    is no longer maintained and is incompatible with current versions of
-    the \code{array} package. Re-building the vignette therefore failed
-    with an \dQuote{Undefined control sequence} error, which led to the
-    archiving of version 1.0-8 on CRAN. The vignette now uses
-    \code{tabularx} from the standard LaTeX \code{tools} bundle, which
-    provides the same functionality.
     \item \code{pushCross} and \code{pullCross} used the \code{type}
     argument before it had been resolved by \code{match.arg}. In
     \code{pushCross} this tested a condition of length four, which R
@@ -66,6 +60,30 @@
     zero and propagated \code{NaN} into the distance matrix.
     \item These changes do not alter the linkage maps produced. Marker
     orders and genetic distances are unchanged on all bundled datasets.
+    \item A \pkg{testthat} regression test suite has been added. It pins
+    the marker orders and genetic distances produced for the bundled
+    datasets so that internal changes can be shown not to alter the
+    linkage maps.
+  }
+}
+}
+\section{Changes in version 1.1-0}{
+\subsection{README}{
+  \itemize{
+    \item This release restored \pkg{ASMap} to CRAN following the
+    archiving of version 1.0-8. There were no user visible changes to
+    the functionality of the package.
+  }
+}
+\subsection{BUG FIXES}{
+  \itemize{
+    \item The package vignette used the \code{tabu} LaTeX package, which
+    is no longer maintained and is incompatible with current versions of
+    the \code{array} package. Re-building the vignette therefore failed
+    with an \dQuote{Undefined control sequence} error, which led to the
+    archiving of version 1.0-8 on CRAN. The vignette now uses
+    \code{tabularx} from the standard LaTeX \code{tools} bundle, which
+    provides the same functionality.
   }
 }
 }
