@@ -17,6 +17,31 @@
     archiving of version 1.0-8 on CRAN. The vignette now uses
     \code{tabularx} from the standard LaTeX \code{tools} bundle, which
     provides the same functionality.
+    \item \code{pushCross} and \code{pullCross} used the \code{type}
+    argument before it had been resolved by \code{match.arg}. In
+    \code{pushCross} this tested a condition of length four, which R
+    4.2.0 and later treat as an error, so the function failed whenever
+    the default argument was used. In \code{pullCross} it caused
+    recursive indexing. Both now resolve \code{type} before first use.
+    \item \code{pushCross} checked the number of genotypes in the pushed
+    marker set before establishing that any such markers existed, which
+    produced an uninformative error. It now reports that there are no
+    markers of that type to push back.
+    \item \code{mstmap.data.frame} failed rather than warning when marker
+    or genotype names contained spaces, and assigned corrected genotype
+    names to the marker names. Spaces are now replaced with a
+    \code{"-"} separator in the correct component, with a warning.
+    \item \code{alignCross} raised an uninformative error when the
+    \code{maps} argument was not a list, and when \code{object} had a
+    single class. Both are now reported correctly.
+    \item \code{mstmap.data.frame} did not reject numeric input for
+    \code{RILn} population types, because the test used
+    \code{is.numeric} on a \code{data.frame}.
+    \item \code{mstmap.cross} and \code{mstmap.data.frame} could pick up
+    an unrelated object named \code{omit.list} from the calling
+    environment.
+    \item Corrected the axis labels produced by \code{pValue} and a
+    cross reference in a \code{statMark} error message.
   }
 }
 }

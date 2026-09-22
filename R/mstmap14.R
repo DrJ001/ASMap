@@ -136,7 +136,7 @@ mstmap.cross <- function(object, chr, id = "Genotype", bychr = TRUE, suffix = "n
             object$imputed.geno <- object$imputed.geno[mixedorder(names(object$imputed.geno))]
         }
     }
-    if(exists("omit.list"))
+    if(exists("omit.list", inherits = FALSE))
         object$omit <- do.call("cbind", omit.list[!sapply(omit.list, is.null)])
     object$geno <- c(object$geno, oldObject$geno)
     object$geno <- object$geno[mixedorder(names(object$geno))]
@@ -286,7 +286,7 @@ mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
             if(any(apply(object, 2, function(el) length(el[is.na(el)]))))
                 stop("Numeric input cannot contain missing values")
             if(any(apply(object, 2, function(el) el < 0 | el > 1)))
-                stop("Ony values between 0 and 1 are allowed if input is numeric.")
+                stop("Only values between 0 and 1 are allowed if input is numeric.")
             if(as.cross)
                 stop("Cross object cannot be returned for numeric input.")
         } else {
@@ -296,7 +296,7 @@ mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
         }
         pop.type <- "DH"
     } else {
-        if(is.numeric(object))
+        if(all(sapply(object, is.numeric)))
             stop("Numeric input is not available for RILn populations.")
         allow.list <- c(allow.list, "X")
         if(!all(alleles %in% allow.list))
@@ -305,11 +305,11 @@ mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
     }
     if(length(grep(" ", rownames(object)))){
         rownames(object) <- gsub(" ", "-", rownames(object))
-        warning("Replacing spaces in genotype names with a "-" separator\n")
+        warning("Replacing spaces in marker names with a \"-\" separator")
     }
     if(length(grep(" ", names(object)))){
-        rownames(object) <- gsub(" ", "-", names(object))
-        warning("Replacing spaces in marker nxames with a "-" separator\n")
+        names(object) <- gsub(" ", "-", names(object))
+        warning("Replacing spaces in genotype names with a \"-\" separator")
     }
     dist.fun <- match.arg(dist.fun)
     objective.fun <- match.arg(objective.fun)
@@ -400,7 +400,7 @@ mstmap.data.frame <- function(object, pop.type= "DH", dist.fun = "kosambi",
         }
         object <- do
     }
-    if(exists("omit.list"))
+    if(exists("omit.list", inherits = FALSE))
         object$omit <- omit.list
     object
 }
@@ -726,6 +726,7 @@ pp.init <- function(seg.thresh = 0.05, seg.ratio = NULL, miss.thresh = 0.1, max.
    }
 
 pullCross <- function(object, chr, type = c("co.located","seg.distortion","missing"), pars = NULL, replace = FALSE, ...){
+    type <- match.arg(type)
     if(!is.null(object[[type]])){
         if(dim(object$pheno)[1] != dim(object[[type]]$data)[1])
             stop("Number of genotypes in linkage map does not match external ", type, " data.")
@@ -735,7 +736,6 @@ pullCross <- function(object, chr, type = c("co.located","seg.distortion","missi
     if(!is.list(pars))
         stop("argument pars must be a list object one or more named elements matching the results of pp.init()")
     pars <- do.call("pp.init", pars)
-    type <- match.arg(type)
     if(!(class(object)[1] %in% c("bc","dh","riself","bcsft")))
         stop("Pulling of markers is not supported for this population type, see ?pullCross.")
     oldObject <- NULL
@@ -820,7 +820,8 @@ pushCross <- function(object, type = c("co.located","seg.distortion","missing","
         x <- x[!sapply(x, is.null)]
         class(x) <- cc
         x }
-    if(type != "unlinked"){
+    type <- match.arg(type)
+    if(type != "unlinked" & !is.null(object[[type]])){
        if(dim(object$pheno)[1] != dim(object[[type]]$data)[1])
            stop("Number of genotypes in linkage map does not match external ", type, " data.")
     }
@@ -830,7 +831,6 @@ pushCross <- function(object, type = c("co.located","seg.distortion","missing","
     if(!is.list(pars))
         stop("Argument pars must be a list object with one or more named elements matching the results of pp.init()")
     pars <- do.call("pp.init", pars)
-    type <- match.arg(type)
     if(!(class(object)[1] %in% c("bc","dh","riself","bcsft")))
         stop("Pushing of markers is not supported for this population type, see ?pushCross.")
     if(is.null(object[[type]]) & !(type %in% "unlinked"))
@@ -1079,7 +1079,7 @@ statMark <- function(cross, chr, stat.type = c("marker","interval"), map.functio
     if(!(class(cross)[1] %in% c("bc","dh","riself","bcsft")))
         stop("This function is not suitable for this population type, see ?statMark.")
     if(any(!(stat.type %in% c("marker","interval"))))
-        stop("Value for stat.type argument does not match allowable names, see ?statMak.")
+        stop("Value for stat.type argument does not match allowable names, see ?statMark.")
     if (!missing(chr))
         cross <- subset(cross, chr = chr)
     nm <- nmar(cross)
@@ -1367,13 +1367,13 @@ profileGen <- function(cross, chr, bychr = TRUE, stat.type = c("xo","dxo","miss"
 }
 
 alignCross <- function(object, chr, maps, ...){
-    if (class(object)[2] != "cross")
+    if (!inherits(object, "cross"))
         stop("object should have class \"cross\".")
     if(missing(maps))
         stop("map argument cannot be missing.")
     call <- match.call()
     mp <- deparse(call$maps)
-    if(!grep("list", mp))
+    if(!length(grep("list", mp)))
         stop("maps argument must be a list of maps")
     mapn <- names(maps)
     if(any(mapn %in% "") | is.null(mapn)){
@@ -1431,7 +1431,7 @@ alignCross <- function(object, chr, maps, ...){
         }
     }
     fdat <- do.call("rbind.data.frame", ldat)
-    if(dim(fdat)[1] == 0) 
+    if(dim(fdat)[1] == 0)
        stop("There are no matching markers between the inputted map and the reference maps.")
     rownames(fdat) <- NULL
     fdat$map.chr <- factor(fdat$map.chr, levels = names(object$geno))
@@ -1470,7 +1470,7 @@ pValue <- function(dist = seq(25,40, by = 5), pop.size = 100:500, map.function =
     dat$pop.size <- rep(pop.size, length(dist))
     dat$dist <- rep(dist, each = length(pop.size))
     cols <- colour_hue(length(dist))
-    labs <- paste(dist, " cM", sepm = "")
+    labs <- paste(dist, " cM", sep = "")
     print(xyplot(val ~ pop.size, type = "l", data = dat, groups = dat$dist,
                  lwd = 2, col = cols, xlab = "Number of genotypes in population", ylab = ylab,
                  key = list(x = 0.05, y = 0.9, text = list(labs, cex = 2), lines = list(col = cols, lwd = 3))))
