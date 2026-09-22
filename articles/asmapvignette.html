@@ -189,48 +189,48 @@ markers where each
 entry of the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>×</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">n \times t</annotation></semantics></math>
 matrix
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>M</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{M}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐌</mi><annotation encoding="application/x-tex">\boldsymbol{M}</annotation></semantics></math>
 is either an
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
 or a
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
 representing the two parental homozygotes in the population. Let
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>P</mi><mo accent="true">→</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><annotation encoding="application/x-tex">\vec{P}_{jk}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐏</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><annotation encoding="application/x-tex">\boldsymbol{P}_{jk}</annotation></semantics></math>
 be the probability of a recombination event between the markers
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mover><mi>m</mi><mo accent="true">→</mo></mover><mi>j</mi></msub><mo>,</mo><msub><mover><mi>m</mi><mo accent="true">→</mo></mover><mi>k</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\vec{m}_j,
-\vec{m}_k)</annotation></semantics></math> where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>≤</mo><msub><mover><mi>P</mi><mo accent="true">→</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>&lt;</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">0 \leq \vec{P}_{jk} &lt; 0.5</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>𝐦</mi><mi>j</mi></msub><mo>,</mo><msub><mi>𝐦</mi><mi>k</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\boldsymbol{m}_j,
+\boldsymbol{m}_k)</annotation></semantics></math> where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>≤</mo><msub><mi>𝐏</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>&lt;</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">0 \leq \boldsymbol{P}_{jk} &lt; 0.5</annotation></semantics></math>.
 MSTmap uses two possible weight objective functions based on
 recombination probabilities between the markers
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>w</mi><mi>p</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mover><mi>P</mi><mo accent="true">→</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>w</mi><mrow><mi>m</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><msub><mover><mi>P</mi><mo accent="true">→</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mspace width="0.167em"></mspace><msub><mover><mi>P</mi><mo accent="true">→</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mover><mi>P</mi><mo accent="true">→</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mspace width="0.167em"></mspace><mn>1</mn><mo>−</mo><msub><mover><mi>P</mi><mo accent="true">→</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
-  w_p(j,k) &amp;= \vec{P}_{jk} \qquad (1)\\
-  w_{ml}(j, k) &amp;= -\bigl(\vec{P}_{jk}\log\,\vec{P}_{jk} + (1 -
-  \vec{P}_{jk})\log(\,1 - \vec{P}_{jk})\bigr) \qquad (2)
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>w</mi><mi>p</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>𝐏</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>w</mi><mrow><mi>m</mi><mi>l</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><msub><mi>𝐏</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mspace width="0.167em"></mspace><msub><mi>𝐏</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>𝐏</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mspace width="0.167em"></mspace><mn>1</mn><mo>−</mo><msub><mi>𝐏</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+  w_p(j,k) &amp;= \boldsymbol{P}_{jk} \qquad (1)\\
+  w_{ml}(j, k) &amp;= -\bigl(\boldsymbol{P}_{jk}\log\,\boldsymbol{P}_{jk} + (1 -
+  \boldsymbol{P}_{jk})\log(\,1 - \boldsymbol{P}_{jk})\bigr) \qquad (2)
 \end{aligned}</annotation></semantics></math> In general
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>P</mi><mo accent="true">→</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><annotation encoding="application/x-tex">\vec{P}_{jk}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐏</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><annotation encoding="application/x-tex">\boldsymbol{P}_{jk}</annotation></semantics></math>
 is not known and so it is replaced by an estimate,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mi>/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">d_{jk}/n</annotation></semantics></math>
 where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><annotation encoding="application/x-tex">d_{jk}</annotation></semantics></math>
 corresponds to the hamming distance between
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>m</mi><mo accent="true">→</mo></mover><mi>j</mi></msub><annotation encoding="application/x-tex">\vec{m}_j</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐦</mi><mi>j</mi></msub><annotation encoding="application/x-tex">\boldsymbol{m}_j</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>m</mi><mo accent="true">→</mo></mover><mi>k</mi></msub><annotation encoding="application/x-tex">\vec{m}_k</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐦</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\boldsymbol{m}_k</annotation></semantics></math>
 (the number of non-mathcing alleles between the two markers). This
 estimate,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mi>/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">d_{jk}/n</annotation></semantics></math>,
 is also the maximum likelihood estimate for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>P</mi><mo accent="true">→</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><annotation encoding="application/x-tex">\vec{P}_{jk}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐏</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><annotation encoding="application/x-tex">\boldsymbol{P}_{jk}</annotation></semantics></math>
 for the two weight functions defined above.</p>
 <div class="section level4">
 <h4 id="clustering">Clustering<a class="anchor" aria-label="anchor" href="#clustering"></a>
 </h4>
 If markers
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>m</mi><mo accent="true">→</mo></mover><mi>j</mi></msub><annotation encoding="application/x-tex">\vec{m}_j</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐦</mi><mi>j</mi></msub><annotation encoding="application/x-tex">\boldsymbol{m}_j</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>m</mi><mo accent="true">→</mo></mover><mi>k</mi></msub><annotation encoding="application/x-tex">\vec{m}_k</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐦</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\boldsymbol{m}_k</annotation></semantics></math>
 belong to two different linkage groups then
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>P</mi><mo accent="true">→</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">\vec{P}_{jk} = 0.5</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐏</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">\boldsymbol{P}_{jk} = 0.5</annotation></semantics></math>
 and the hamming distance between them has the property
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>d</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>n</mi><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">E(d_{jk}) = n/2</annotation></semantics></math>.
 A simple thresholding mechanism to determine whether markers belong to
@@ -281,24 +281,24 @@ linkage map construction to ensure an appropriate p-value is given to
 the MSTmap algorithm.</p>
 <p>To cluster the markers MSTmap uses an edge-weighted undirected
 complete graph, for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>M</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{M}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐌</mi><annotation encoding="application/x-tex">\boldsymbol{M}</annotation></semantics></math>
 where the individual markers are vertices and the edges between any two
 markers
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>m</mi><mo accent="true">→</mo></mover><mi>j</mi></msub><annotation encoding="application/x-tex">\vec{m}_j</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐦</mi><mi>j</mi></msub><annotation encoding="application/x-tex">\boldsymbol{m}_j</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>m</mi><mo accent="true">→</mo></mover><mi>k</mi></msub><annotation encoding="application/x-tex">\vec{m}_k</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐦</mi><mi>k</mi></msub><annotation encoding="application/x-tex">\boldsymbol{m}_k</annotation></semantics></math>
 is the pairwise hamming distance
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub><annotation encoding="application/x-tex">d_{jk}</annotation></semantics></math>.
 Edges with weights greater than
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>δ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{\delta}</annotation></semantics></math>
 are then removed. The remaining connected components allow the marker
 set
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>M</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{M}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐌</mi><annotation encoding="application/x-tex">\boldsymbol{M}</annotation></semantics></math>
 to be partitioned into
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math>
 linkage groups,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>M</mi><mo accent="true">→</mo></mover><mo>=</mo><mo stretchy="false" form="prefix">[</mo><msub><mover><mi>M</mi><mo accent="true">→</mo></mover><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mover><mi>M</mi><mo accent="true">→</mo></mover><mi>r</mi></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\vec{M} =
-[\vec{M}_1,\ldots,\vec{M}_r]</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐌</mi><mo>=</mo><mo stretchy="false" form="prefix">[</mo><msub><mi>𝐌</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>𝐌</mi><mi>r</mi></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\boldsymbol{M} =
+[\boldsymbol{M}_1,\ldots,\boldsymbol{M}_r]</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pValue.html">pValue</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">30</span>, <span class="fl">35</span>, <span class="fl">40</span><span class="op">)</span>, pop.size <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">500</span>, map.function <span class="op">=</span> <span class="st">"kosambi"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -314,7 +314,7 @@ four threshold cM distances.
 <p>For simplicity, consider the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>×</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">n \times t</annotation></semantics></math>
 matrix of markers
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>M</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{M}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐌</mi><annotation encoding="application/x-tex">\boldsymbol{M}</annotation></semantics></math>
 belongs to the same linkage group. Preceding marker ordering, the
 markers are “binned” into groups where, within each group, the pairwise
 distance between any two markers is zero. The markers within each group
@@ -325,19 +325,19 @@ genotypes used to construct the linkage map. A representative marker is
 then chosen from each of the bins and used to form the reduced
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>×</mo><msup><mi>t</mi><mo>*</mo></msup></mrow><annotation encoding="application/x-tex">n \times t^*</annotation></semantics></math>
 marker set
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mover><mi>M</mi><mo accent="true">→</mo></mover><mo>*</mo></msup><annotation encoding="application/x-tex">\vec{M}^*</annotation></semantics></math>.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐌</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\boldsymbol{M}^*</annotation></semantics></math>.</p>
 <p>For the reduced matrix
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mover><mi>M</mi><mo accent="true">→</mo></mover><mo>*</mo></msup><annotation encoding="application/x-tex">\vec{M}^*</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐌</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\boldsymbol{M}^*</annotation></semantics></math>,
 consider the complete set of entries
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo>∈</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><msup><mi>t</mi><mo>*</mo></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(j, k)
 \in (1, \ldots, t^*)</annotation></semantics></math> for either weight
 function (1) or (2). These complete set of entries can be viewed as the
 upper triangle of a symmetric weight matrix
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>W</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{W}</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\boldsymbol{W}</annotation></semantics></math>.
 MSTmap views all these entries as being connected edges in an undirected
 graph where the individual markers are vertices. A marker order for the
 set
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mover><mi>M</mi><mo accent="true">→</mo></mover><mo>*</mo></msup><annotation encoding="application/x-tex">\vec{M}^*</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐌</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\boldsymbol{M}^*</annotation></semantics></math>,
 also known as a travelling salesman path (TSP), can be determined by
 visiting each marker once and summing the weights from the connected
 edges. To find a minimum weight
@@ -359,28 +359,28 @@ algorithm.</p>
 an EM type algorithm for the imputation of missing allele scores that is
 tightly integrated with the ordering algorithm for the markers. To
 achieve this the marker matrix
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mover><mi>M</mi><mo accent="true">→</mo></mover><mo>*</mo></msup><annotation encoding="application/x-tex">\vec{M}^*</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐌</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\boldsymbol{M}^*</annotation></semantics></math>
 is converted to a matrix,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>A</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{A}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐀</mi><annotation encoding="application/x-tex">\boldsymbol{A}</annotation></semantics></math>,
 where the entries represent the probabilistic certainty of the allele
 being A. For the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>th
 marker and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>th
 individual then
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>A</mi><mo accent="true">→</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>1</mn></mtd><mtd columnalign="left" style="text-align: left"><mspace width="1.0em"></mspace><mrow><mrow><mtext mathvariant="normal">if </mtext><mspace width="0.333em"></mspace></mrow><mrow><msup><mover><mi>M</mi><mo accent="true">→</mo></mover><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is the A allele</mtext></mrow></mrow></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn></mtd><mtd columnalign="left" style="text-align: left"><mspace width="1.0em"></mspace><mrow><mrow><mtext mathvariant="normal">if </mtext><mspace width="0.333em"></mspace></mrow><mrow><msup><mover><mi>M</mi><mo accent="true">→</mo></mover><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is the B allele</mtext></mrow></mrow></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mover><mover><mi>P</mi><mo accent="true">→</mo></mover><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mover><mover><mi>P</mi><mo accent="true">→</mo></mover><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mover><mover><mi>P</mi><mo accent="true">→</mo></mover><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mover><mover><mi>P</mi><mo accent="true">→</mo></mover><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mover><mover><mi>P</mi><mo accent="true">→</mo></mover><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi></mrow></msub><msub><mover><mover><mi>P</mi><mo accent="true">→</mo></mover><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left"><mspace width="1.0em"></mspace><mrow><mrow><mtext mathvariant="normal">if
- </mtext><mspace width="0.333em"></mspace></mrow><mrow><msup><mover><mi>M</mi><mo accent="true">→</mo></mover><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is missing</mtext></mrow></mrow></mtd></mtr></mtable></mrow><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>4</mn><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
-  \vec{A}(i,j) = \left\{\begin{array}{ll}
-          1 &amp; \quad \mbox{if $\vec{M}^*(i,j)$ is the A allele}\\
-          0 &amp; \quad \mbox{if $\vec{M}^*(i,j)$ is the B allele}\\
-          \frac{(1 - \hat{\vec{P}}_{j - 1,j})(1 - \hat{\vec{P}}_{j,j+1})}
-          {(1 - \hat{\vec{P}}_{j,j+1})(1 - \hat{\vec{P}}_{j,j+1})
-           + \hat{\vec{P}}_{j-1,j} \hat{\vec{P}}_{j,j+1}} &amp; \quad \mbox{if
-           $\vec{M}^*(i,j)$ is missing} \end{array}\right.\qquad (4)
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>𝐀</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>1</mn></mtd><mtd columnalign="left" style="text-align: left"><mspace width="1.0em"></mspace><mrow><mrow><mtext mathvariant="normal">if </mtext><mspace width="0.333em"></mspace></mrow><mrow><msup><mi>𝐌</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is the A allele</mtext></mrow></mrow></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn></mtd><mtd columnalign="left" style="text-align: left"><mspace width="1.0em"></mspace><mrow><mrow><mtext mathvariant="normal">if </mtext><mspace width="0.333em"></mspace></mrow><mrow><msup><mi>𝐌</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is the B allele</mtext></mrow></mrow></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mover><mi>𝐏</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mover><mi>𝐏</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mover><mi>𝐏</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mover><mi>𝐏</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><msub><mover><mi>𝐏</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi></mrow></msub><msub><mover><mi>𝐏</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left"><mspace width="1.0em"></mspace><mrow><mrow><mtext mathvariant="normal">if
+ </mtext><mspace width="0.333em"></mspace></mrow><mrow><msup><mi>𝐌</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is missing</mtext></mrow></mrow></mtd></mtr></mtable></mrow><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>4</mn><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+  \boldsymbol{A}(i,j) = \left\{\begin{array}{ll}
+          1 &amp; \quad \mbox{if $\boldsymbol{M}^*(i,j)$ is the A allele}\\
+          0 &amp; \quad \mbox{if $\boldsymbol{M}^*(i,j)$ is the B allele}\\
+          \frac{(1 - \hat{\boldsymbol{P}}_{j - 1,j})(1 - \hat{\boldsymbol{P}}_{j,j+1})}
+          {(1 - \hat{\boldsymbol{P}}_{j,j+1})(1 - \hat{\boldsymbol{P}}_{j,j+1})
+           + \hat{\boldsymbol{P}}_{j-1,j} \hat{\boldsymbol{P}}_{j,j+1}} &amp; \quad \mbox{if
+           $\boldsymbol{M}^*(i,j)$ is missing} \end{array}\right.\qquad (4)
 \end{aligned}</annotation></semantics></math> where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mover><mi>P</mi><mo accent="true">→</mo></mover><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\hat{\vec{P}}_{j,j-1}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>𝐏</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\hat{\boldsymbol{P}}_{j,j-1}</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mover><mi>P</mi><mo accent="true">→</mo></mover><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\hat{\vec{P}}_{j,j+1}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>𝐏</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\hat{\boldsymbol{P}}_{j,j+1}</annotation></semantics></math>
 are estimated recombination fractions between the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(j-1)</annotation></semantics></math>th
 and
@@ -396,12 +396,12 @@ being the A allele for genotype
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 given the current estimate. The ordering algorithm begins by initially
 calculating pairwise normalized distances between all markers in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mover><mi>M</mi><mo accent="true">→</mo></mover><mo>*</mo></msup><annotation encoding="application/x-tex">\vec{M}^*</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐌</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\boldsymbol{M}^*</annotation></semantics></math>
 and deriving an initial weight matrix,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>W</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{W}</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\boldsymbol{W}</annotation></semantics></math>.
 An undirected graph is formed using the markers as vertices and the
 upper triangular entries of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>W</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{W}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\boldsymbol{W}</annotation></semantics></math>
 as connected edges. An MST of the undirected graph is then found to
 establish an initial order for the markers of the linkage group. For the
 current order at the
@@ -410,25 +410,25 @@ j + 1)</annotation></semantics></math>th markers the E-step of algorithm
 requires updating the missing observation at marker
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
 by updating the estimates
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mover><mi>P</mi><mo accent="true">→</mo></mover><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi></mrow></msub><mo>=</mo><msub><mover><mi>d</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi></mrow></msub><mi>/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">\hat{\vec{P}}_{j-1,j} = \hat{d}_{j-1,j}/n</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>𝐏</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi></mrow></msub><mo>=</mo><msub><mover><mi>d</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi></mrow></msub><mi>/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">\hat{\boldsymbol{P}}_{j-1,j} = \hat{d}_{j-1,j}/n</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mover><mi>P</mi><mo accent="true">→</mo></mover><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mover><mi>d</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mi>/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">\hat{\vec{P}}_{j,j+1} =
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>𝐏</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mover><mi>d</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mo>,</mo><mi>j</mi><mo>+</mo><mn>1</mn></mrow></msub><mi>/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">\hat{\boldsymbol{P}}_{j,j+1} =
     \hat{d}_{j,j+1}/n</annotation></semantics></math> in (4). The M-step
 then re-estimates the pairwise distances between all markers in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mover><mi>M</mi><mo accent="true">→</mo></mover><mo>*</mo></msup><annotation encoding="application/x-tex">\vec{M}^*</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>𝐌</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\boldsymbol{M}^*</annotation></semantics></math>
 where, for the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>th
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>th
 marker, is
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mover><mi>d</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><msup><mi>t</mi><mo>*</mo></msup></munderover><mover><mi>A</mi><mo accent="true">→</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mover><mi>A</mi><mo accent="true">→</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mover><mi>A</mi><mo accent="true">→</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mover><mi>A</mi><mo accent="true">→</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
-\hat{d}_{jk} = \sum_{i = 1}^{t^*}\vec{A}(i,j)(1 - \vec{A}(i, k)) + \vec{A}(i,k)(1 - \vec{A}(i, j))
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mover><mi>d</mi><mo accent="true">̂</mo></mover><mrow><mi>j</mi><mi>k</mi></mrow></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><msup><mi>t</mi><mo>*</mo></msup></munderover><mi>𝐀</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>𝐀</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>𝐀</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>𝐀</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+\hat{d}_{jk} = \sum_{i = 1}^{t^*}\boldsymbol{A}(i,j)(1 - \boldsymbol{A}(i, k)) + \boldsymbol{A}(i,k)(1 - \boldsymbol{A}(i, j))
 \qquad (5)
 \end{aligned}</annotation></semantics></math> and the weight matrix
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>W</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{W}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\boldsymbol{W}</annotation></semantics></math>
 is recalculated. An undirected graph is formed with the markers as
 vertices and the upper triangular entries of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>W</mi><mo accent="true">→</mo></mover><annotation encoding="application/x-tex">\vec{W}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐖</mi><annotation encoding="application/x-tex">\boldsymbol{W}</annotation></semantics></math>
 as connected edges. A new order of the markers is derived by obtaining
 an MST of the undirected graph and the algorithm is repeated to
 convergence. Although this requires several iterations to converge, the
@@ -443,9 +443,9 @@ determine the expected state of the allele. For individual
 and marker
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
 the expected value of the allele is calculated using
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mtext mathvariant="normal">E</mtext><mo stretchy="false" form="prefix">[</mo><mover><mi>A</mi><mo accent="true">→</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>j</mi><mo>≠</mo><mi>k</mi></mrow></munder><msubsup><mi>d</mi><mrow><mi>j</mi><mo>,</mo><mi>k</mi></mrow><mrow><mi>−</mi><mn>2</mn></mrow></msubsup><mover><mi>A</mi><mo accent="true">→</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mi minsize="240%" maxsize="240%" stretchy="true">/</mi><munder><mo>∑</mo><mrow><mi>j</mi><mo>≠</mo><mi>k</mi></mrow></munder><msubsup><mi>d</mi><mrow><mi>j</mi><mo>,</mo><mi>k</mi></mrow><mrow><mi>−</mi><mn>2</mn></mrow></msubsup><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>6</mn><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
-\mbox{E}[\vec{A}(i, j)] = \sum_{j \neq
-    k}d_{j,k}^{-2}\vec{A}(i,k)\bigg/\sum_{j \neq k}d_{j,k}^{-2}
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mtext mathvariant="normal">E</mtext><mo stretchy="false" form="prefix">[</mo><mi>𝐀</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>j</mi><mo>≠</mo><mi>k</mi></mrow></munder><msubsup><mi>d</mi><mrow><mi>j</mi><mo>,</mo><mi>k</mi></mrow><mrow><mi>−</mi><mn>2</mn></mrow></msubsup><mi>𝐀</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mi minsize="240%" maxsize="240%" stretchy="true">/</mi><munder><mo>∑</mo><mrow><mi>j</mi><mo>≠</mo><mi>k</mi></mrow></munder><msubsup><mi>d</mi><mrow><mi>j</mi><mo>,</mo><mi>k</mi></mrow><mrow><mi>−</mi><mn>2</mn></mrow></msubsup><mspace width="2.0em"></mspace><mo stretchy="false" form="prefix">(</mo><mn>6</mn><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+\mbox{E}[\boldsymbol{A}(i, j)] = \sum_{j \neq
+    k}d_{j,k}^{-2}\boldsymbol{A}(i,k)\bigg/\sum_{j \neq k}d_{j,k}^{-2}
 \qquad (6)
 \end{aligned}</annotation></semantics></math> In this equation the
 weights are the inverse square of the distance from marker
@@ -453,7 +453,7 @@ weights are the inverse square of the distance from marker
 to its nearby markers. MSTmap only uses a small set of nearby markers
 during each iteration and the observed allele is considered suspicious
 if
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mtext mathvariant="normal">E</mtext><mo stretchy="false" form="prefix">[</mo><mover><mi>A</mi><mo accent="true">→</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>−</mo><mover><mi>A</mi><mo accent="true">→</mo></mover><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">|</mo><mo>&gt;</mo><mn>0.75</mn></mrow><annotation encoding="application/x-tex">|\mbox{E}[\vec{A}(i, j)] - \vec{A}(i, j)| &gt;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><mtext mathvariant="normal">E</mtext><mo stretchy="false" form="prefix">[</mo><mi>𝐀</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>−</mo><mi>𝐀</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">|</mo><mo>&gt;</mo><mn>0.75</mn></mrow><annotation encoding="application/x-tex">|\mbox{E}[\boldsymbol{A}(i, j)] - \boldsymbol{A}(i, j)| &gt;
 0.75</annotation></semantics></math>. If an observation is detected as
 suspicious it is treated as missing and imputed using the EM algorithm
 discussed previously. The removal of the suspicious allele has the

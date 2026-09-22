@@ -113,33 +113,34 @@ construction functions that are available with the R/ASMap package.
 Following the notation of ([Wu 2008](#ref-mst08)) consider a Doubled
 Haploid population of $`n`$ individuals genotyped across a set of $`t`$
 markers where each $`(i,j)`$th entry of the $`n \times t`$ matrix
-$`\vec{M}`$ is either an $`A`$ or a $`B`$ representing the two parental
-homozygotes in the population. Let $`\vec{P}_{jk}`$ be the probability
-of a recombination event between the markers $`(\vec{m}_j,
-\vec{m}_k)`$ where $`0 \leq \vec{P}_{jk} < 0.5`$. MSTmap uses two
-possible weight objective functions based on recombination probabilities
-between the markers
+$`\boldsymbol{M}`$ is either an $`A`$ or a $`B`$ representing the two
+parental homozygotes in the population. Let $`\boldsymbol{P}_{jk}`$ be
+the probability of a recombination event between the markers
+$`(\boldsymbol{m}_j,
+\boldsymbol{m}_k)`$ where $`0 \leq \boldsymbol{P}_{jk} < 0.5`$. MSTmap
+uses two possible weight objective functions based on recombination
+probabilities between the markers
 ``` math
 \begin{aligned}
-  w_p(j,k) &= \vec{P}_{jk} \qquad (1)\\
-  w_{ml}(j, k) &= -\bigl(\vec{P}_{jk}\log\,\vec{P}_{jk} + (1 -
-  \vec{P}_{jk})\log(\,1 - \vec{P}_{jk})\bigr) \qquad (2)
+  w_p(j,k) &= \boldsymbol{P}_{jk} \qquad (1)\\
+  w_{ml}(j, k) &= -\bigl(\boldsymbol{P}_{jk}\log\,\boldsymbol{P}_{jk} + (1 -
+  \boldsymbol{P}_{jk})\log(\,1 - \boldsymbol{P}_{jk})\bigr) \qquad (2)
 \end{aligned}
 ```
-In general $`\vec{P}_{jk}`$ is not known and so it is replaced by an
-estimate, $`d_{jk}/n`$ where $`d_{jk}`$ corresponds to the hamming
-distance between $`\vec{m}_j`$ and $`\vec{m}_k`$ (the number of
-non-mathcing alleles between the two markers). This estimate,
+In general $`\boldsymbol{P}_{jk}`$ is not known and so it is replaced by
+an estimate, $`d_{jk}/n`$ where $`d_{jk}`$ corresponds to the hamming
+distance between $`\boldsymbol{m}_j`$ and $`\boldsymbol{m}_k`$ (the
+number of non-mathcing alleles between the two markers). This estimate,
 $`d_{jk}/n`$, is also the maximum likelihood estimate for
-$`\vec{P}_{jk}`$ for the two weight functions defined above.
+$`\boldsymbol{P}_{jk}`$ for the two weight functions defined above.
 
 #### Clustering
 
-If markers $`\vec{m}_j`$ and $`\vec{m}_k`$ belong to two different
-linkage groups then $`\vec{P}_{jk} = 0.5`$ and the hamming distance
-between them has the property $`E(d_{jk}) = n/2`$. A simple thresholding
-mechanism to determine whether markers belong to the same linkage group
-can be calculated using Hoeffdings inequality, \$\$
+If markers $`\boldsymbol{m}_j`$ and $`\boldsymbol{m}_k`$ belong to two
+different linkage groups then $`\boldsymbol{P}_{jk} = 0.5`$ and the
+hamming distance between them has the property $`E(d_{jk}) = n/2`$. A
+simple thresholding mechanism to determine whether markers belong to the
+same linkage group can be calculated using Hoeffdings inequality, \$\$
 ``` math
 \begin{aligned}
  P(d_{jk} < \delta) \leq \mbox{exp}(-2(n/2 - \delta)^2/n)
@@ -171,13 +172,13 @@ checked before linkage map construction to ensure an appropriate p-value
 is given to the MSTmap algorithm.
 
 To cluster the markers MSTmap uses an edge-weighted undirected complete
-graph, for $`\vec{M}`$ where the individual markers are vertices and the
-edges between any two markers $`\vec{m}_j`$ and $`\vec{m}_k`$ is the
-pairwise hamming distance $`d_{jk}`$. Edges with weights greater than
-$`\hat{\delta}`$ are then removed. The remaining connected components
-allow the marker set $`\vec{M}`$ to be partitioned into $`r`$ linkage
-groups, $`\vec{M} =
-[\vec{M}_1,\ldots,\vec{M}_r]`$.
+graph, for $`\boldsymbol{M}`$ where the individual markers are vertices
+and the edges between any two markers $`\boldsymbol{m}_j`$ and
+$`\boldsymbol{m}_k`$ is the pairwise hamming distance $`d_{jk}`$. Edges
+with weights greater than $`\hat{\delta}`$ are then removed. The
+remaining connected components allow the marker set $`\boldsymbol{M}`$
+to be partitioned into $`r`$ linkage groups, $`\boldsymbol{M} =
+[\boldsymbol{M}_1,\ldots,\boldsymbol{M}_r]`$.
 
 ``` r
 
@@ -194,88 +195,91 @@ four threshold cM distances.
 #### Marker Ordering
 
 For simplicity, consider the $`n \times t`$ matrix of markers
-$`\vec{M}`$ belongs to the same linkage group. Preceding marker
+$`\boldsymbol{M}`$ belongs to the same linkage group. Preceding marker
 ordering, the markers are “binned” into groups where, within each group,
 the pairwise distance between any two markers is zero. The markers
 within each group have no recombinations between them and are said to be
 co-locating at the same genomic location for the $`n`$ genotypes used to
 construct the linkage map. A representative marker is then chosen from
 each of the bins and used to form the reduced $`n \times t^*`$ marker
-set $`\vec{M}^*`$.
+set $`\boldsymbol{M}^*`$.
 
-For the reduced matrix $`\vec{M}^*`$, consider the complete set of
-entries $`(j, k)
+For the reduced matrix $`\boldsymbol{M}^*`$, consider the complete set
+of entries $`(j, k)
 \in (1, \ldots, t^*)`$ for either weight function (1) or (2). These
 complete set of entries can be viewed as the upper triangle of a
-symmetric weight matrix $`\vec{W}`$. MSTmap views all these entries as
-being connected edges in an undirected graph where the individual
-markers are vertices. A marker order for the set $`\vec{M}^*`$, also
-known as a travelling salesman path (TSP), can be determined by visiting
-each marker once and summing the weights from the connected edges. To
-find a minimum weight (TSP$`_{min}`$), MSTmap uses a minimum spanning
-tree (MST) algorithm ([Cheriton and Tarjan 1976](#ref-ct76)), such as
-Prims algorithm ([Prim 1957](#ref-prim57)). If the TSP$`_{min}`$ is
-unique then the MST is the correct order for the markers. For cases
-where the data contains genotyping errors or lower numbers of
-individuals the MST may not be a complete path and contain markers or
-small sets of markers as individual nodes connected to the path. In
-these cases, MSTmap uses the longest path in the MST as the backbone and
-employs several efficient local optimization techniques such as K-opt,
-node-relocation and block-optimize (see [Wu 2008](#ref-mst08)) to
-improve the current minimum TSP. By integrating these local optimization
-techniques into the algorithm, MSTmap provides users with a true one
-stage marker ordering algorithm.
+symmetric weight matrix $`\boldsymbol{W}`$. MSTmap views all these
+entries as being connected edges in an undirected graph where the
+individual markers are vertices. A marker order for the set
+$`\boldsymbol{M}^*`$, also known as a travelling salesman path (TSP),
+can be determined by visiting each marker once and summing the weights
+from the connected edges. To find a minimum weight (TSP$`_{min}`$),
+MSTmap uses a minimum spanning tree (MST) algorithm ([Cheriton and
+Tarjan 1976](#ref-ct76)), such as Prims algorithm ([Prim
+1957](#ref-prim57)). If the TSP$`_{min}`$ is unique then the MST is the
+correct order for the markers. For cases where the data contains
+genotyping errors or lower numbers of individuals the MST may not be a
+complete path and contain markers or small sets of markers as individual
+nodes connected to the path. In these cases, MSTmap uses the longest
+path in the MST as the backbone and employs several efficient local
+optimization techniques such as K-opt, node-relocation and
+block-optimize (see [Wu 2008](#ref-mst08)) to improve the current
+minimum TSP. By integrating these local optimization techniques into the
+algorithm, MSTmap provides users with a true one stage marker ordering
+algorithm.
 
 One excellent feature of the MSTmap algorithm is the utilisation of an
 EM type algorithm for the imputation of missing allele scores that is
 tightly integrated with the ordering algorithm for the markers. To
-achieve this the marker matrix $`\vec{M}^*`$ is converted to a matrix,
-$`\vec{A}`$, where the entries represent the probabilistic certainty of
-the allele being A. For the $`j`$th marker and $`i`$th individual then
+achieve this the marker matrix $`\boldsymbol{M}^*`$ is converted to a
+matrix, $`\boldsymbol{A}`$, where the entries represent the
+probabilistic certainty of the allele being A. For the $`j`$th marker
+and $`i`$th individual then
 ``` math
 \begin{aligned}
-  \vec{A}(i,j) = \left\{\begin{array}{ll}
-          1 & \quad \mbox{if $\vec{M}^*(i,j)$ is the A allele}\\
-          0 & \quad \mbox{if $\vec{M}^*(i,j)$ is the B allele}\\
-          \frac{(1 - \hat{\vec{P}}_{j - 1,j})(1 - \hat{\vec{P}}_{j,j+1})}
-          {(1 - \hat{\vec{P}}_{j,j+1})(1 - \hat{\vec{P}}_{j,j+1})
-           + \hat{\vec{P}}_{j-1,j} \hat{\vec{P}}_{j,j+1}} & \quad \mbox{if
-           $\vec{M}^*(i,j)$ is missing} \end{array}\right.\qquad (4)
+  \boldsymbol{A}(i,j) = \left\{\begin{array}{ll}
+          1 & \quad \mbox{if $\boldsymbol{M}^*(i,j)$ is the A allele}\\
+          0 & \quad \mbox{if $\boldsymbol{M}^*(i,j)$ is the B allele}\\
+          \frac{(1 - \hat{\boldsymbol{P}}_{j - 1,j})(1 - \hat{\boldsymbol{P}}_{j,j+1})}
+          {(1 - \hat{\boldsymbol{P}}_{j,j+1})(1 - \hat{\boldsymbol{P}}_{j,j+1})
+           + \hat{\boldsymbol{P}}_{j-1,j} \hat{\boldsymbol{P}}_{j,j+1}} & \quad \mbox{if
+           $\boldsymbol{M}^*(i,j)$ is missing} \end{array}\right.\qquad (4)
 \end{aligned}
 ```
-where $`\hat{\vec{P}}_{j,j-1}`$ and $`\hat{\vec{P}}_{j,j+1}`$ are
-estimated recombination fractions between the $`(j-1)`$th and $`j`$th
-marker and $`j`$th and $`(j+1)`$th marker respectively. The equation on
-the right hand side is the posterior probability of the missing value in
-marker $`j`$ being the A allele for genotype $`i`$ given the current
-estimate. The ordering algorithm begins by initially calculating
-pairwise normalized distances between all markers in $`\vec{M}^*`$ and
-deriving an initial weight matrix, $`\vec{W}`$. An undirected graph is
-formed using the markers as vertices and the upper triangular entries of
-$`\vec{W}`$ as connected edges. An MST of the undirected graph is then
-found to establish an initial order for the markers of the linkage
+where $`\hat{\boldsymbol{P}}_{j,j-1}`$ and
+$`\hat{\boldsymbol{P}}_{j,j+1}`$ are estimated recombination fractions
+between the $`(j-1)`$th and $`j`$th marker and $`j`$th and $`(j+1)`$th
+marker respectively. The equation on the right hand side is the
+posterior probability of the missing value in marker $`j`$ being the A
+allele for genotype $`i`$ given the current estimate. The ordering
+algorithm begins by initially calculating pairwise normalized distances
+between all markers in $`\boldsymbol{M}^*`$ and deriving an initial
+weight matrix, $`\boldsymbol{W}`$. An undirected graph is formed using
+the markers as vertices and the upper triangular entries of
+$`\boldsymbol{W}`$ as connected edges. An MST of the undirected graph is
+then found to establish an initial order for the markers of the linkage
 group. For the current order at the $`(j - 1, j,
 j + 1)`$th markers the E-step of algorithm requires updating the missing
 observation at marker $`j`$ by updating the estimates
-$`\hat{\vec{P}}_{j-1,j} = \hat{d}_{j-1,j}/n`$ and
-$`\hat{\vec{P}}_{j,j+1} =
+$`\hat{\boldsymbol{P}}_{j-1,j} = \hat{d}_{j-1,j}/n`$ and
+$`\hat{\boldsymbol{P}}_{j,j+1} =
     \hat{d}_{j,j+1}/n`$ in (4). The M-step then re-estimates the
-pairwise distances between all markers in $`\vec{M}^*`$ where, for the
-$`j`$th and $`k`$th marker, is
+pairwise distances between all markers in $`\boldsymbol{M}^*`$ where,
+for the $`j`$th and $`k`$th marker, is
 ``` math
 \begin{aligned}
-\hat{d}_{jk} = \sum_{i = 1}^{t^*}\vec{A}(i,j)(1 - \vec{A}(i, k)) + \vec{A}(i,k)(1 - \vec{A}(i, j))
+\hat{d}_{jk} = \sum_{i = 1}^{t^*}\boldsymbol{A}(i,j)(1 - \boldsymbol{A}(i, k)) + \boldsymbol{A}(i,k)(1 - \boldsymbol{A}(i, j))
 \qquad (5)
 \end{aligned}
 ```
-and the weight matrix $`\vec{W}`$ is recalculated. An undirected graph
-is formed with the markers as vertices and the upper triangular entries
-of $`\vec{W}`$ as connected edges. A new order of the markers is derived
-by obtaining an MST of the undirected graph and the algorithm is
-repeated to convergence. Although this requires several iterations to
-converge, the computational time for the ordering algorithm remains
-expedient. However, an increase in the number of missing values will
-increase computation time.
+and the weight matrix $`\boldsymbol{W}`$ is recalculated. An undirected
+graph is formed with the markers as vertices and the upper triangular
+entries of $`\boldsymbol{W}`$ as connected edges. A new order of the
+markers is derived by obtaining an MST of the undirected graph and the
+algorithm is repeated to convergence. Although this requires several
+iterations to converge, the computational time for the ordering
+algorithm remains expedient. However, an increase in the number of
+missing values will increase computation time.
 
 If required, the MSTmap algorithm also detects and removes genotyping
 errors as well as integrates this process into the ordering algorithm.
@@ -284,15 +288,16 @@ determine the expected state of the allele. For individual $`i`$ and
 marker $`j`$ the expected value of the allele is calculated using
 ``` math
 \begin{aligned}
-\mbox{E}[\vec{A}(i, j)] = \sum_{j \neq
-    k}d_{j,k}^{-2}\vec{A}(i,k)\bigg/\sum_{j \neq k}d_{j,k}^{-2}
+\mbox{E}[\boldsymbol{A}(i, j)] = \sum_{j \neq
+    k}d_{j,k}^{-2}\boldsymbol{A}(i,k)\bigg/\sum_{j \neq k}d_{j,k}^{-2}
 \qquad (6)
 \end{aligned}
 ```
 In this equation the weights are the inverse square of the distance from
 marker $`j`$ to its nearby markers. MSTmap only uses a small set of
 nearby markers during each iteration and the observed allele is
-considered suspicious if $`|\mbox{E}[\vec{A}(i, j)] - \vec{A}(i, j)| >
+considered suspicious if
+$`|\mbox{E}[\boldsymbol{A}(i, j)] - \boldsymbol{A}(i, j)| >
 0.75`$. If an observation is detected as suspicious it is treated as
 missing and imputed using the EM algorithm discussed previously. The
 removal of the suspicious allele has the effect of reducing the number
