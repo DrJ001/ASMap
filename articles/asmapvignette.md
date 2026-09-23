@@ -185,12 +185,12 @@ to be partitioned into $`r`$ linkage groups, $`\boldsymbol{M} =
 pValue(dist = c(25, 30, 35, 40), pop.size = 100:500, map.function = "kosambi")
 ```
 
-![Negative log10 \$\$ versus the number of genotypes in the population
-for four threshold cM
+![Negative log10 epsilon versus the number of genotypes in the
+population for four threshold cM
 distances.](asmapvignette_files/figure-html/pvalfig-1.png)
 
-Negative log10 \$\$ versus the number of genotypes in the population for
-four threshold cM distances.
+Negative log10 epsilon versus the number of genotypes in the population
+for four threshold cM distances.
 
 #### Marker Ordering
 
@@ -974,7 +974,7 @@ heatMap(mapDH, lmax = 50)
     Warning in heatMap(mapDH, lmax = 50): Running est.rf.
 
 ![Heat map of the constructed linkage map mapDH using
-\`heatMap()\`.](asmapvignette_files/figure-html/heat2-1.png)
+heatMap().](asmapvignette_files/figure-html/heat2-1.png)
 
 Heat map of the constructed linkage map mapDH using
 [`heatMap()`](https://drj001.github.io/ASMap/reference/heatMap.md).
