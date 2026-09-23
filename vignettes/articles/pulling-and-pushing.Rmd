@@ -21,78 +21,151 @@ knitr::opts_chunk$set(
   dpi = 110
 )
 library(ASMap)
-data(mapDH); data(mapDHf); data(mapBC); data(mapBCu); data(mapF2)
+data(mapDH)
 ```
 
-## Pulling and pushing markers
+Most map construction begins by pruning markers — dropping those with too many
+missing scores, or those badly distorted from their expected Mendelian ratios.
+That pruning is usually permanent, and it throws away information you cannot get
+back. A marker that looks unusable against raw data may be perfectly well
+behaved once the map exists.
 
-Often in linkage map construction, some pruning of the markers occurs before initial construction. This may be the removal of markers with a proportion of missing values higher than some desired threshold as well as markers that are significantly distorted from their expected Mendelian segregation patterns. Often the removal is permanent and the possible importance of some of these markers is overlooked. A preferable system would be to identify and place the problematic markers aside with the intention of checking their usefulness at a later stage of the construction process.
+[`pullCross()`](../reference/pullCross.html) offers the alternative. Instead of
+deleting a marker it moves it into a holding element of the cross object,
+keeping everything needed to put it back.
+[`pushCross()`](../reference/pushCross.html) then reintroduces it once you have
+a map to judge it against.
 
-The R/ASMap package contains two functions that allow you to do this. The first is the function `pullCross()` which provide users with a mechanism to “pull” markers of certain types from a linkage map and place them aside. The complementary function `pushCross()` then allows users to “push” markers back into the linkage map at any stage of the construction process. These can be seen as helper functions for more efficient construction of linkage maps (see `?pullCross` and `?pushCross` for complete details).
+This article pulls markers out of the constructed map `mapDH`, rebuilds it, and
+pushes them back.
 
-```r
-pullCross(object, chr, type = c("co.located","seg.distortion","missing"),
-               pars = NULL, replace = FALSE, ...)
-pushCross(object, chr, type = c("co.located","seg.distortion","missing","unlinked"),
-               unlinked.chr = NULL, pars = NULL, replace = FALSE, ...)
-pp.init(seg.thresh = 0.05, seg.ratio = NULL, miss.thresh = 0.1, max.rf =
-             0.25, min.lod = 3)
-```
+## Three kinds of problem marker
 
-In the current version of the package, the helper functions share three types of markers that can be “pulled/pushed” from linkage maps. These include markers that are co-located with other markers, markers that have some defined segregation distortion and markers with a defined proportion of missing values. If the argument `type` is `"seg.distortion"` or `"missing"` then the initialization function `pp.init` is used to determine the appropriate threshold parameter setting (`seg.thresh`, `seg.ratio`, `miss.thresh`) that will be used to pull/push markers from the linkage map. Users can set their own parameters by setting the `pars` argument (see examples below). For each of the different types, `pullCross()` will pull markers from the map and place them in separate elements of the cross object. Within the elements, vital information is kept that can be accessed by `pushCross()` to push the markers back at a later stage of linkage map construction.
+| `type` | Markers affected | Why set them aside |
+|---|---|---|
+| `"co.located"` | Markers at zero distance from another marker | They add no ordering information but cost construction time |
+| `"seg.distortion"` | Markers whose segregation distortion p-value is below `seg.thresh` | Distorted markers may not map to a unique location |
+| `"missing"` | Markers whose missing proportion exceeds `miss.thresh` | Sparse markers are placed less reliably |
 
-The function `pushCross()` also contains another marker type called `"unlinked"` which, in conjunction with the argument `unlinked.chr`, allows users to push markers from an unlinked linkage group in the `geno` element of the `object` into established linkage groups. This mechanism becomes vital, for example, when pushing new markers into an established linkage map. An example of this is presented in section Unknown linkage groups.
+Thresholds come from [`pp.init()`](../reference/pp.init.html), which supplies
+defaults of `seg.thresh = 0.05` and `miss.thresh = 0.1`. Override them through
+the `pars` argument.
 
-Again, the constructed linkage map `mapDH` will be used to showcase the power of `pullCross()` and `pushCross()`. Markers are pulled from the map that are co-located with other markers, have significant segregation distortion with a p-value less than 0.02 and have a missing value proportion greater than 0.03.
+## Pulling markers aside
+
+Pull the co-located markers, those distorted at a p-value below 0.02, and those
+missing more than 3% of their scores:
 
 ```{r pp2}
 mapDHs <- pullCross(mapDH, type = "co.located")
 mapDHs <- pullCross(mapDHs, type = "seg.distortion", pars = list(seg.thresh = 0.02))
 mapDHs <- pullCross(mapDHs, type = "missing", pars = list(miss.thresh = 0.03))
+
 names(mapDHs)
-names(mapDHs$co.located)
 ```
 
-The cross object now contains three new elements named by the marker types that are pulled from the map. In each of the elements there are two elements, a table of information for the markers that are pulled and the actual marker data in genotype by marker format (i.e. exactly the same as the data contained in the linkage groups themselves).
+The object has gained one element per marker type. Each holds a `table`
+summarising the markers and a `data` matrix of their scores, in the same
+genotype-by-marker layout as the linkage groups themselves.
 
 ```{r pp3}
 mapDHs$seg.distortion$table
 ```
 
-The table element of each of the marker types `"missing"` and `"seg.distortion"` consists of a summary of positional information as well as information from `geno.table()` in the R/qtl package.
+For `"seg.distortion"` and `"missing"`, the table combines positional
+information with the output of `geno.table()` from R/qtl, so you can see exactly
+why each marker was pulled.
 
 ```{r pp4}
 head(mapDHs$co.located$table)
 ```
 
-The table element for the marker type `"co.located"` contains information on the markers that are co-located and the group or bin they belong to. In each group the first marker is the reference marker that remains in the linkage map and the remaining markers are pulled from the map and placed aside.
+The `"co.located"` table works differently. Markers are grouped into bins, and
+within each bin the **first marker stays in the map as a reference**; the rest
+are pulled. That reference is what lets `pushCross()` find its way back.
 
-Suppose now the map is undergone a construction or re-construction process so that the linkage groups are artificially renamed. To do this we will re-run MSTmap with `bychr = FALSE`.
+## Rebuild the map
+
+Rebuilding with `bychr = FALSE` bulks every remaining marker and reconstructs
+from scratch, which renames the linkage groups — a good test of whether the
+markers really can find their way home.
 
 ```{r pp5}
-mapDHs <- mstmap(mapDHs, bychr = FALSE, dist.fun = "kosambi", trace = TRUE, anchor = TRUE)
+mapDHs <- mstmap(mapDHs, bychr = FALSE, dist.fun = "kosambi", trace = FALSE,
+                 anchor = TRUE)
 nmar(mapDHs)
 ```
 
-The markers can now be pushed back into the linkage map using `pushCross()`. The complete set of co.located markers are pushed back as well as markers that have significant segregation distortion with p-values greater than 0.001 and markers that have a missing value proportion less than 0.05.
+## The thresholds reverse when you push
+
+This is the part that catches people out.
+
+> `pullCross()` removes a marker when its distortion p-value is **below**
+> `seg.thresh`. `pushCross()` returns it when that p-value is **above**
+> `seg.thresh`. The same is true of `miss.thresh`, in the same direction.
+
+So pulling and pushing at the same threshold returns nothing, and ASMap will
+tell you there are no markers to push back. The two thresholds are meant to
+differ, with the push set more permissively than the pull, so that a marker has
+to earn its place in the map.
+
+| Parameter | Pulled when | Pushed back when |
+|---|---|---|
+| `seg.thresh` | p-value **<** threshold | p-value **>** threshold |
+| `miss.thresh` | missing proportion **>** threshold | missing proportion **<** threshold |
+
+Here the markers were pulled at `seg.thresh = 0.02` and `miss.thresh = 0.03`, so
+they are pushed back at 0.001 and 0.05 respectively.
 
 ```{r pp6}
 mapDHs <- pushCross(mapDHs, type = "co.located")
 mapDHs <- pushCross(mapDHs, type = "seg.distortion", pars = list(seg.thresh = 0.001))
 mapDHs <- pushCross(mapDHs, type = "missing", pars = list(miss.thresh = 0.05))
+
 names(mapDHs)
 ```
 
-With the above parameter settings all markers from each marker type are pushed back into the map and the marker type elements are removed from the `object`.
+Every marker went back, so the holding elements have been removed from the
+object entirely.
+
+## Where the markers land
 
 ```{r pp7}
 pull.map(mapDHs)[[4]]
 pull.map(mapDHs)[[21]]
 ```
 
-For co-located markers the reference marker for each group is used as a guide to place the set of co-locating markers back into the linkage map adjacent to the reference marker. For example, the co-locating marker `1D.m.4` on 1D appears adjacent to its reference marker `1D.m.3`. Markers from the `"seg.distortion"` and `"missing"` elements are pushed back to the end of the linkage groups ready for the map to be re-constructed by chromosome. For example the distorted marker `6D.m.12` is pushed to the end of 6D. A final run of MSTmap within each linkage group will produce the desired map with all markers in their optimal position.
+Co-located markers are placed next to their reference marker — `1D.m.4` sits
+beside `1D.m.3`. Markers from the `"seg.distortion"` and `"missing"` elements
+cannot be placed so precisely, so they are appended to the end of whichever
+linkage group they belong to. `6D.m.12` is there at the end of 6D.
+
+> `pushCross()` assigns markers to linkage groups but does **not** order them.
+> The map is not finished until you run MSTmap again.
+
+A final pass within each linkage group puts everything in its optimal position.
+`p.value = 2` disables clustering, so the groups themselves cannot change:
 
 ```{r pp8}
-mapDHs <- mstmap(mapDHs, bychr = TRUE, dist.fun = "kosambi", trace = TRUE, anchor = TRUE, p.value = 2)
+mapDHs <- mstmap(mapDHs, bychr = TRUE, dist.fun = "kosambi", trace = FALSE,
+                 anchor = TRUE, p.value = 2)
 ```
 
+## Pushing markers that were never in the map
+
+`pushCross()` accepts a fourth type, `"unlinked"`, which takes markers sitting in
+an unlinked group of the `geno` element and distributes them into the
+established linkage groups. This is the mechanism behind adding new markers to a
+finished map — see
+[Worked example II](worked-example-refinement.html) for fine mapping and
+unknown linkage groups.
+
+## Where next
+
+- [Diagnosing genotypes and markers](diagnostics.html) — deciding which markers
+  are worth pulling in the first place
+- [Worked example I](worked-example-construction.html) — pulling markers as part
+  of a full construction
+- [`pullCross()`](../reference/pullCross.html),
+  [`pushCross()`](../reference/pushCross.html),
+  [`pp.init()`](../reference/pp.init.html) — full argument documentation

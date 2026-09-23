@@ -23,10 +23,13 @@ library(ASMap)
 data(mapDH); data(mapDHf)
 ```
 
-ASMap constructs genetic linkage maps using the MSTmap algorithm, which clusters
-markers into linkage groups and orders the markers within each group in a single
-pass. This article builds a map from scratch and points at the rest of the
-documentation.
+This article takes a set of raw marker scores and builds a finished linkage map
+from them, in about five minutes. Along the way it covers the one argument you
+will have to think about, and how to check that the result is any good.
+
+ASMap does this with the MSTmap algorithm, which clusters markers into linkage
+groups and orders them within each group in a single pass — no separate
+"rippling" step, and no overnight wait.
 
 ## Installation
 
@@ -40,11 +43,12 @@ devtools::install_github("DrJ001/ASMap")
 
 ## Building a map from marker scores
 
-The package datasets are not lazy-loaded, so they need an explicit `data()`
-call. `mapDHf` is an unconstructed doubled haploid wheat marker set, in the
-layout the construction function expects: **markers in rows, genotypes in
-columns**, with marker names in the `rownames` and genotype names in the
-`names`.
+`mapDHf` is an unconstructed doubled haploid wheat marker set, in the layout the
+construction function expects: **markers in rows, genotypes in columns**, with
+marker names in the `rownames` and genotype names in the `names`.
+
+> The package datasets are not lazy-loaded, so every example needs an explicit
+> `data()` call. Forgetting it gives `object 'mapDHf' not found`.
 
 ```{r look}
 library(ASMap)
@@ -85,7 +89,7 @@ nchr(map2)
 ```
 
 Setting `bychr = TRUE` instead keeps the existing groups and only re-orders the
-markers within them. Two settings are worth committing to memory:
+markers within them. Two combinations are worth committing to memory:
 
 ```r
 # cluster and order from scratch, ignoring existing linkage groups
