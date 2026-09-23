@@ -1,0 +1,42 @@
+/* ASMap site customisation
+ *
+ * The diagnostic figures are multi-panel lattice displays that were drawn for
+ * a 16cm LaTeX page, several of them on devices up to 17 inches wide. In the
+ * default pkgdown column they are scaled down far enough that the axis and
+ * panel labels become hard to read, so the content column is widened on large
+ * screens and figures are allowed to fill it.
+ */
+
+@media (min-width: 1200px) {
+  .container,
+  .container-sm,
+  .container-md,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    max-width: 1400px;
+  }
+}
+
+/* Figures fill the content column rather than sitting at their intrinsic
+   pixel size. Applied to article and reference pages only, so that logos and
+   badges on the home page are left alone. */
+.template-article main img,
+.template-reference-topic main img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Keep captions visually tied to the figure they belong to. */
+.template-article main .figure,
+.template-article main figure {
+  margin-top: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.template-article main .figure img,
+.template-article main figure img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

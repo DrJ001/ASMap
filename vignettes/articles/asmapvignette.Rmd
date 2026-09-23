@@ -16,7 +16,8 @@ knitr::opts_chunk$set(
   fig.width = 9,
   fig.height = 6,
   fig.align = "center",
-  dpi = 96
+  out.width = "100%",
+  dpi = 110
 )
 library(ASMap)
 data(mapDH); data(mapDHf); data(mapBC); data(mapBCu); data(mapF2)
@@ -364,7 +365,7 @@ $\bullet$
 
 The two statistics `"xo"` and `"dxo"` are obviously only useful for constructed linkage maps. However, from my experience, they represent the most vital two statistics for determining a linkage maps quality. Inflated crossover or double crossover rates of any genotypes indicate a lack of adherence to Mendelian genetics. For example, it can be quickly calculated for a Doubled Haploid wheat population of size 100, one recombination is approximately 1cM. Consequently, under Mendelian genetics, a chromosome of length 200 cM would expect to have 200 random crossovers with each genotype having an expected recombination rate of 2. Wheat is a hexaploid, so for excellent coverage over the whole genome the expected recombination rate of any genotype is $\sim$`<!-- -->`{=html}42. This number will obviously be reduced if the coverage of the genome is incomplete. Significant recombination rates can be checked by manually inputting a median recombination rate in the argument `xo.lambda` of `profileGen()`. As an example, the genotype profiles of the `mapDH` can be displayed using the command below and the resultant plot is given in the figure below.
 
-```{r prof2, fig.width = 15, fig.height = 8, fig.cap = "Genotype profiles of missing values, double recombinations and recombinations for `mapDH`."}
+```{r prof2, fig.width = 10.5, fig.height = 5.6, fig.cap = "Genotype profiles of missing values, double recombinations and recombinations for `mapDH`."}
 profileGen(mapDH, bychr = FALSE, stat.type = c("xo", "dxo", "miss"), id = "Genotype", xo.lambda = 25, layout = c(1,3), lty = 2)
 ```
 
@@ -402,7 +403,7 @@ $\bullet$
 
 The function allows any or all of the statistics to be plotted simultaneously on a multi-panel lattice display. This includes combinations of marker and interval statistics. There is a `chr` argument to subset the linkage map to user defined linkage groups. If `crit.val = "bonf"` then markers that have significant segregation distortion greater than the family wide alpha level of 0.05/no.of.markers will be annotated in marker panels. Similarly, intervals that have a significantly weak linkage from a test of the recombination fraction of $r = 0.5$ will also be annotated in the interval panels. Similar to `profileGen()`, graphical arguments can be used in `profileMark()` and are passed to the high level lattice function `xyplot()`. A plot of the segregation distortion, double crossovers, estimated recombination fractions and LOD scores for the whole genome of `mapDH` is given in the figure below and created with the command
 
-```{r prof3, fig.width = 15, fig.height = 8, fig.cap = "Marker and interval profiles of segregation distortion, double crossovers, estimated recombination fractions and LOD scores for `mapDH`.", warning = FALSE}
+```{r prof3, fig.width = 10.5, fig.height = 5.6, fig.cap = "Marker and interval profiles of segregation distortion, double crossovers, estimated recombination fractions and LOD scores for `mapDH`.", warning = FALSE}
 profileMark(mapDH, stat.type = c("seg.dist", "dxo", "erf", "lod"), id = "Genotype", layout = c(1,4), type = "l")
 ```
 
@@ -601,7 +602,7 @@ The level of segregation distortion, the allelic proportions and the missing val
 
 Setting `crit.val = "bonf"` annotates the markers that have a p-value for the test of segregation distortion lower than the family wide bonferroni adjusted alpha level of 0.05/no.of.markers on each of the figures in each panel. Additional plotting parameters `layout = c(1,4)`, `type="p"` and `cex = 0.5` are passed to the high level lattice plotting function `xyplot()` to provide a more aesthetically pleasing plot. The plot indicates there are numerous markers that are considered to be significantly distorted with three highly distorted markers. The plot also indicates that the missing value proportion of the markers does not exceed 20%.
 
-```{r ex8, fig.width=17, fig.height=10, warning=FALSE, fig.cap = "For individual markers, the negative log10 p-value for the test of segregation distortion, the proportion of each contributing allele and the proportion of missing values.", fig.alt = "For individual markers, the negative log10 p-value for the test of segregation distortion, the proportion of each contributing allele and the proportion of missing values."}
+```{r ex8, fig.width = 11.9, fig.height = 7, warning=FALSE, fig.cap = "For individual markers, the negative log10 p-value for the test of segregation distortion, the proportion of each contributing allele and the proportion of missing values.", fig.alt = "For individual markers, the negative log10 p-value for the test of segregation distortion, the proportion of each contributing allele and the proportion of missing values."}
 profileMark(mapBC2, stat.type = c("seg.dist", "prop", "miss"), crit.val = "bonf", layout = c(1,4), type = "l", cex = 0.5)
 ```
 
@@ -644,7 +645,7 @@ As discussed in section Improved heat map, an aesthetic heat map is attained whe
 Although the heat map is indicating the construction process was successful it does not highlight subtle problems that may be existing in the constructed linkage map. As stated in section Genotype and marker/interval profiling one of the key quality characteristics of a well constructed linkage map is an appropriate recombination rate of the the genotypes. For this barley Backcross population each line is considered to be independent with an expected recombination rate of   14 across the genome. The current linkage map contains linkage groups that exceed the theoretical cutoff of 200cM indicating there may be genotypes with inflated recombination rates. This can easily be ascertained from the `profileGen()` function available in R/ASMap.
 
 
-```{r ex15, fig.width=17, fig.height=10, warning=FALSE, fig.cap = "For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC4", fig.alt = "For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC4"}
+```{r ex15, fig.width = 11.9, fig.height = 7, warning=FALSE, fig.cap = "For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC4", fig.alt = "For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC4"}
 pg <- profileGen(mapBC4, bychr = FALSE, stat.type = c("xo","dxo","miss"), id = "Genotype", xo.lambda = 14, layout = c(1,3), lty = 2, cex = 0.7)
 ```
 
@@ -661,7 +662,7 @@ Users can check the recombination rates of the remaining genotypes in the re-con
 It is also useful to graphically display statistics of the markers and intervals of the current constructed linkage map. For example, the figure below shows the marker profiles of the -log10 p-value for the test of segregation distortion, the allele proportions and the number of double crossovers. It also displays the interval profile of the number of recombinations occurring between adjacent markers. This plot reveals many things that are useful for the next phase of the construction process.
 
 
-```{r ex18, fig.width=17, fig.height=12, warning=FALSE, fig.cap = "Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions and the number of double of crossovers as well as the interval profile of the number of recombinations between adjacent markers in mapBC6.", fig.alt = "Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions and the number of double of crossovers as well as the interval profile of the number of recombinations between adjacent markers in mapBC6."}
+```{r ex18, fig.width = 11.9, fig.height = 8.4, warning=FALSE, fig.cap = "Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions and the number of double of crossovers as well as the interval profile of the number of recombinations between adjacent markers in mapBC6.", fig.alt = "Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions and the number of double of crossovers as well as the interval profile of the number of recombinations between adjacent markers in mapBC6."}
 profileMark(mapBC6, stat.type = c("seg.dist","prop","dxo","recomb"), layout = c(1,5), type = "l")
 ```
 
@@ -678,7 +679,7 @@ mapBC6 <- pushCross(mapBC6, type = "missing", pars = list(miss.thresh = 0.22, ma
 The parameter `miss.thresh = 0.22` is used to ensure that all markers with a threshold less 0.22 are pushed back into the linkage map. Note, this pushing mechanism is not re-constructing the map and only assigns the markers to the most suitable linkage group. At this point it is worth re-plotting the heatmap to check whether the push has been successful. In this vignette we will confine the graphic to linkage groups L.3, L.5, L.8 and L.9 to determine whether the extra markers have provided useful additional information about the possible merging of the groups. The resulting heat map is given in the figure below.
 
 
-```{r ex21, fig.width=14, fig.height=8, warning=FALSE, fig.cap = "Heat map of the constructed linkage map mapBC6.", fig.alt = "Heat map of the constructed linkage map mapBC6."}
+```{r ex21, fig.width = 9.8, fig.height = 5.6, warning=FALSE, fig.cap = "Heat map of the constructed linkage map mapBC6.", fig.alt = "Heat map of the constructed linkage map mapBC6."}
 heatMap(mapBC6, chr = c("L.3","L.5","L.8","L.9"), lmax = 70)
 ```
 
@@ -694,7 +695,7 @@ chrlen(mapBC7)
 As the optimal number of linkage groups have been identified the re-construction of the map is performed by linkage group only through setting the `p.value = 2`. At this point there is no need to anchor the map during construction as orientation of linkage groups has not been formally identified. The linkage group lengths of L.1, L.2 and L.4 are slightly elevated indicating excessive recombination across these groups. The reason for this inflation is quickly understood by checking the profile of the genotypes again using `profileGen()`
 
 
-```{r ex24, fig.width=17, fig.height=10, warning=FALSE, fig.cap = "For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC7.", fig.alt = "For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC7."}
+```{r ex24, fig.width = 11.9, fig.height = 7, warning=FALSE, fig.cap = "For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC7.", fig.alt = "For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC7."}
 pg1 <- profileGen(mapBC7, bychr = FALSE, stat.type = c("xo","dxo","miss"), id = "Genotype", xo.lambda = 14, layout = c(1,3), lty = 2, cex = 0.7)
 ```
 
@@ -709,7 +710,7 @@ chrlen(mapBC9)
 The removal of these two lines will not have a deleterious effect on the number of linkage groups and therefore the linkage map should be reconstructed by linkage group only. The length of most linkage groups has now been appreciably reduced. the figure below displays the segregation distortion and allele proportion profiles for the markers from using `profileMark()` again.
 
 
-```{r ex27, fig.width=17, fig.height=10, warning=FALSE, fig.cap = "Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions for mapBC9", fig.alt = "Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions for mapBC9"}
+```{r ex27, fig.width = 11.9, fig.height = 7, warning=FALSE, fig.cap = "Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions for mapBC9", fig.alt = "Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions for mapBC9"}
 profileMark(mapBC9, stat.type = c("seg.dist","prop"), layout = c(1,3), type = "l")
 ```
 
