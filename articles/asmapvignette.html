@@ -302,7 +302,7 @@ linkage groups,
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pValue.html">pValue</a></span><span class="op">(</span>dist <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">30</span>, <span class="fl">35</span>, <span class="fl">40</span><span class="op">)</span>, pop.size <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">500</span>, map.function <span class="op">=</span> <span class="st">"kosambi"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/pvalfig-1.png" class="r-plt" alt="Negative log10 $$ versus the number of genotypes in the population for four threshold cM distances." width="768"><p class="caption">
+<img src="asmapvignette_files/figure-html/pvalfig-1.png" class="r-plt" alt="Negative log10 $$ versus the number of genotypes in the population for four threshold cM distances." width="100%"><p class="caption">
 Negative log10 $$ versus the number of genotypes in the population for
 four threshold cM distances.
 </p>
@@ -970,7 +970,7 @@ blue areas.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="external-link">plotRF</a></span><span class="op">(</span><span class="va">mapDH</span><span class="op">)</span></span></code></pre></div>
 <pre><code>Warning in plotRF(mapDH): Running est.rf.</code></pre>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/plotrffig-1.png" class="r-plt" alt="Heat map of the constructed linkage map mapDH using `plotRF()`." width="864"><p class="caption">
+<img src="asmapvignette_files/figure-html/plotrffig-1.png" class="r-plt" alt="Heat map of the constructed linkage map mapDH using `plotRF()`." width="100%"><p class="caption">
 Heat map of the constructed linkage map mapDH using
 <code><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="external-link">plotRF()</a></code>.
 </p>
@@ -1012,7 +1012,7 @@ equivalent of <code><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="ex
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatMap.html">heatMap</a></span><span class="op">(</span><span class="va">mapDH</span>, lmax <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></code></pre></div>
 <pre><code>Warning in heatMap(mapDH, lmax = 50): Running est.rf.</code></pre>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/heat2-1.png" class="r-plt" alt="Heat map of the constructed linkage map mapDH using `heatMap()`." width="864"><p class="caption">
+<img src="asmapvignette_files/figure-html/heat2-1.png" class="r-plt" alt="Heat map of the constructed linkage map mapDH using `heatMap()`." width="100%"><p class="caption">
 Heat map of the constructed linkage map mapDH using
 <code><a href="../reference/heatMap.html">heatMap()</a></code>.
 </p>
@@ -1090,7 +1090,7 @@ command below and the resultant plot is given in the figure below.</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/profileGen.html">profileGen</a></span><span class="op">(</span><span class="va">mapDH</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xo"</span>, <span class="st">"dxo"</span>, <span class="st">"miss"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"Genotype"</span>, xo.lambda <span class="op">=</span> <span class="fl">25</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/prof2-1.png" class="r-plt" alt="Genotype profiles of missing values, double recombinations and recombinations for `mapDH`." width="1440"><p class="caption">
+<img src="asmapvignette_files/figure-html/prof2-1.png" class="r-plt" alt="Genotype profiles of missing values, double recombinations and recombinations for `mapDH`." width="100%"><p class="caption">
 Genotype profiles of missing values, double recombinations and
 recombinations for <code>mapDH</code>.
 </p>
@@ -1148,7 +1148,7 @@ created with the command</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/profileMark.html">profileMark</a></span><span class="op">(</span><span class="va">mapDH</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seg.dist"</span>, <span class="st">"dxo"</span>, <span class="st">"erf"</span>, <span class="st">"lod"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"Genotype"</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/prof3-1.png" class="r-plt" alt="Marker and interval profiles of segregation distortion, double crossovers, estimated recombination fractions and LOD scores for `mapDH`." width="1440"><p class="caption">
+<img src="asmapvignette_files/figure-html/prof3-1.png" class="r-plt" alt="Marker and interval profiles of segregation distortion, double crossovers, estimated recombination fractions and LOD scores for `mapDH`." width="100%"><p class="caption">
 Marker and interval profiles of segregation distortion, double
 crossovers, estimated recombination fractions and LOD scores for
 <code>mapDH</code>.
@@ -1371,7 +1371,7 @@ calculations for large linkage maps.</p>
 <span><span class="va">map2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">map2</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">map2</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/plot.map.html" class="external-link">plotMap</a></span><span class="op">(</span><span class="va">map1</span>, <span class="va">map2</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/quick2-1.png" class="r-plt" alt="Comparison of `mapDH` using `est.map` and `quickEst`." width="672"><p class="caption">
+<img src="asmapvignette_files/figure-html/quick2-1.png" class="r-plt" alt="Comparison of `mapDH` using `est.map` and `quickEst`." width="100%"><p class="caption">
 Comparison of <code>mapDH</code> using <code>est.map</code> and
 <code>quickEst</code>.
 </p>
@@ -1526,7 +1526,7 @@ markers.</p>
 <div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/plot.missing.html" class="external-link">plotMissing</a></span><span class="op">(</span><span class="va">mapBCu</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/ex3-1.png" class="r-plt" alt="Plot of the missing allele scores for the unconstructed map mapBCu" width="864"><p class="caption">
+<img src="asmapvignette_files/figure-html/ex3-1.png" class="r-plt" alt="Plot of the missing allele scores for the unconstructed map mapBCu" width="100%"><p class="caption">
 Plot of the missing allele scores for the unconstructed map mapBCu
 </p>
 </div>
@@ -1615,7 +1615,7 @@ does not exceed 20%.</p>
 <div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/profileMark.html">profileMark</a></span><span class="op">(</span><span class="va">mapBC2</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seg.dist"</span>, <span class="st">"prop"</span>, <span class="st">"miss"</span><span class="op">)</span>, crit.val <span class="op">=</span> <span class="st">"bonf"</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span>, cex <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/ex8-1.png" class="r-plt" alt="For individual markers, the negative log10 p-value for the test of segregation distortion, the proportion of each contributing allele and the proportion of missing values." width="1632"><p class="caption">
+<img src="asmapvignette_files/figure-html/ex8-1.png" class="r-plt" alt="For individual markers, the negative log10 p-value for the test of segregation distortion, the proportion of each contributing allele and the proportion of missing values." width="100%"><p class="caption">
 For individual markers, the negative log10 p-value for the test of
 segregation distortion, the proportion of each contributing allele and
 the proportion of missing values.
@@ -1679,7 +1679,7 @@ linkage using the R/ASMap function <code><a href="../reference/heatMap.html">hea
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatMap.html">heatMap</a></span><span class="op">(</span><span class="va">mapBC4</span>, lmax <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
 <pre><code>Warning in heatMap(mapBC4, lmax = 70): Running est.rf.</code></pre>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/ex12-1.png" class="r-plt" alt="Heat map of the constructed linkage map mapBC4." width="864"><p class="caption">
+<img src="asmapvignette_files/figure-html/ex12-1.png" class="r-plt" alt="Heat map of the constructed linkage map mapBC4." width="100%"><p class="caption">
 Heat map of the constructed linkage map mapBC4.
 </p>
 </div>
@@ -1705,7 +1705,7 @@ the <code><a href="../reference/profileGen.html">profileGen()</a></code> functio
 <div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/profileGen.html">profileGen</a></span><span class="op">(</span><span class="va">mapBC4</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xo"</span>,<span class="st">"dxo"</span>,<span class="st">"miss"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"Genotype"</span>, xo.lambda <span class="op">=</span> <span class="fl">14</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">2</span>, cex <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/ex15-1.png" class="r-plt" alt="For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC4" width="1632"><p class="caption">
+<img src="asmapvignette_files/figure-html/ex15-1.png" class="r-plt" alt="For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC4" width="100%"><p class="caption">
 For individual genotypes, the number of recombinations, double
 recombinations and missing values for mapBC4
 </p>
@@ -1743,7 +1743,7 @@ process.</p>
 <div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/profileMark.html">profileMark</a></span><span class="op">(</span><span class="va">mapBC6</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seg.dist"</span>,<span class="st">"prop"</span>,<span class="st">"dxo"</span>,<span class="st">"recomb"</span><span class="op">)</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">5</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/ex18-1.png" class="r-plt" alt="Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions and the number of double of crossovers as well as the interval profile of the number of recombinations between adjacent markers in mapBC6." width="1632"><p class="caption">
+<img src="asmapvignette_files/figure-html/ex18-1.png" class="r-plt" alt="Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions and the number of double of crossovers as well as the interval profile of the number of recombinations between adjacent markers in mapBC6." width="100%"><p class="caption">
 Marker profiles of the -log10 p-value for the test of segregation
 distortion, allele proportions and the number of double of crossovers as
 well as the interval profile of the number of recombinations between
@@ -1783,7 +1783,7 @@ groups. The resulting heat map is given in the figure below.</p>
 <div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatMap.html">heatMap</a></span><span class="op">(</span><span class="va">mapBC6</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L.3"</span>,<span class="st">"L.5"</span>,<span class="st">"L.8"</span>,<span class="st">"L.9"</span><span class="op">)</span>, lmax <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/ex21-1.png" class="r-plt" alt="Heat map of the constructed linkage map mapBC6." width="1344"><p class="caption">
+<img src="asmapvignette_files/figure-html/ex21-1.png" class="r-plt" alt="Heat map of the constructed linkage map mapBC6." width="100%"><p class="caption">
 Heat map of the constructed linkage map mapBC6.
 </p>
 </div>
@@ -1811,7 +1811,7 @@ checking the profile of the genotypes again using
 <div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pg1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/profileGen.html">profileGen</a></span><span class="op">(</span><span class="va">mapBC7</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xo"</span>,<span class="st">"dxo"</span>,<span class="st">"miss"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"Genotype"</span>, xo.lambda <span class="op">=</span> <span class="fl">14</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">2</span>, cex <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/ex24-1.png" class="r-plt" alt="For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC7." width="1632"><p class="caption">
+<img src="asmapvignette_files/figure-html/ex24-1.png" class="r-plt" alt="For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC7." width="100%"><p class="caption">
 For individual genotypes, the number of recombinations, double
 recombinations and missing values for mapBC7.
 </p>
@@ -1837,7 +1837,7 @@ from using <code><a href="../reference/profileMark.html">profileMark()</a></code
 <div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/profileMark.html">profileMark</a></span><span class="op">(</span><span class="va">mapBC9</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seg.dist"</span>,<span class="st">"prop"</span><span class="op">)</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/ex27-1.png" class="r-plt" alt="Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions for mapBC9" width="1632"><p class="caption">
+<img src="asmapvignette_files/figure-html/ex27-1.png" class="r-plt" alt="Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions for mapBC9" width="100%"><p class="caption">
 Marker profiles of the -log10 p-value for the test of segregation
 distortion, allele proportions for mapBC9
 </p>
@@ -2085,7 +2085,7 @@ substantially to the inflated distances of the linkage groups.</p>
 <div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/plot.missing.html" class="external-link">plotMissing</a></span><span class="op">(</span><span class="va">mapBC4</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="asmapvignette_files/figure-html/dist1-1.png" class="r-plt" alt="Plot of the missing allele scores for the constructed map mapBC4" width="864"><p class="caption">
+<img src="asmapvignette_files/figure-html/dist1-1.png" class="r-plt" alt="Plot of the missing allele scores for the constructed map mapBC4" width="100%"><p class="caption">
 Plot of the missing allele scores for the constructed map mapBC4
 </p>
 </div>
