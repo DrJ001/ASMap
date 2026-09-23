@@ -85,10 +85,13 @@
 
     
     
-<p>ASMap constructs genetic linkage maps using the MSTmap algorithm,
-which clusters markers into linkage groups and orders the markers within
-each group in a single pass. This article builds a map from scratch and
-points at the rest of the documentation.</p>
+<p>This article takes a set of raw marker scores and builds a finished
+linkage map from them, in about five minutes. Along the way it covers
+the one argument you will have to think about, and how to check that the
+result is any good.</p>
+<p>ASMap does this with the MSTmap algorithm, which clusters markers
+into linkage groups and orders them within each group in a single pass —
+no separate “rippling” step, and no overnight wait.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -102,12 +105,15 @@ points at the rest of the documentation.</p>
 <div class="section level2">
 <h2 id="building-a-map-from-marker-scores">Building a map from marker scores<a class="anchor" aria-label="anchor" href="#building-a-map-from-marker-scores"></a>
 </h2>
-<p>The package datasets are not lazy-loaded, so they need an explicit
-<code><a href="https://rdrr.io/r/utils/data.html" class="external-link">data()</a></code> call. <code>mapDHf</code> is an unconstructed
-doubled haploid wheat marker set, in the layout the construction
-function expects: <strong>markers in rows, genotypes in
-columns</strong>, with marker names in the <code>rownames</code> and
-genotype names in the <code>names</code>.</p>
+<p><code>mapDHf</code> is an unconstructed doubled haploid wheat marker
+set, in the layout the construction function expects: <strong>markers in
+rows, genotypes in columns</strong>, with marker names in the
+<code>rownames</code> and genotype names in the <code>names</code>.</p>
+<blockquote>
+<p>The package datasets are not lazy-loaded, so every example needs an
+explicit <code><a href="https://rdrr.io/r/utils/data.html" class="external-link">data()</a></code> call. Forgetting it gives
+<code>object 'mapDHf' not found</code>.</p>
+</blockquote>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DrJ001/ASMap" class="external-link">ASMap</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mapDHf</span><span class="op">)</span></span>
@@ -180,7 +186,7 @@ The number of bins in each linkage group: 41    4   33  9   40  34  7   13  36  
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nchr.html" class="external-link">nchr</a></span><span class="op">(</span><span class="va">map2</span><span class="op">)</span></span></code></pre></div>
 <pre><code>[1] 24</code></pre>
 <p>Setting <code>bychr = TRUE</code> instead keeps the existing groups
-and only re-orders the markers within them. Two settings are worth
+and only re-orders the markers within them. Two combinations are worth
 committing to memory:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># cluster and order from scratch, ignoring existing linkage groups</span></span>

@@ -507,5 +507,5 @@ system.time(testd <- mstmap(dfg, dist.fun = "kosambi", trace = FALSE))
 #> The size of the linkage groups are: 33   27  32  33  9   37  4   37  35  56  40  13  41  41  8   6   5   21  54  15  30  10  6   6   
 #> The number of bins in each linkage group: 32 27  32  33  8   36  3   36  34  55  40  13  41  41  7   5   4   21  53  14  29  9   5   6   
 #>    user  system elapsed 
-#>   0.406   0.000   0.406 
+#>   0.398   0.000   0.397 
 ```
