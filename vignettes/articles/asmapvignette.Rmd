@@ -64,7 +64,7 @@ If markers $\boldsymbol{m}_j$ and $\boldsymbol{m}_k$ belong to two different lin
 To cluster the markers MSTmap uses an edge-weighted undirected complete graph, for $\boldsymbol{M}$ where the individual markers are vertices and the edges between any two markers $\boldsymbol{m}_j$ and $\boldsymbol{m}_k$ is the pairwise hamming distance $d_{jk}$. Edges with weights greater than $\hat{\delta}$ are then removed. The remaining connected components allow the marker set $\boldsymbol{M}$ to be partitioned into $r$ linkage groups, $\boldsymbol{M} =
 [\boldsymbol{M}_1,\ldots,\boldsymbol{M}_r]$.
 
-```{r pvalfig, fig.width = 8, fig.height = 5.5, fig.cap = "Negative log10 $$ versus the number of genotypes in the population for four threshold cM distances.", fig.alt = "Negative log10 $$ versus the number of genotypes in the population for four threshold cM distances."}
+```{r pvalfig, fig.width = 8, fig.height = 5.5, fig.cap = "Negative log10 epsilon versus the number of genotypes in the population for four threshold cM distances.", fig.alt = "Negative log10 epsilon versus the number of genotypes in the population for four threshold cM distances."}
 pValue(dist = c(25, 30, 35, 40), pop.size = 100:500, map.function = "kosambi")
 ```
 
@@ -334,7 +334,7 @@ heatMap(x, chr, mark, what = c("both", "lod", "rf"), lmax = 12,
 
 The function independently plots the LOD score on the bottom triangle of the heatmap as well as the actual estimated recombination fractions on the upper triangle. The function also releases the arbitrary threshold on the LOD score and recombination fractions by providing a user defined `lmax` and `rmin` argument that is adjustable to suit the population size and any requirements of the plot required. For example, the figure below shows the `heatMap()` equivalent of `plotRF()` for the linkage map `mapDH` made with the call
 
-```{r heat2, fig.cap = "Heat map of the constructed linkage map mapDH using `heatMap()`.", fig.alt = "Heat map of the constructed linkage map mapDH using `heatMap()`."}
+```{r heat2, fig.cap = "Heat map of the constructed linkage map mapDH using `heatMap()`.", fig.alt = "Heat map of the constructed linkage map mapDH using heatMap()."}
 heatMap(mapDH, lmax = 50)
 ```
 
