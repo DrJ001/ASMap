@@ -1,0 +1,142 @@
+---
+title: "Getting started with ASMap"
+description: >
+  Build a linkage map from a set of marker scores in a few lines, then find
+  your way around the rest of the documentation.
+output:
+  rmarkdown::html_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  comment = NA,
+  collapse = FALSE,
+  fig.width = 9,
+  fig.height = 6,
+  fig.align = "center",
+  out.width = "100%",
+  dpi = 110
+)
+library(ASMap)
+data(mapDH); data(mapDHf)
+```
+
+ASMap constructs genetic linkage maps using the MSTmap algorithm, which clusters
+markers into linkage groups and orders the markers within each group in a single
+pass. This article builds a map from scratch and points at the rest of the
+documentation.
+
+## Installation
+
+```r
+install.packages("ASMap")
+
+# development version
+# install.packages("devtools")
+devtools::install_github("DrJ001/ASMap")
+```
+
+## Building a map from marker scores
+
+The package datasets are not lazy-loaded, so they need an explicit `data()`
+call. `mapDHf` is an unconstructed doubled haploid wheat marker set, in the
+layout the construction function expects: **markers in rows, genotypes in
+columns**, with marker names in the `rownames` and genotype names in the
+`names`.
+
+```{r look}
+library(ASMap)
+data(mapDHf)
+
+dim(mapDHf)
+mapDHf[1:5, 1:6]
+```
+
+One call clusters the markers into linkage groups, orders them within each
+group and estimates the genetic distances.
+
+```{r build}
+map <- mstmap(mapDHf, pop.type = "DH", dist.fun = "kosambi", p.value = 1e-06)
+
+nchr(map)
+round(chrlen(map), 1)
+```
+
+The result is an R/qtl `cross` object, so the whole of
+[qtl](https://CRAN.R-project.org/package=qtl) is available to you immediately.
+
+```{r qtl, fig.height = 5}
+summary(map)
+plotMap(map)
+```
+
+## Starting from an existing cross object
+
+If the markers are already in a `cross` object, the same generic accepts it.
+`bychr = FALSE` bulks every marker and rebuilds the map from scratch, ignoring
+the existing linkage groups.
+
+```{r cross}
+data(mapDH)
+map2 <- mstmap(mapDH, bychr = FALSE, dist.fun = "kosambi", p.value = 1e-06)
+nchr(map2)
+```
+
+Setting `bychr = TRUE` instead keeps the existing groups and only re-orders the
+markers within them. Two settings are worth committing to memory:
+
+```r
+# cluster and order from scratch, ignoring existing linkage groups
+mstmap(cross, bychr = FALSE, p.value = 1e-12)
+
+# re-order within existing linkage groups, never splitting them
+mstmap(cross, bychr = TRUE, p.value = 2)
+```
+
+A `p.value` greater than 1 switches clustering off altogether, which is what
+makes the second idiom work.
+
+## Choosing `p.value`
+
+`p.value` sets the threshold at which markers are split into separate linkage
+groups, and the right value depends strongly on population size — larger
+populations need a smaller one. Expect to try a few. `pValue()` plots the
+relationship, so the choice can be made deliberately rather than by trial and
+error.
+
+```{r pvalue, fig.height = 5.5}
+pValue(dist = c(25, 30, 35, 40), pop.size = 100:500, map.function = "kosambi")
+```
+
+For a population of around 300, a `p.value` of `1e-12` gives a threshold of
+roughly 30 cM before markers are linked into the same group.
+
+## Checking the result
+
+`heatMap()` shows pairwise recombination fractions and LOD scores of linkage
+together, each with its own legend. Consistent heat within a linkage group
+means the markers near each other really are linked.
+
+```{r heat, fig.height = 8, warning = FALSE}
+heatMap(mapDH, lmax = 50)
+```
+
+## Where to go next
+
+| Article | What it covers |
+|---|---|
+| [How the MSTmap algorithm works](mstmap-algorithm.html) | The minimum spanning tree formulation, clustering and marker ordering |
+| [Constructing a linkage map](constructing-a-map.html) | Both construction functions and every MSTmap parameter |
+| [Pulling and pushing markers](pulling-and-pushing.html) | Setting problematic markers aside and reintroducing them |
+| [Diagnosing genotypes and markers](diagnostics.html) | Profiling individuals, markers and intervals; genetic clones |
+| [Heat maps](heat-maps.html) | Reading and tuning the recombination fraction and LOD display |
+| [Manipulating linkage maps](manipulating-maps.html) | Breaking, merging, subsetting and combining maps |
+| [Worked example I: construction](worked-example-construction.html) | A real barley backcross, from raw markers to a constructed map |
+| [Worked example II: refinement](worked-example-refinement.html) | Pushing markers back, merging groups, fine mapping |
+| [Notes on the MSTmap algorithm](algorithm-notes.html) | Distance calculations, `mvest.bc` and `detectBadData` |
+
+If you use the package in published work, please cite it — `citation("ASMap")`,
+or Taylor and Butler (2017), *Journal of Statistical Software* **79**(6), 1–29,
+[doi:10.18637/jss.v079.i06](https://doi.org/10.18637/jss.v079.i06).

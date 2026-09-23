@@ -1,0 +1,150 @@
+---
+title: "Worked example I: construction"
+description: >
+  A barley backcross marker set taken from 3,023 unassigned markers through pre-construction diagnosis to a constructed map of nine linkage groups.
+bibliography: ../ref.bib
+link-citations: true
+output:
+  rmarkdown::html_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  comment = NA,
+  collapse = FALSE,
+  fig.width = 9,
+  fig.height = 6,
+  fig.align = "center",
+  out.width = "100%",
+  dpi = 110
+)
+library(ASMap)
+data(mapDH); data(mapDHf); data(mapBC); data(mapBCu); data(mapF2)
+```
+
+
+This chapter involves the complete linkage map construction process for a barley Backcross population that contains 3024 markers genotyped on 326 individuals in an unconstructed marker set formatted as an R/qtl object with class `"bc"`. The data is available from the R/ASMap package by typing
+
+```{r ex1}
+data(mapBCu, package = "ASMap")
+```
+
+## Pre-construction
+
+The construction of a linkage map does not usually just involve applying a construction algorithm to a supplied set of genetic marker data. It is always prudent to go through a pre-construction checklist to ensure that the best quality genotypes/markers are being used to construct the linkage map.
+
+A non-exhaustive ordered checklist for an unconstructed marker set could be
+
+1.  Check missing allele scores across markers for each genotype as well as across genotypes for each marker. Markers or genotypes with a high proportion of missing information could indicate problems with the physical genotyping.
+
+2.  Check for genetic clones or individuals that have a high proportion of matching allelic information between them.
+
+3.  Check markers for excessive segregation distortion. Highly distorted markers may not map to unique locations.
+
+4.  Check markers for switched alleles. These markers will not cluster or link well with other markers during the construction process and it is therefore preferred to repair their alignment before proceeding.
+
+5.  Check for co-locating markers. For large linkage maps it would be more computationally efficient from a construction standpoint to temporarily omit markers that are co-located with other markers.
+
+R/qtl provides a very simple graphical tool for checking the structure of missing allele score across the genotypes and the markers.
+
+```{r ex3, fig.cap = "Plot of the missing allele scores for the unconstructed map mapBCu", fig.alt = "Plot of the missing allele scores for the unconstructed map mapBCu"}
+plotMissing(mapBCu)
+```
+
+the figure below shows the resulting plot for this command. The darkest lines on the plot indicate there are some genotypes with large amounts of missing data. This could indicate poor physical genotyping of these lines and they should be removed before proceeding. The plot also reveals the markers have a large number of typed allele values across the range of genotypes. The R/ASMap function `statGen()` can be used to identify the genotypes with a certain number of missing values. These genotypes are then omitted using the usual functions available in R/qtl.
+
+```{r ex4}
+sg <- statGen(mapBCu, bychr = FALSE, stat.type = "miss")
+mapBC1 <- subset(mapBCu, ind = sg$miss < 1600)
+```
+
+From a map construction point of view, highly related individuals can enhance segregation distortion of markers. It is therefore wise to determine a course of action such as removal of individuals or the creation of consensus genotypes before proceeding with any further pre-construction diagnostics. The R/ASMap function `genClones()` discussed in section Genetic clones can be used to identify and report genetic clones.
+
+```{r ex5}
+gc <- genClones(mapBC1, tol = 0.95)
+gc$cgd
+```
+
+The table shows 13 groups of genotypes that share a proportion of their alleles greater than 0.95. The supplied additional statistics show that the first group contains three pairs of genotypes that had matched pairs of alleles from 1620 markers or less. These pairs also   1400 markers where an allele was present for one genotype and missing for another. Based on this, there is not enough evidence to suspect these pairs may be clones and they are removed from the table. The `fixClones()` function can then be used to form consensus genotypes for the remaining groups of clones in the table.
+
+```{r ex6}
+cgd <- gc$cgd[-c(1,4,5),]
+mapBC2 <- fixClones(mapBC1, cgd, consensus = TRUE)
+levels(mapBC2$pheno[[1]])[grep("_", levels(mapBC2$pheno[[1]]))]
+```
+
+
+At this juncture it is wise to check the segregation distortion statistics of the markers. Segregation distortion is phenomenon where the observed allelic frequencies at a specific locus deviate from expected allelic frequencies due to Mendelian genetics. It is well known that this distortion can occur from physical laboratorial processes or it may also occur in local genomic regions from underlying biological and genetic mechanisms [@lytt91].
+
+The level of segregation distortion, the allelic proportions and the missing value proportion across the genome can be graphically represented using the marker profiling function `profileMark()` and the result is displayed in the figure below.
+
+Setting `crit.val = "bonf"` annotates the markers that have a p-value for the test of segregation distortion lower than the family wide bonferroni adjusted alpha level of 0.05/no.of.markers on each of the figures in each panel. Additional plotting parameters `layout = c(1,4)`, `type="p"` and `cex = 0.5` are passed to the high level lattice plotting function `xyplot()` to provide a more aesthetically pleasing plot. The plot indicates there are numerous markers that are considered to be significantly distorted with three highly distorted markers. The plot also indicates that the missing value proportion of the markers does not exceed 20%.
+
+```{r ex8, fig.width = 11.9, fig.height = 7, warning=FALSE, fig.cap = "For individual markers, the negative log10 p-value for the test of segregation distortion, the proportion of each contributing allele and the proportion of missing values.", fig.alt = "For individual markers, the negative log10 p-value for the test of segregation distortion, the proportion of each contributing allele and the proportion of missing values."}
+profileMark(mapBC2, stat.type = c("seg.dist", "prop", "miss"), crit.val = "bonf", layout = c(1,4), type = "l", cex = 0.5)
+```
+
+The highly distorted markers can easily be dropped using
+
+```{r ex9}
+mm <- statMark(mapBC2, stat.type = "marker")$marker$AB
+mapBC3 <- drop.markers(mapBC2, c(markernames(mapBC2)[mm > 0.98],markernames(mapBC2)[mm < 0.2]))
+```
+
+Without a constructed map it is impossible to determine the origin of the segregation distortion. However, the blind use of distorted markers may also create linkage map construction problems. It may be more sensible to place the distorted markers aside and construct the map with less problematic markers. Once the linkage map is constructed the more problematic markers can be introduced to determine whether they have a useful or deleterious effect on the map. The R/ASMap functions `pullCross()` and `pushCross()` are designed to take advantage of this scenario. To showcase their use in this example, they are also used to pull markers with 10-20% missing values as well as co-located markers.
+
+```{r ex10}
+mapBC3 <- pullCross(mapBC3, type = "missing", pars = list(miss.thresh = 0.1))
+mapBC3 <- pullCross(mapBC3, type = "seg.distortion", pars = list(seg.thresh = "bonf"))
+mapBC3 <- pullCross(mapBC3, type = "co.located")
+names(mapBC3)
+sum(ncol(mapBC3$missing$data),ncol(mapBC3$seg.dist$data),ncol(mapBC3$co.located$data))
+```
+
+A total of 847 markers are removed and placed aside in their respective elements and the map is now constructed with the remaining 2173 markers.
+
+## MSTmap construction
+
+The curated genetic marker data in `mapBC3` can now be constructed using the `mstmap.cross` function available in R/ASMap.
+
+```{r ex11}
+mapBC4 <- mstmap(mapBC3, bychr = FALSE, trace = TRUE, dist.fun = "kosambi", p.value = 1e-12)
+chrlen(mapBC4)
+```
+
+By setting `bychr = FALSE` the complete set of marker data from `mapBC3` is bulked and constructed from scratch. This construction involves the clustering of markers to linkage groups and then the optimal ordering of markers within each linkage group. An initial check of the figure below, indicates for a population size of 309 the `p.value` should be set to `1e-12` to ensure a 30cM threshold when clustering markers to linkage groups. The newly constructed linkage map contains 9 linkage groups each containing markers that are optimally ordered. The performance of the MSTmap construction can be checked by plotting the heat map of pairwise recombination fractions between markers and their pairwise LOD score of linkage using the R/ASMap function `heatMap()`
+
+```{r ex12, fig.cap = "Heat map of the constructed linkage map mapBC4.", fig.alt = "Heat map of the constructed linkage map mapBC4."}
+heatMap(mapBC4, lmax = 70)
+```
+
+As discussed in section Improved heat map, an aesthetic heat map is attained when the heat on the upper triangle of the plot used for the pairwise estimated recombination fractions matches the heat of the pairwise LOD scores. the figure below displays the heat map and shows this was achieved by setting `lmax = 70`. The heat map also shows consistent heat across the markers within linkage groups indicating strong linkage between nearby markers. The linkage groups appear to be very distinctly clustered.
+
+Although the heat map is indicating the construction process was successful it does not highlight subtle problems that may be existing in the constructed linkage map. As stated in section Genotype and marker/interval profiling one of the key quality characteristics of a well constructed linkage map is an appropriate recombination rate of the the genotypes. For this barley Backcross population each line is considered to be independent with an expected recombination rate of   14 across the genome. The current linkage map contains linkage groups that exceed the theoretical cutoff of 200cM indicating there may be genotypes with inflated recombination rates. This can easily be ascertained from the `profileGen()` function available in R/ASMap.
+
+
+```{r ex15, fig.width = 11.9, fig.height = 7, warning=FALSE, fig.cap = "For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC4", fig.alt = "For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC4"}
+pg <- profileGen(mapBC4, bychr = FALSE, stat.type = c("xo","dxo","miss"), id = "Genotype", xo.lambda = 14, layout = c(1,3), lty = 2, cex = 0.7)
+```
+
+the figure below show the number of recombinations, double recombination and missing values for each of 309 genotypes. The plot also annotates the genotypes that have recombination rates significantly above the expected recombination rate of 14. A total of seven lines have recombination rates above 20 and the plots also show that these lines have excessive missing values. To ensure the extra list elements `"co.located"`, `"seg.distortion"` and `"missing"` of the object are subsetted and updated appropriately, the offending genotypes are removed using the R/ASMap function `subsetCross()`. The linkage map is then be reconstructed.
+
+```{r ex16}
+mapBC5 <- subsetCross(mapBC4, ind = !pg$xo.lambda)
+mapBC6 <- mstmap(mapBC5, bychr = TRUE, dist.fun = "kosambi", trace = TRUE, p.value = 1e-12)
+chrlen(mapBC6)
+```
+
+Users can check the recombination rates of the remaining genotypes in the re-constructed map are now within respectable limits. As a result the lengths of the linkage groups have dropped dramatically.
+
+It is also useful to graphically display statistics of the markers and intervals of the current constructed linkage map. For example, the figure below shows the marker profiles of the -log10 p-value for the test of segregation distortion, the allele proportions and the number of double crossovers. It also displays the interval profile of the number of recombinations occurring between adjacent markers. This plot reveals many things that are useful for the next phase of the construction process.
+
+
+```{r ex18, fig.width = 11.9, fig.height = 8.4, warning=FALSE, fig.cap = "Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions and the number of double of crossovers as well as the interval profile of the number of recombinations between adjacent markers in mapBC6.", fig.alt = "Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions and the number of double of crossovers as well as the interval profile of the number of recombinations between adjacent markers in mapBC6."}
+profileMark(mapBC6, stat.type = c("seg.dist","prop","dxo","recomb"), layout = c(1,5), type = "l")
+```
+
+The plot instantly reveals the success of the map construction process with no more than one double crossover being found at any marker and very few being found in total. The plot also reveals the extent of the biological distortion that can occur within a linkage group. A close look at the segregation distortion and allele proportion plots shows the linkage group L.3 and the short linkage group L.5 have profiles that could be joined if the linkage groups were merged. In addition, L.8 and L.9 also have profiles that could be joined if the linkage groups were combined. This will be discussed in more detail in the next section.
+
