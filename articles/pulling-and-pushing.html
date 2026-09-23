@@ -13,9 +13,9 @@
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Pulling and pushing markers">
-<meta name="description" content="Setting problematic markers aside before construction and reintroducing them afterwards, instead of discarding them permanently.
+<meta name="description" content="Setting problematic markers aside before construction and reintroducing them afterwards, in place of their permanent removal.
 ">
-<meta property="og:description" content="Setting problematic markers aside before construction and reintroducing them afterwards, instead of discarding them permanently.
+<meta property="og:description" content="Setting problematic markers aside before construction and reintroducing them afterwards, in place of their permanent removal.
 ">
 </head>
 <body>
@@ -85,21 +85,27 @@
 
     
     
-<p>Most map construction begins by pruning markers — dropping those with
-too many missing scores, or those badly distorted from their expected
-Mendelian ratios. That pruning is usually permanent, and it throws away
-information you cannot get back. A marker that looks unusable against
-raw data may be perfectly well behaved once the map exists.</p>
-<p><a href="../reference/pullCross.html"><code>pullCross()</code></a>
-offers the alternative. Instead of deleting a marker it moves it into a
-holding element of the cross object, keeping everything needed to put it
-back. <a href="../reference/pushCross.html"><code>pushCross()</code></a>
-then reintroduces it once you have a map to judge it against.</p>
-<p>This article pulls markers out of the constructed map
-<code>mapDH</code>, rebuilds it, and pushes them back.</p>
+<p>Linkage map construction is commonly preceded by some pruning of the
+marker set, typically the removal of markers exhibiting a high
+proportion of missing values or significant departure from their
+expected Mendelian segregation ratios. Such removal is usually
+permanent, and the potential value of the discarded markers is thereby
+overlooked. A marker that appears unsuitable when judged against
+unordered data may prove entirely well behaved once a map has been
+established.</p>
+<p>A preferable approach is to identify the problematic markers and
+place them aside, with the intention of reassessing their usefulness at
+a later stage of the construction process. The functions <a href="../reference/pullCross.html"><code>pullCross()</code></a> and <a href="../reference/pushCross.html"><code>pushCross()</code></a> provide
+this facility. Rather than deleting a marker, <code><a href="../reference/pullCross.html">pullCross()</a></code>
+transfers it to a holding element of the cross object, retaining the
+information required to restore it; <code><a href="../reference/pushCross.html">pushCross()</a></code>
+subsequently reintroduces it into an established map.</p>
+<p>The constructed map <code>mapDH</code> is used below to illustrate
+both operations.</p>
 <div class="section level2">
-<h2 id="three-kinds-of-problem-marker">Three kinds of problem marker<a class="anchor" aria-label="anchor" href="#three-kinds-of-problem-marker"></a>
+<h2 id="marker-types">Marker types<a class="anchor" aria-label="anchor" href="#marker-types"></a>
 </h2>
+<p>Three types of marker may be set aside.</p>
 <table class="table">
 <colgroup>
 <col width="33%">
@@ -109,40 +115,42 @@ then reintroduces it once you have a map to judge it against.</p>
 <thead><tr class="header">
 <th><code>type</code></th>
 <th>Markers affected</th>
-<th>Why set them aside</th>
+<th>Rationale</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td><code>"co.located"</code></td>
-<td>Markers at zero distance from another marker</td>
-<td>They add no ordering information but cost construction time</td>
+<td>Markers separated from another marker by zero distance</td>
+<td>They contribute no ordering information, yet add to the
+computational cost of construction</td>
 </tr>
 <tr class="even">
 <td><code>"seg.distortion"</code></td>
-<td>Markers whose segregation distortion p-value is below
+<td>Markers whose segregation distortion p-value falls below
 <code>seg.thresh</code>
 </td>
 <td>Distorted markers may not map to a unique location</td>
 </tr>
 <tr class="odd">
 <td><code>"missing"</code></td>
-<td>Markers whose missing proportion exceeds
+<td>Markers whose proportion of missing values exceeds
 <code>miss.thresh</code>
 </td>
-<td>Sparse markers are placed less reliably</td>
+<td>Sparsely scored markers are positioned less reliably</td>
 </tr>
 </tbody>
 </table>
-<p>Thresholds come from <a href="../reference/pp.init.html"><code>pp.init()</code></a>, which
-supplies defaults of <code>seg.thresh = 0.05</code> and
-<code>miss.thresh = 0.1</code>. Override them through the
+<p>The relevant thresholds are supplied by <a href="../reference/pp.init.html"><code>pp.init()</code></a>, which
+provides defaults of <code>seg.thresh = 0.05</code> and
+<code>miss.thresh = 0.1</code>. These may be overridden through the
 <code>pars</code> argument.</p>
 </div>
 <div class="section level2">
-<h2 id="pulling-markers-aside">Pulling markers aside<a class="anchor" aria-label="anchor" href="#pulling-markers-aside"></a>
+<h2 id="setting-markers-aside">Setting markers aside<a class="anchor" aria-label="anchor" href="#setting-markers-aside"></a>
 </h2>
-<p>Pull the co-located markers, those distorted at a p-value below 0.02,
-and those missing more than 3% of their scores:</p>
+<p>In the following, markers are pulled that are co-located with another
+marker, that exhibit segregation distortion at a p-value below 0.02, or
+that are missing more than 3% of their scores.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapDHs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullCross.html">pullCross</a></span><span class="op">(</span><span class="va">mapDH</span>, type <span class="op">=</span> <span class="st">"co.located"</span><span class="op">)</span></span>
 <span><span class="va">mapDHs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullCross.html">pullCross</a></span><span class="op">(</span><span class="va">mapDHs</span>, type <span class="op">=</span> <span class="st">"seg.distortion"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>seg.thresh <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span><span class="op">)</span></span>
@@ -151,10 +159,10 @@ and those missing more than 3% of their scores:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mapDHs</span><span class="op">)</span></span></code></pre></div>
 <pre><code>[1] "geno"           "pheno"          "co.located"     "seg.distortion"
 [5] "missing"       </code></pre>
-<p>The object has gained one element per marker type. Each holds a
-<code>table</code> summarising the markers and a <code>data</code>
-matrix of their scores, in the same genotype-by-marker layout as the
-linkage groups themselves.</p>
+<p>The object has acquired one element for each marker type. Each
+contains a <code>table</code> summarising the markers concerned and a
+<code>data</code> matrix of their scores, in the same genotype by marker
+layout as the linkage groups themselves.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapDHs</span><span class="op">$</span><span class="va">seg.distortion</span><span class="op">$</span><span class="va">table</span></span></code></pre></div>
 <pre><code>      mark chr      pos neglog10P     missing        AA        AB
@@ -168,10 +176,10 @@ linkage groups themselves.</p>
 8  3B.m.20  3B 66.48546  1.830929 0.000000000 0.5825688 0.4174312
 9  6D.m.12  6D 60.69446  1.756872 0.004587156 0.4193548 0.5806452
 10  7B.m.6  7B 23.03041  1.769873 0.013761468 0.4186047 0.5813953</code></pre>
-<p>For <code>"seg.distortion"</code> and <code>"missing"</code>, the
-table combines positional information with the output of
-<code><a href="https://rdrr.io/pkg/qtl/man/geno.table.html" class="external-link">geno.table()</a></code> from R/qtl, so you can see exactly why each
-marker was pulled.</p>
+<p>For the types <code>"seg.distortion"</code> and
+<code>"missing"</code>, the table combines positional information with
+the output of <code><a href="https://rdrr.io/pkg/qtl/man/geno.table.html" class="external-link">geno.table()</a></code> from the R/qtl package <span class="citation">(<a href="#ref-br14">Broman and Wu 2014</a>)</span>, so
+that the basis for each marker’s removal may be inspected.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mapDHs</span><span class="op">$</span><span class="va">co.located</span><span class="op">$</span><span class="va">table</span><span class="op">)</span></span></code></pre></div>
 <pre><code>  bins chr    mark
@@ -181,17 +189,20 @@ marker was pulled.</p>
 4    2  1D  1D.m.4
 5    3  2B 2B.m.31
 6    3  2B 2B.m.32</code></pre>
-<p>The <code>"co.located"</code> table works differently. Markers are
-grouped into bins, and within each bin the <strong>first marker stays in
-the map as a reference</strong>; the rest are pulled. That reference is
-what lets <code><a href="../reference/pushCross.html">pushCross()</a></code> find its way back.</p>
+<p>The table for <code>"co.located"</code> markers is of a different
+form. Markers are assigned to bins, and within each bin the
+<strong>first marker is retained in the map as a reference</strong>, the
+remainder being pulled. It is this reference that permits the
+co-locating markers to be restored to their correct position.</p>
 </div>
 <div class="section level2">
-<h2 id="rebuild-the-map">Rebuild the map<a class="anchor" aria-label="anchor" href="#rebuild-the-map"></a>
+<h2 id="reconstruction">Reconstruction<a class="anchor" aria-label="anchor" href="#reconstruction"></a>
 </h2>
-<p>Rebuilding with <code>bychr = FALSE</code> bulks every remaining
-marker and reconstructs from scratch, which renames the linkage groups —
-a good test of whether the markers really can find their way home.</p>
+<p>Reconstruction with <code>bychr = FALSE</code> combines all remaining
+markers and rebuilds the map in its entirety, in the course of which the
+linkage groups are renamed. This provides a reasonably stringent test of
+whether the markers set aside can subsequently be restored to their
+correct positions.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapDHs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDHs</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                 anchor <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -206,20 +217,23 @@ L.24  L.3  L.4  L.5  L.6  L.7  L.8  L.9
    3   31    9   37   34    7   13   35 </code></pre>
 </div>
 <div class="section level2">
-<h2 id="the-thresholds-reverse-when-you-push">The thresholds reverse when you push<a class="anchor" aria-label="anchor" href="#the-thresholds-reverse-when-you-push"></a>
+<h2 id="reversal-of-the-thresholds">Reversal of the thresholds<a class="anchor" aria-label="anchor" href="#reversal-of-the-thresholds"></a>
 </h2>
-<p>This is the part that catches people out.</p>
+<p>The thresholds operate in opposite senses in the two functions, and
+this is a frequent source of confusion.</p>
 <blockquote>
-<p><code><a href="../reference/pullCross.html">pullCross()</a></code> removes a marker when its distortion p-value
-is <strong>below</strong> <code>seg.thresh</code>.
-<code><a href="../reference/pushCross.html">pushCross()</a></code> returns it when that p-value is
-<strong>above</strong> <code>seg.thresh</code>. The same is true of
-<code>miss.thresh</code>, in the same direction.</p>
+<p><code><a href="../reference/pullCross.html">pullCross()</a></code> removes a marker when its segregation
+distortion p-value lies <strong>below</strong> <code>seg.thresh</code>,
+whereas <code><a href="../reference/pushCross.html">pushCross()</a></code> restores it when that p-value lies
+<strong>above</strong> <code>seg.thresh</code>. The same applies to
+<code>miss.thresh</code>.</p>
 </blockquote>
-<p>So pulling and pushing at the same threshold returns nothing, and
-ASMap will tell you there are no markers to push back. The two
-thresholds are meant to differ, with the push set more permissively than
-the pull, so that a marker has to earn its place in the map.</p>
+<p>Pulling and pushing at an identical threshold therefore returns no
+markers at all, and the function reports that there are none of that
+type to push back. The two thresholds are intended to differ, the value
+used when pushing being the less stringent of the two, so that a marker
+is restored only if it is adequately behaved in the context of the
+established map.</p>
 <table class="table">
 <colgroup>
 <col width="33%">
@@ -229,7 +243,7 @@ the pull, so that a marker has to earn its place in the map.</p>
 <thead><tr class="header">
 <th>Parameter</th>
 <th>Pulled when</th>
-<th>Pushed back when</th>
+<th>Restored when</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -244,9 +258,9 @@ the pull, so that a marker has to earn its place in the map.</p>
 </tr>
 </tbody>
 </table>
-<p>Here the markers were pulled at <code>seg.thresh = 0.02</code> and
-<code>miss.thresh = 0.03</code>, so they are pushed back at 0.001 and
-0.05 respectively.</p>
+<p>Markers were pulled above at <code>seg.thresh = 0.02</code> and
+<code>miss.thresh = 0.03</code>, and are accordingly restored at 0.001
+and 0.05 respectively.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapDHs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pushCross.html">pushCross</a></span><span class="op">(</span><span class="va">mapDHs</span>, type <span class="op">=</span> <span class="st">"co.located"</span><span class="op">)</span></span>
 <span><span class="va">mapDHs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pushCross.html">pushCross</a></span><span class="op">(</span><span class="va">mapDHs</span>, type <span class="op">=</span> <span class="st">"seg.distortion"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>seg.thresh <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span><span class="op">)</span></span>
@@ -254,11 +268,11 @@ the pull, so that a marker has to earn its place in the map.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mapDHs</span><span class="op">)</span></span></code></pre></div>
 <pre><code>[1] "geno"  "pheno"</code></pre>
-<p>Every marker went back, so the holding elements have been removed
-from the object entirely.</p>
+<p>Under these settings all markers of each type have been restored, and
+the holding elements have consequently been removed from the object.</p>
 </div>
 <div class="section level2">
-<h2 id="where-the-markers-land">Where the markers land<a class="anchor" aria-label="anchor" href="#where-the-markers-land"></a>
+<h2 id="placement-of-the-restored-markers">Placement of the restored markers<a class="anchor" aria-label="anchor" href="#placement-of-the-restored-markers"></a>
 </h2>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/pull.map.html" class="external-link">pull.map</a></span><span class="op">(</span><span class="va">mapDHs</span><span class="op">)</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
@@ -282,20 +296,20 @@ attr(,"class")
 80.274363 80.733092 97.376797 
 attr(,"class")
 [1] "A"</code></pre>
-<p>Co-located markers are placed next to their reference marker —
-<code>1D.m.4</code> sits beside <code>1D.m.3</code>. Markers from the
-<code>"seg.distortion"</code> and <code>"missing"</code> elements cannot
-be placed so precisely, so they are appended to the end of whichever
-linkage group they belong to. <code>6D.m.12</code> is there at the end
-of 6D.</p>
+<p>Co-located markers are placed adjacent to their reference marker, as
+for example <code>1D.m.4</code> beside <code>1D.m.3</code> on 1D.
+Markers held in the <code>"seg.distortion"</code> and
+<code>"missing"</code> elements cannot be positioned so precisely and
+are appended to the end of the linkage group to which they are assigned;
+the distorted marker <code>6D.m.12</code> appears at the end of 6D.</p>
 <blockquote>
 <p><code><a href="../reference/pushCross.html">pushCross()</a></code> assigns markers to linkage groups but does
-<strong>not</strong> order them. The map is not finished until you run
-MSTmap again.</p>
+not order them. The map is not complete until MSTmap has been run
+again.</p>
 </blockquote>
-<p>A final pass within each linkage group puts everything in its optimal
-position. <code>p.value = 2</code> disables clustering, so the groups
-themselves cannot change:</p>
+<p>A final pass within each linkage group places all markers in their
+optimal position. Setting <code>p.value = 2</code> suppresses
+clustering, so that the composition of the groups cannot change.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapDHs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDHs</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                 anchor <span class="op">=</span> <span class="cn">TRUE</span>, p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
@@ -373,30 +387,40 @@ The size of the linkage groups are: 37
 The number of bins in each linkage group: 36    </code></pre>
 </div>
 <div class="section level2">
-<h2 id="pushing-markers-that-were-never-in-the-map">Pushing markers that were never in the map<a class="anchor" aria-label="anchor" href="#pushing-markers-that-were-never-in-the-map"></a>
+<h2 id="markers-not-previously-present-in-the-map">Markers not previously present in the map<a class="anchor" aria-label="anchor" href="#markers-not-previously-present-in-the-map"></a>
 </h2>
-<p><code><a href="../reference/pushCross.html">pushCross()</a></code> accepts a fourth type,
-<code>"unlinked"</code>, which takes markers sitting in an unlinked
-group of the <code>geno</code> element and distributes them into the
-established linkage groups. This is the mechanism behind adding new
-markers to a finished map — see <a href="worked-example-refinement.html">Worked example II</a> for fine
-mapping and unknown linkage groups.</p>
+<p><code><a href="../reference/pushCross.html">pushCross()</a></code> admits a fourth type,
+<code>"unlinked"</code>, which distributes markers residing in an
+unlinked group of the <code>geno</code> element into the established
+linkage groups. This provides the mechanism by which new markers are
+introduced into a completed map, and is described in <a href="worked-example-refinement.html">Worked example II</a> in the
+context of fine mapping and of unknown linkage groups.</p>
 </div>
 <div class="section level2">
-<h2 id="where-next">Where next<a class="anchor" aria-label="anchor" href="#where-next"></a>
+<h2 id="further-reading">Further reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
 </h2>
 <ul>
 <li>
 <a href="diagnostics.html">Diagnosing genotypes and markers</a> —
-deciding which markers are worth pulling in the first place</li>
+determining which markers warrant setting aside</li>
 <li>
 <a href="worked-example-construction.html">Worked example I</a> —
-pulling markers as part of a full construction</li>
+the pull operation within a complete construction</li>
 <li>
 <a href="../reference/pullCross.html"><code>pullCross()</code></a>,
 <a href="../reference/pushCross.html"><code>pushCross()</code></a>, <a href="../reference/pp.init.html"><code>pp.init()</code></a> — full
 argument documentation</li>
 </ul>
+</div>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-br14" class="csl-entry">
+Broman, K. W, and H Wu. 2014. <em><span class="nocase">: Tools for
+Analayzing QTL Experiments</span></em>. <a href="http://www.CRAN.R-project.org/src/contrib/Archive/qtl/" class="external-link">http://www.CRAN.R-project.org/src/contrib/Archive/qtl/</a>.
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

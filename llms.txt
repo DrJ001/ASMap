@@ -808,8 +808,8 @@ documentation. These are not lazy-loaded, so an explicit
 - [Getting started with
   ASMap](https://drj001.github.io/ASMap/articles/getting-started.md):
 
-  Build a linkage map from a set of marker scores in a few lines, then
-  find your way around the rest of the documentation.
+  Construct a linkage map from a set of marker scores, and an
+  orientation to the remainder of the documentation.
 
 ### Function guides
 
@@ -823,7 +823,7 @@ documentation. These are not lazy-loaded, so an explicit
   markers](https://drj001.github.io/ASMap/articles/pulling-and-pushing.md):
 
   Setting problematic markers aside before construction and
-  reintroducing them afterwards, instead of discarding them permanently.
+  reintroducing them afterwards, in place of their permanent removal.
 
 - [Diagnosing genotypes and
   markers](https://drj001.github.io/ASMap/articles/diagnostics.md):

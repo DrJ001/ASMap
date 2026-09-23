@@ -1,13 +1,16 @@
 # Getting started with ASMap
 
-This article takes a set of raw marker scores and builds a finished
-linkage map from them, in about five minutes. Along the way it covers
-the one argument you will have to think about, and how to check that the
-result is any good.
+This article constructs a linkage map from a set of unordered marker
+scores, discusses the single argument that most influences the outcome,
+and indicates how the resulting map may be assessed. It is intended as
+an entry point to the remaining documentation.
 
-ASMap does this with the MSTmap algorithm, which clusters markers into
-linkage groups and orders them within each group in a single pass — no
-separate “rippling” step, and no overnight wait.
+Construction is performed by the MSTmap algorithm ([Wu
+2008](#ref-mst08)), which clusters markers into linkage groups and
+determines an optimal order within each group in a single pass. This is
+in contrast to the two-stage procedures common elsewhere, in which an
+initial non-exhaustive ordering is followed by an exhaustive search
+within a sliding marker window.
 
 ## Installation
 
@@ -20,16 +23,16 @@ install.packages("ASMap")
 devtools::install_github("DrJ001/ASMap")
 ```
 
-## Building a map from marker scores
+## Construction from a set of marker scores
 
-`mapDHf` is an unconstructed doubled haploid wheat marker set, in the
-layout the construction function expects: **markers in rows, genotypes
-in columns**, with marker names in the `rownames` and genotype names in
-the `names`.
+`mapDHf` is an unconstructed doubled haploid wheat marker set, supplied
+in the layout the construction function requires: **markers in rows,
+genotypes in columns**, with marker names held in the `rownames` and
+genotype names in the `names`.
 
-> The package datasets are not lazy-loaded, so every example needs an
-> explicit [`data()`](https://rdrr.io/r/utils/data.html) call.
-> Forgetting it gives `object 'mapDHf' not found`.
+> The package datasets are not lazy-loaded, and therefore require an
+> explicit [`data()`](https://rdrr.io/r/utils/data.html) call. Its
+> omission results in `object 'mapDHf' not found`.
 
 ``` r
 
@@ -53,8 +56,9 @@ mapDHf[1:5, 1:6]
     6B.m.3    B   B   A   B   A   A
     5A.m.43   B   B   A   B   B   A
 
-One call clusters the markers into linkage groups, orders them within
-each group and estimates the genetic distances.
+A single call clusters the markers into linkage groups, orders the
+markers within each group and estimates the genetic distances between
+them.
 
 ``` r
 
@@ -82,9 +86,10 @@ round(chrlen(map), 1)
       L14   L15   L16   L17   L18   L19   L20   L21   L22   L23   L24 
      81.2  98.2   8.7 109.5  60.9 134.5 104.0  18.0   7.8   7.8  19.2 
 
-The result is an R/qtl `cross` object, so the whole of
-[qtl](https://CRAN.R-project.org/package=qtl) is available to you
-immediately.
+The value returned is an R/qtl `cross` object, so the facilities of the
+[qtl](https://CRAN.R-project.org/package=qtl) package ([Broman and Wu
+2014](#ref-br14)) are immediately available for further examination of
+the map.
 
 ``` r
 
@@ -118,11 +123,12 @@ plotMap(map)
 
 ![](getting-started_files/figure-html/qtl-1.png)
 
-## Starting from an existing cross object
+## Construction from an existing cross object
 
-If the markers are already in a `cross` object, the same generic accepts
-it. `bychr = FALSE` bulks every marker and rebuilds the map from
-scratch, ignoring the existing linkage groups.
+Where the markers already reside in a `cross` object, the same generic
+accepts it directly. Setting `bychr = FALSE` combines all markers and
+reconstructs the map in its entirety, disregarding the existing linkage
+groups.
 
 ``` r
 
@@ -141,30 +147,31 @@ nchr(map2)
 
     [1] 24
 
-Setting `bychr = TRUE` instead keeps the existing groups and only
-re-orders the markers within them. Two combinations are worth committing
-to memory:
+Setting `bychr = TRUE` instead retains the existing groups and re-orders
+the markers within them. Two combinations of arguments are used
+repeatedly throughout this documentation:
 
 ``` r
 
-# cluster and order from scratch, ignoring existing linkage groups
+# cluster and order from scratch, disregarding existing linkage groups
 mstmap(cross, bychr = FALSE, p.value = 1e-12)
 
-# re-order within existing linkage groups, never splitting them
+# re-order within existing linkage groups, without splitting them
 mstmap(cross, bychr = TRUE, p.value = 2)
 ```
 
-A `p.value` greater than 1 switches clustering off altogether, which is
-what makes the second idiom work.
+A `p.value` greater than unity suppresses clustering entirely, which is
+the mechanism underlying the second of these.
 
-## Choosing `p.value`
+## The choice of `p.value`
 
-`p.value` sets the threshold at which markers are split into separate
-linkage groups, and the right value depends strongly on population size
-— larger populations need a smaller one. Expect to try a few.
-[`pValue()`](https://drj001.github.io/ASMap/reference/pValue.md) plots
-the relationship, so the choice can be made deliberately rather than by
-trial and error.
+The `p.value` argument determines the threshold at which markers are
+separated into distinct linkage groups. Its appropriate value depends
+strongly upon the size of the population, larger populations requiring a
+smaller value, and some experimentation is generally necessary. The
+relationship may be examined directly with
+[`pValue()`](https://drj001.github.io/ASMap/reference/pValue.md), which
+permits the choice to be made on a considered basis.
 
 ``` r
 
@@ -173,15 +180,18 @@ pValue(dist = c(25, 30, 35, 40), pop.size = 100:500, map.function = "kosambi")
 
 ![](getting-started_files/figure-html/pvalue-1.png)
 
-For a population of around 300, a `p.value` of `1e-12` gives a threshold
-of roughly 30 cM before markers are linked into the same group.
+For a population of approximately 300 individuals, a `p.value` of
+`1e-12` corresponds to a threshold of some 30 cM before markers are
+assigned to a common linkage group.
 
-## Checking the result
+## Assessment of the constructed map
 
-[`heatMap()`](https://drj001.github.io/ASMap/reference/heatMap.md) shows
-pairwise recombination fractions and LOD scores of linkage together,
-each with its own legend. Consistent heat within a linkage group means
-the markers near each other really are linked.
+[`heatMap()`](https://drj001.github.io/ASMap/reference/heatMap.md)
+displays the pairwise estimated recombination fractions and the pairwise
+LOD scores of linkage together, each with its own legend. Consistent
+heat within a linkage group indicates strong linkage between
+neighbouring markers, and blocks of shared heat between groups suggest
+groups that may require merging.
 
 ``` r
 
@@ -190,21 +200,33 @@ heatMap(mapDH, lmax = 50)
 
 ![](getting-started_files/figure-html/heat-1.png)
 
-## Where to go next
+## Further reading
 
-| Article | What it covers |
+| Article | Subject |
 |----|----|
 | [How the MSTmap algorithm works](https://drj001.github.io/ASMap/articles/mstmap-algorithm.md) | The minimum spanning tree formulation, clustering and marker ordering |
-| [Constructing a linkage map](https://drj001.github.io/ASMap/articles/constructing-a-map.md) | Both construction functions and every MSTmap parameter |
+| [Constructing a linkage map](https://drj001.github.io/ASMap/articles/constructing-a-map.md) | Both construction functions and the MSTmap parameters |
 | [Pulling and pushing markers](https://drj001.github.io/ASMap/articles/pulling-and-pushing.md) | Setting problematic markers aside and reintroducing them |
-| [Diagnosing genotypes and markers](https://drj001.github.io/ASMap/articles/diagnostics.md) | Profiling individuals, markers and intervals; genetic clones |
-| [Heat maps](https://drj001.github.io/ASMap/articles/heat-maps.md) | Reading and tuning the recombination fraction and LOD display |
+| [Diagnosing genotypes and markers](https://drj001.github.io/ASMap/articles/diagnostics.md) | Profiling of individuals, markers and intervals; genetic clones |
+| [Heat maps](https://drj001.github.io/ASMap/articles/heat-maps.md) | Interpretation and tuning of the recombination fraction and LOD display |
 | [Manipulating linkage maps](https://drj001.github.io/ASMap/articles/manipulating-maps.md) | Breaking, merging, subsetting and combining maps |
-| [Worked example I: construction](https://drj001.github.io/ASMap/articles/worked-example-construction.md) | A real barley backcross, from raw markers to a constructed map |
-| [Worked example II: refinement](https://drj001.github.io/ASMap/articles/worked-example-refinement.md) | Pushing markers back, merging groups, fine mapping |
+| [Worked example I: construction](https://drj001.github.io/ASMap/articles/worked-example-construction.md) | A barley backcross, from raw markers to a constructed map |
+| [Worked example II: refinement](https://drj001.github.io/ASMap/articles/worked-example-refinement.md) | Reintroduction of markers, merging of groups, fine mapping |
 | [Notes on the MSTmap algorithm](https://drj001.github.io/ASMap/articles/algorithm-notes.md) | Distance calculations, `mvest.bc` and `detectBadData` |
 
-If you use the package in published work, please cite it —
-`citation("ASMap")`, or Taylor and Butler (2017), *Journal of
-Statistical Software* **79**(6), 1–29,
-[doi:10.18637/jss.v079.i06](https://doi.org/10.18637/jss.v079.i06).
+The package should be cited in published work as Taylor and Butler
+([2017](#ref-tb17)); `citation("ASMap")` gives the current entry.
+
+## References
+
+Broman, K. W, and H Wu. 2014. *: Tools for Analayzing QTL Experiments*.
+<http://www.CRAN.R-project.org/src/contrib/Archive/qtl/>.
+
+Taylor, Julian, and David Butler. 2017. “R Package ASMap: Efficient
+Genetic Linkage Map Construction and Diagnosis.” *Journal of Statistical
+Software* 79 (6): 1–29. <https://doi.org/10.18637/jss.v079.i06>.
+
+Wu, Prasanna R. AND Close, Yonghui AND Bhat. 2008. “Efficient and
+Accurate Construction of Genetic Linkage Maps from the Minimum Spanning
+Tree of a Graph.” *PLoS Genetics* 4 (10).
+<https://doi.org/10.1371/journal.pgen.1000212>.
