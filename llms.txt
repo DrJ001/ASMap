@@ -863,9 +863,10 @@ documentation. These are not lazy-loaded, so an explicit
 - [How the MSTmap algorithm
   works](https://drj001.github.io/ASMap/articles/mstmap-algorithm.md):
 
-  The minimum spanning tree formulation behind ASMap: how markers are
-  clustered into linkage groups, how they are ordered within a group,
-  and how missing scores are imputed as part of the same algorithm.
+  The minimum spanning tree formulation underlying ASMap: the clustering
+  of markers into linkage groups, the determination of an optimal order
+  within a group, and the imputation of missing scores and detection of
+  genotyping errors that are integrated with it.
 
 - [Notes on the MSTmap
   algorithm](https://drj001.github.io/ASMap/articles/algorithm-notes.md):
