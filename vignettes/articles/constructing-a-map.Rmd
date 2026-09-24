@@ -5,6 +5,8 @@ description: >
   R/qtl cross object, and the arguments that govern their behaviour.
 bibliography: ../ref.bib
 link-citations: true
+nocite: |
+  @tb17
 output:
   rmarkdown::html_document:
     toc: true

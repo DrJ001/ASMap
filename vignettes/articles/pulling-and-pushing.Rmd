@@ -5,6 +5,8 @@ description: >
   afterwards, in place of their permanent removal.
 bibliography: ../ref.bib
 link-citations: true
+nocite: |
+  @tb17
 output:
   rmarkdown::html_document:
     toc: true
