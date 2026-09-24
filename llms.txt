@@ -101,11 +101,11 @@ of the MSTmap algorithm, and a worked example taking an unconstructed
 3,023 marker barley backcross through to a diagnosed seven linkage group
 map.
 
-#### Getting started
+#### Get started
 
 | Article | Description |
 |----|----|
-| [Getting started with ASMap](https://drj001.github.io/ASMap/articles/getting-started.html) | Construct a linkage map from a set of marker scores, the choice of `p.value`, and an orientation to the remaining documentation. |
+| [Linkage map construction with ASMap](https://drj001.github.io/ASMap/articles/ASMap.html) | A short introduction: construction from marker scores, the choice of `p.value`, diagnosis of genotypes and markers, and setting markers aside. Also installed with the package as [`vignette("ASMap")`](https://drj001.github.io/ASMap/articles/ASMap.md). |
 
 #### Function guides
 
@@ -486,11 +486,12 @@ they clear a more permissive one, letting a marker earn its place in the
 map.
 
 `type = "unlinked"` is the mechanism for pushing new markers into an
-established map - the basis of the fine mapping workflow in the
-vignette. For all types other than `"co.located"`, markers are allocated
-to linkage groups by a fast clustering method that reduces the map to a
-skeleton marker set, tuned via `max.rf` and `min.lod`. Avoid `"UL"` in
-linkage group names, as it is used internally for unlinked groups.
+established map - the basis of the fine mapping workflow described in
+the articles. For all types other than `"co.located"`, markers are
+allocated to linkage groups by a fast clustering method that reduces the
+map to a skeleton marker set, tuned via `max.rf` and `min.lod`. Avoid
+`"UL"` in linkage group names, as it is used internally for unlinked
+groups.
 
 > [`pushCross()`](https://drj001.github.io/ASMap/reference/pushCross.md)
 > allocates markers to linkage groups but does **not** re-construct the
@@ -559,8 +560,7 @@ distances re-estimated.
 
 ## A worked example
 
-**Click to expand: the condensed barley backcross workflow from the
-vignette**
+**Click to expand: the condensed barley backcross workflow**
 
 Starting from `mapBCu` - 3,023 markers scored on 326 individuals, with
 no linkage groups assigned.
@@ -647,8 +647,10 @@ mapBC7 <- mstmap(mapBC6, bychr = TRUE, dist.fun = "kosambi", p.value = 2)
 chrlen(mapBC7)
 ```
 
-The vignette continues from here into fine mapping, combining maps of
-the same population, and resolving unknown linkage groups.
+The [worked
+example](https://drj001.github.io/ASMap/articles/worked-example-refinement.html)
+continues from here into fine mapping, combining maps of the same
+population, and resolving unknown linkage groups.
 
 ------------------------------------------------------------------------
 
@@ -829,14 +831,6 @@ documentation. These are not lazy-loaded, so an explicit
   of R/qtl objects.
 
 # Articles
-
-### Getting started
-
-- [Getting started with
-  ASMap](https://drj001.github.io/ASMap/articles/getting-started.md):
-
-  Construct a linkage map from a set of marker scores, and an
-  orientation to the remainder of the documentation.
 
 ### Function guides
 

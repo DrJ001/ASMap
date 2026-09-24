@@ -1,9 +1,9 @@
 # How the MSTmap algorithm works
 
 This article describes the technical basis of the MSTmap algorithm ([Wu
-2008](#ref-mst08)) as it is implemented in ASMap. An understanding of
-its components is of practical value, since they correspond directly to
-arguments of the two construction functions.
+et al. 2008](#ref-mst08)) as it is implemented in ASMap. An
+understanding of its components is of practical value, since they
+correspond directly to arguments of the two construction functions.
 
 ## Background
 
@@ -41,8 +41,9 @@ reached.
 
 ASMap was developed to avoid this two-stage structure ([Taylor and
 Butler 2014](#ref-tb14); [Taylor and Butler 2017](#ref-tb17)). Its
-construction functions use the MSTmap algorithm ([Wu 2008](#ref-mst08)),
-implemented as C++ source code and available separately from
+construction functions use the MSTmap algorithm ([Wu et al.
+2008](#ref-mst08)), implemented as C++ source code and available
+separately from
 [http://alumni.cs.ucr.edu/~yonghui/mstmap.html](http://alumni.cs.ucr.edu/~yonghui/mstmap.md).
 The algorithm uses the minimum spanning tree of a graph ([Cheriton and
 Tarjan 1976](#ref-ct76)) both to cluster markers into linkage groups and
@@ -55,12 +56,13 @@ populations are treated as bi-parental for the purpose of construction.
 
 ## Notation and objective functions
 
-Following the notation of Wu ([2008](#ref-mst08)), consider a doubled
-haploid population of $`n`$ individuals genotyped across a set of $`t`$
-markers, in which each $`(i,j)`$th entry of the $`n \times t`$ matrix
-$`\boldsymbol{M}`$ is either an $`A`$ or a $`B`$, representing the two
-parental homozygotes. Let $`\boldsymbol{P}_{jk}`$ denote the probability
-of a recombination event between the markers $`(\boldsymbol{m}_j,
+Following the notation of Wu et al. ([2008](#ref-mst08)), consider a
+doubled haploid population of $`n`$ individuals genotyped across a set
+of $`t`$ markers, in which each $`(i,j)`$th entry of the $`n \times t`$
+matrix $`\boldsymbol{M}`$ is either an $`A`$ or a $`B`$, representing
+the two parental homozygotes. Let $`\boldsymbol{P}_{jk}`$ denote the
+probability of a recombination event between the markers
+$`(\boldsymbol{m}_j,
 \boldsymbol{m}_k)`$, where $`0 \leq \boldsymbol{P}_{jk} < 0.5`$. MSTmap
 admits two weight objective functions based on these recombination
 probabilities,
@@ -102,11 +104,11 @@ $`n`$, the equation $`-2(n/2 - \delta)^2/n = \mbox{log}\,\epsilon`$ is
 solved to obtain an appropriate Hamming distance threshold
 $`\hat{\delta}`$.
 
-Wu ([2008](#ref-mst08)) indicate that the choice of $`\epsilon`$ is not
-critical to the formation of linkage groups. The equation to be solved
-is, however, strongly dependent on the number of individuals in the
-population, and in practice the choice matters a great deal. The figure
-below shows, for a doubled haploid population, the profiles of
+Wu et al. ([2008](#ref-mst08)) indicate that the choice of $`\epsilon`$
+is not critical to the formation of linkage groups. The equation to be
+solved is, however, strongly dependent on the number of individuals in
+the population, and in practice the choice matters a great deal. The
+figure below shows, for a doubled haploid population, the profiles of
 $`-\log_{10} \epsilon`$ against population size for four threshold
 minimum cM distances $`(25, 30, 35, 40)`$.
 
@@ -173,7 +175,7 @@ the number of individuals is small, the tree may not form a complete
 path and may instead contain markers or small sets of markers as nodes
 attached to it. In such cases MSTmap takes the longest path in the tree
 as a backbone and applies local optimisation techniques, among them
-K-opt, node relocation and block optimisation (see [Wu
+K-opt, node relocation and block optimisation (see [Wu et al.
 2008](#ref-mst08)), to improve upon the current path. The integration of
 these techniques is what permits ordering to be completed in a single
 stage.
@@ -283,34 +285,34 @@ algorithm](https://drj001.github.io/ASMap/articles/algorithm-notes.md).
 
 ## References
 
-Broman, K. W, and S Sen. 2009. *A Guide to QTL Mapping with /*.
+Broman, K. W, and S Sen. 2009. *A Guide to QTL Mapping with R/qtl*.
 Springer-Verlag.
 
-Broman, K. W, and H Wu. 2014. *: Tools for Analayzing QTL Experiments*.
-<http://www.CRAN.R-project.org/src/contrib/Archive/qtl/>.
+Broman, K. W, and H Wu. 2014. *qtl: Tools for Analyzing QTL
+Experiments*. <https://CRAN.R-project.org/package=qtl>.
 
 Buetow, K. H, and A Chakravarti. 1987. “Multipoint gene mapping using
-seriation. 1 Gneeral methods.” *American Journal of Human Genetics* 41:
+seriation. 1 General methods.” *American Journal of Human Genetics* 41:
 180–88.
 
 Cheriton, D., and R. E. Tarjan. 1976. “Finding Minimum Spanning Trees.”
 *SIAM Journal on Computing* 5 (4): 724–42.
 <https://doi.org/10.1137/0205051>.
 
-Margarido, G, and M Mollinari. 2014. *: Software for constructing
+Margarido, G, and M Mollinari. 2014. *onemap: Software for constructing
 genetic maps in experimental crosses: full-sib, RILs, F2 and
-backcrosses*. <http://www.CRAN.R-project.org/src/contrib/Archive/qtl/>.
+backcrosses*. <https://CRAN.R-project.org/package=onemap>.
 
 Prim, R. C. 1957. “Shortest Connection Networks and Some
-Generalizations.” *Bell System Techical. Journal* 36: 1389–401.
+Generalizations.” *Bell System Technical Journal* 36: 1389–401.
 
 R Development Core Team. 2014. *R: A Language and Environment for
 Statistical Computing*. R Foundation for Statistical Computing.
 <http://www.R-project.org>.
 
-Taylor, J. D, and D Butler. 2014. *: An (A)ccurate and (S)peedy linkage
-map construction package for inbred populatons that uses the extremely
-efficient MSTmap algorithm.*
+Taylor, J. D, and D Butler. 2014. *ASMap: An (A)ccurate and (S)peedy
+linkage map construction package for inbred populations that uses the
+extremely efficient MSTmap algorithm.*
 <http://www.CRAN.R-project.org/src/contrib/Archive/ASMap/>.
 
 Taylor, Julian, and David Butler. 2017. “R Package ASMap: Efficient
@@ -322,7 +324,7 @@ Van Os, Hans, Piet Stam, Richard Visser, and Herman Van Eck. 2005.
 *TAG Theoretical and Applied Genetics* 112: 30–40.
 <http://dx.doi.org/10.1007/s00122-005-0097-x>.
 
-Wu, Prasanna R. AND Close, Yonghui AND Bhat. 2008. “Efficient and
-Accurate Construction of Genetic Linkage Maps from the Minimum Spanning
-Tree of a Graph.” *PLoS Genetics* 4 (10).
+Wu, Yonghui, Prasanna R. Bhat, Timothy J. Close, and Stefano Lonardi.
+2008. “Efficient and Accurate Construction of Genetic Linkage Maps from
+the Minimum Spanning Tree of a Graph.” *PLoS Genetics* 4 (10).
 <https://doi.org/10.1371/journal.pgen.1000212>.

@@ -18,8 +18,8 @@ randomly assorted on one large linkage group. The data is in qtl format
 with a class structure `c("bc","cross")`. See
 [`read.cross()`](https://rdrr.io/pkg/qtl/man/read.cross.html)
 documentation for more details on the format of this object. This data
-set forms the basis of the worked example in Chapter 3 of the vignette
-(see vignette("ASMap") for complete details)
+set forms the basis of the worked example given at
+<https://drj001.github.io/ASMap/articles/worked-example-construction.html>
 
 ## References
 

@@ -35,13 +35,11 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="articles/ASMap.html">Get started</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/getting-started.html">Getting started with ASMap</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Function guides</h6></li>
-    <li><a class="dropdown-item" href="articles/constructing-a-map.html">Constructing a linkage map</a></li>
+<li><a class="dropdown-item" href="articles/constructing-a-map.html">Constructing a linkage map</a></li>
     <li><a class="dropdown-item" href="articles/pulling-and-pushing.html">Pulling and pushing markers</a></li>
     <li><a class="dropdown-item" href="articles/diagnostics.html">Diagnosing genotypes and markers</a></li>
     <li><a class="dropdown-item" href="articles/heat-maps.html">Heat maps</a></li>
@@ -217,7 +215,7 @@
 </h2>
 <p>Full documentation is published at <strong><a href="https://drj001.github.io/ASMap/">drj001.github.io/ASMap</a></strong>, as a set of articles covering every function in the package, the technical basis of the MSTmap algorithm, and a worked example taking an unconstructed 3,023 marker barley backcross through to a diagnosed seven linkage group map.</p>
 <div class="section level4">
-<h4 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+<h4 id="get-started">Get started<a class="anchor" aria-label="anchor" href="#get-started"></a>
 </h4>
 <table class="table">
 <colgroup>
@@ -229,8 +227,8 @@
 <th>Description</th>
 </tr></thead>
 <tbody><tr>
-<td><a href="https://drj001.github.io/ASMap/articles/getting-started.html">Getting started with ASMap</a></td>
-<td>Construct a linkage map from a set of marker scores, the choice of <code>p.value</code>, and an orientation to the remaining documentation.</td>
+<td><a href="https://drj001.github.io/ASMap/articles/ASMap.html">Linkage map construction with ASMap</a></td>
+<td>A short introduction: construction from marker scores, the choice of <code>p.value</code>, diagnosis of genotypes and markers, and setting markers aside. Also installed with the package as <code><a href="articles/ASMap.html">vignette("ASMap")</a></code>.</td>
 </tr></tbody>
 </table>
 </div>
@@ -981,7 +979,7 @@
 </tbody>
 </table>
 <p>So markers are typically pulled at one threshold and only pushed back if they clear a more permissive one, letting a marker earn its place in the map.</p>
-<p><code>type = "unlinked"</code> is the mechanism for pushing new markers into an established map - the basis of the fine mapping workflow in the vignette. For all types other than <code>"co.located"</code>, markers are allocated to linkage groups by a fast clustering method that reduces the map to a skeleton marker set, tuned via <code>max.rf</code> and <code>min.lod</code>. Avoid <code>"UL"</code> in linkage group names, as it is used internally for unlinked groups.</p>
+<p><code>type = "unlinked"</code> is the mechanism for pushing new markers into an established map - the basis of the fine mapping workflow described in the articles. For all types other than <code>"co.located"</code>, markers are allocated to linkage groups by a fast clustering method that reduces the map to a skeleton marker set, tuned via <code>max.rf</code> and <code>min.lod</code>. Avoid <code>"UL"</code> in linkage group names, as it is used internally for unlinked groups.</p>
 <blockquote>
 <p><code><a href="reference/pushCross.html">pushCross()</a></code> allocates markers to linkage groups but does <strong>not</strong> re-construct the map. Follow it with <code>mstmap(..., bychr = TRUE, p.value = 2)</code> to place the new markers optimally.</p>
 </blockquote>
@@ -1082,7 +1080,7 @@
 <div class="section level2">
 <h2 id="a-worked-example">A worked example<a class="anchor" aria-label="anchor" href="#a-worked-example"></a>
 </h2>
-<details><summary><b>Click to expand: the condensed barley backcross workflow from the vignette</b>
+<details><summary><b>Click to expand: the condensed barley backcross workflow</b>
 </summary><p>Starting from <code>mapBCu</code> - 3,023 markers scored on 326 individuals, with no linkage groups assigned.</p>
 <div class="section level3">
 <h3 id="id_1-pre-construction-diagnosis">1. Pre-construction diagnosis<a class="anchor" aria-label="anchor" href="#id_1-pre-construction-diagnosis"></a>
@@ -1158,7 +1156,7 @@
 <span></span>
 <span><span class="va">mapBC7</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapBC6</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC7</span><span class="op">)</span></span></code></pre></div>
-<p>The vignette continues from here into fine mapping, combining maps of the same population, and resolving unknown linkage groups.</p>
+<p>The <a href="https://drj001.github.io/ASMap/articles/worked-example-refinement.html">worked example</a> continues from here into fine mapping, combining maps of the same population, and resolving unknown linkage groups.</p>
 
 <hr>
 </div>

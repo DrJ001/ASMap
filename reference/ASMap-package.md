@@ -69,14 +69,18 @@ Other miscellaneous utilities for qtl objects include
 
 - `fixClones`: Consensus genotypes for clonal groups
 
-A comprehensive vignette showcasing the package is now available! It
-contains detailed explanations of the functions in the package and how
-they can be used to perform efficient map construction. There is a fully
-worked example that involves pre-construction diagnostics, linkage map
-construction and post construction diagnostics. This example also shows
-how functions of the package can be used for post linkage map
-construction techniques such as fine mapping and combining linkage maps.
-The vignette has be succinctly summarised in the Journal of Statistical
+Complete documentation for the package is published at
+<https://drj001.github.io/ASMap/>, as a set of articles containing
+detailed explanations of each function and how it may be used to perform
+efficient map construction. These include a fully worked example
+involving pre-construction diagnostics, linkage map construction and
+post-construction diagnostics, and extending to post-construction
+techniques such as fine mapping and the combining of linkage maps.
+
+A short introduction is installed with the package and may be viewed
+with
+[`vignette("ASMap")`](https://drj001.github.io/ASMap/articles/ASMap.md).
+The package is succinctly described in the Journal of Statistical
 Software publication Taylor and Butler (2017) referenced below.
 
 ## Author

@@ -40,7 +40,7 @@ profileMark(cross, chr, stat.type = "marker", use.dist = TRUE,
 
 - map.function:
 
-  Character string of either `"koasmbi"`, `"haldane"`, `"morgan"` or
+  Character string of either `"kosambi"`, `"haldane"`, `"morgan"` or
   `"cf"` defining the map function to be used for interval related
   statistics.
 

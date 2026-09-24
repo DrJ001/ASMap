@@ -3,16 +3,16 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   articles/algorithm-notes: algorithm-notes.html
+  ASMap: ASMap.html
   articles/constructing-a-map: constructing-a-map.html
   articles/diagnostics: diagnostics.html
-  articles/getting-started: getting-started.html
   articles/heat-maps: heat-maps.html
   articles/manipulating-maps: manipulating-maps.html
   articles/mstmap-algorithm: mstmap-algorithm.html
   articles/pulling-and-pushing: pulling-and-pushing.html
   articles/worked-example-construction: worked-example-construction.html
   articles/worked-example-refinement: worked-example-refinement.html
-last_built: 2026-09-24T01:35Z
+last_built: 2026-09-24T13:05Z
 urls:
   reference: https://drj001.github.io/ASMap/reference
   article: https://drj001.github.io/ASMap/articles

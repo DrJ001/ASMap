@@ -22,7 +22,7 @@ quickEst(object, chr, map.function = "kosambi", ...)
 
 - map.function:
 
-  Character string of either `"koasmbi"`, `"haldane"`, `"morgan"` or
+  Character string of either `"kosambi"`, `"haldane"`, `"morgan"` or
   `"cf"` defining the mapping function to be used.
 
 - ...:

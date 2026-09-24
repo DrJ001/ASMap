@@ -32,7 +32,7 @@ statMark(cross, chr, stat.type = c("marker","interval"),
 
 - map.function:
 
-  Character string of either `"koasmbi"`, `"haldane"`, `"morgan"` or
+  Character string of either `"kosambi"`, `"haldane"`, `"morgan"` or
   `"cf"` defining the map function to be used for interval related
   statistics.
 

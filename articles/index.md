@@ -1,13 +1,5 @@
 # Articles
 
-### Getting started
-
-- [Getting started with
-  ASMap](https://drj001.github.io/ASMap/articles/getting-started.md):
-
-  Construct a linkage map from a set of marker scores, and an
-  orientation to the remainder of the documentation.
-
 ### Function guides
 
 - [Constructing a linkage

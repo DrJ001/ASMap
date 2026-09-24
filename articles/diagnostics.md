@@ -202,8 +202,8 @@ is set to missing rather than resolved arbitrarily.
 
 ## References
 
-Broman, K. W, and H Wu. 2014. *: Tools for Analayzing QTL Experiments*.
-<http://www.CRAN.R-project.org/src/contrib/Archive/qtl/>.
+Broman, K. W, and H Wu. 2014. *qtl: Tools for Analyzing QTL
+Experiments*. <https://CRAN.R-project.org/package=qtl>.
 
 Taylor, Julian, and David Butler. 2017. “R Package ASMap: Efficient
 Genetic Linkage Map Construction and Diagnosis.” *Journal of Statistical

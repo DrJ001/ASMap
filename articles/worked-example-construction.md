@@ -384,7 +384,7 @@ II](https://drj001.github.io/ASMap/articles/worked-example-refinement.md).
 
 ## References
 
-Lyttle, T. W. 1991. “Segregation Distorters.” *Annula Reviews of
+Lyttle, T. W. 1991. “Segregation Distorters.” *Annual Reviews of
 Genetics* 25: 511–86.
 
 Taylor, Julian, and David Butler. 2017. “R Package ASMap: Efficient

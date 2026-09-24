@@ -35,13 +35,11 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/ASMap.html">Get started</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/getting-started.html">Getting started with ASMap</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Function guides</h6></li>
-    <li><a class="dropdown-item" href="../articles/constructing-a-map.html">Constructing a linkage map</a></li>
+<li><a class="dropdown-item" href="../articles/constructing-a-map.html">Constructing a linkage map</a></li>
     <li><a class="dropdown-item" href="../articles/pulling-and-pushing.html">Pulling and pushing markers</a></li>
     <li><a class="dropdown-item" href="../articles/diagnostics.html">Diagnosing genotypes and markers</a></li>
     <li><a class="dropdown-item" href="../articles/heat-maps.html">Heat maps</a></li>
@@ -86,8 +84,8 @@
     
     
 <p>This article describes the technical basis of the MSTmap algorithm
-<span class="citation">(<a href="#ref-mst08">Wu 2008</a>)</span> as it
-is implemented in ASMap. An understanding of its components is of
+<span class="citation">(<a href="#ref-mst08">Wu et al. 2008</a>)</span>
+as it is implemented in ASMap. An understanding of its components is of
 practical value, since they correspond directly to arguments of the two
 construction functions.</p>
 <div class="section level2">
@@ -121,8 +119,8 @@ computational cost of the second stage grows rapidly with the number of
 markers and the width of the window, and the procedure may require
 repetition before a stable order is reached.</p>
 <p>ASMap was developed to avoid this two-stage structure <span class="citation">(<a href="#ref-tb14">Taylor and Butler 2014</a>; <a href="#ref-tb17">Taylor and Butler 2017</a>)</span>. Its construction
-functions use the MSTmap algorithm <span class="citation">(<a href="#ref-mst08">Wu 2008</a>)</span>, implemented as C++ source code
-and available separately from <a href="http://alumni.cs.ucr.edu/~yonghui/mstmap.html" class="external-link uri">http://alumni.cs.ucr.edu/~yonghui/mstmap.html</a>. The
+functions use the MSTmap algorithm <span class="citation">(<a href="#ref-mst08">Wu et al. 2008</a>)</span>, implemented as C++ source
+code and available separately from <a href="http://alumni.cs.ucr.edu/~yonghui/mstmap.html" class="external-link uri">http://alumni.cs.ucr.edu/~yonghui/mstmap.html</a>. The
 algorithm uses the minimum spanning tree of a graph <span class="citation">(<a href="#ref-ct76">Cheriton and Tarjan
 1976</a>)</span> both to cluster markers into linkage groups and to
 order markers within each group, in a single stage. It is applicable to
@@ -138,7 +136,7 @@ are treated as bi-parental for the purpose of construction.</p>
 <div class="section level2">
 <h2 id="notation-and-objective-functions">Notation and objective functions<a class="anchor" aria-label="anchor" href="#notation-and-objective-functions"></a>
 </h2>
-<p>Following the notation of <span class="citation">Wu (<a href="#ref-mst08">2008</a>)</span>, consider a doubled haploid
+<p>Following the notation of <span class="citation">Wu et al. (<a href="#ref-mst08">2008</a>)</span>, consider a doubled haploid
 population of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
 individuals genotyped across a set of
@@ -210,8 +208,7 @@ the equation
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>2</mn><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mi>/</mi><mn>2</mn><mo>−</mo><mi>δ</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mi>/</mi><mi>n</mi><mo>=</mo><mtext mathvariant="normal">log</mtext><mspace width="0.167em"></mspace><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">-2(n/2 - \delta)^2/n = \mbox{log}\,\epsilon</annotation></semantics></math>
 is solved to obtain an appropriate Hamming distance threshold
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>δ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{\delta}</annotation></semantics></math>.</p>
-<p><span class="citation">Wu (<a href="#ref-mst08">2008</a>)</span>
-indicate that the choice of
+<p><span class="citation">Wu et al. (<a href="#ref-mst08">2008</a>)</span> indicate that the choice of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϵ</mi><annotation encoding="application/x-tex">\epsilon</annotation></semantics></math>
 is not critical to the formation of linkage groups. The equation to be
 solved is, however, strongly dependent on the number of individuals in
@@ -307,8 +304,8 @@ errors, or the number of individuals is small, the tree may not form a
 complete path and may instead contain markers or small sets of markers
 as nodes attached to it. In such cases MSTmap takes the longest path in
 the tree as a backbone and applies local optimisation techniques, among
-them K-opt, node relocation and block optimisation <span class="citation">(see <a href="#ref-mst08">Wu 2008</a>)</span>, to
-improve upon the current path. The integration of these techniques is
+them K-opt, node relocation and block optimisation <span class="citation">(see <a href="#ref-mst08">Wu et al. 2008</a>)</span>,
+to improve upon the current path. The integration of these techniques is
 what permits ordering to be completed in a single stage.</p>
 </div>
 <div class="section level2">
@@ -453,14 +450,14 @@ the algorithm applied to a barley backcross population</li>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-brosen09" class="csl-entry">
 Broman, K. W, and S Sen. 2009. <em><span class="nocase">A Guide to QTL
-Mapping with /</span></em>. Springer-Verlag.
+Mapping with R/qtl</span></em>. Springer-Verlag.
 </div>
 <div id="ref-br14" class="csl-entry">
-Broman, K. W, and H Wu. 2014. <em><span class="nocase">: Tools for
-Analayzing QTL Experiments</span></em>. <a href="http://www.CRAN.R-project.org/src/contrib/Archive/qtl/" class="external-link">http://www.CRAN.R-project.org/src/contrib/Archive/qtl/</a>.
+Broman, K. W, and H Wu. 2014. <em><span class="nocase">qtl: Tools for
+Analyzing QTL Experiments</span></em>. <a href="https://CRAN.R-project.org/package=qtl" class="external-link">https://CRAN.R-project.org/package=qtl</a>.
 </div>
 <div id="ref-ser87" class="csl-entry">
-Buetow, K. H, and A Chakravarti. 1987. <span>“<span class="nocase">Multipoint gene mapping using seriation. 1 Gneeral
+Buetow, K. H, and A Chakravarti. 1987. <span>“<span class="nocase">Multipoint gene mapping using seriation. 1 General
 methods.</span>”</span> <em>American Journal of Human Genetics</em> 41:
 180–88.
 </div>
@@ -469,13 +466,13 @@ Cheriton, D., and R. E. Tarjan. 1976. <span>“Finding Minimum Spanning
 Trees.”</span> <em>SIAM Journal on Computing</em> 5 (4): 724–42. <a href="https://doi.org/10.1137/0205051" class="external-link">https://doi.org/10.1137/0205051</a>.
 </div>
 <div id="ref-one14" class="csl-entry">
-Margarido, G, and M Mollinari. 2014. <em><span class="nocase">: Software
-for constructing genetic maps in experimental crosses: full-sib, RILs,
-F2 and backcrosses</span></em>. <a href="http://www.CRAN.R-project.org/src/contrib/Archive/qtl/" class="external-link">http://www.CRAN.R-project.org/src/contrib/Archive/qtl/</a>.
+Margarido, G, and M Mollinari. 2014. <em><span class="nocase">onemap:
+Software for constructing genetic maps in experimental crosses:
+full-sib, RILs, F2 and backcrosses</span></em>. <a href="https://CRAN.R-project.org/package=onemap" class="external-link">https://CRAN.R-project.org/package=onemap</a>.
 </div>
 <div id="ref-prim57" class="csl-entry">
 Prim, R. C. 1957. <span>“Shortest Connection Networks and Some
-Generalizations.”</span> <em>Bell System Techical. Journal</em> 36:
+Generalizations.”</span> <em>Bell System Technical Journal</em> 36:
 1389–401.
 </div>
 <div id="ref-rsoft14" class="csl-entry">
@@ -483,9 +480,9 @@ R Development Core Team. 2014. <em>R: A Language and Environment for
 Statistical Computing</em>. R Foundation for Statistical Computing. <a href="http://www.R-project.org" class="external-link">http://www.R-project.org</a>.
 </div>
 <div id="ref-tb14" class="csl-entry">
-Taylor, J. D, and D Butler. 2014. <em><span class="nocase">: An
+Taylor, J. D, and D Butler. 2014. <em><span class="nocase">ASMap: An
 (A)ccurate and (S)peedy linkage map construction package for inbred
-populatons that uses the extremely efficient MSTmap
+populations that uses the extremely efficient MSTmap
 algorithm.</span></em> <a href="http://www.CRAN.R-project.org/src/contrib/Archive/ASMap/" class="external-link">http://www.CRAN.R-project.org/src/contrib/Archive/ASMap/</a>.
 </div>
 <div id="ref-tb17" class="csl-entry">
@@ -501,9 +498,10 @@ Map.”</span> <em>TAG Theoretical and Applied Genetics</em> 112: 30–40.
 <a href="http://dx.doi.org/10.1007/s00122-005-0097-x" class="external-link">http://dx.doi.org/10.1007/s00122-005-0097-x</a>.
 </div>
 <div id="ref-mst08" class="csl-entry">
-Wu, Prasanna R. AND Close, Yonghui AND Bhat. 2008. <span>“Efficient and
-Accurate Construction of Genetic Linkage Maps from the Minimum Spanning
-Tree of a Graph.”</span> <em>PLoS Genetics</em> 4 (10). <a href="https://doi.org/10.1371/journal.pgen.1000212" class="external-link">https://doi.org/10.1371/journal.pgen.1000212</a>.
+Wu, Yonghui, Prasanna R. Bhat, Timothy J. Close, and Stefano Lonardi.
+2008. <span>“Efficient and Accurate Construction of Genetic Linkage Maps
+from the Minimum Spanning Tree of a Graph.”</span> <em>PLoS
+Genetics</em> 4 (10). <a href="https://doi.org/10.1371/journal.pgen.1000212" class="external-link">https://doi.org/10.1371/journal.pgen.1000212</a>.
 </div>
 </div>
 </div>

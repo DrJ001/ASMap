@@ -21,7 +21,7 @@ pValue(dist = seq(25,40, by = 5), pop.size = 100:500,
 
 - map.function:
 
-  Character string of either `"koasmbi"`, `"haldane"`, `"morgan"` or
+  Character string of either `"kosambi"`, `"haldane"`, `"morgan"` or
   `"cf"` defining the mapping function to be used.
 
 - LOD:
@@ -33,7 +33,8 @@ pValue(dist = seq(25,40, by = 5), pop.size = 100:500,
 ## Details
 
 This function provides the ability to create a user specified p-value
-plot similar to Figure 1.1 in the vignette for the package.
+plot, as discussed in
+[`vignette("ASMap")`](https://drj001.github.io/ASMap/articles/ASMap.md).
 
 ## Value
 
