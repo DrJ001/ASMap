@@ -12,8 +12,8 @@
   The data is in \pkg{qtl} format with a class structure
   \code{c("bc","cross")}. See \code{read.cross()} documentation for more
   details on the format of this object. This data set forms the basis of
-  the worked example in Chapter 3 of the vignette (see vignette("ASMap")
-  for complete details)
+  the worked example given at
+  \url{https://drj001.github.io/ASMap/articles/worked-example-construction.html}
 }
 \references{
 Taylor, J., Butler, D. (2017) R Package ASMap: Efficient Genetic

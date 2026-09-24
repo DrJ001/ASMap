@@ -15,17 +15,12 @@ home:
 
 navbar:
   structure:
-    left: [articles, reference]
+    left: [intro, articles, reference]
     right: [search, github]
 
 articles:
-- title: Getting started
-  navbar: ~
-  contents:
-  - '`articles/getting-started`'
-
 - title: Function guides
-  navbar: Function guides
+  navbar: ~
   contents:
   - '`articles/constructing-a-map`'
   - '`articles/pulling-and-pushing`'

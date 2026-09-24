@@ -9,6 +9,29 @@
     linkage maps produced by \pkg{ASMap} are unchanged.
   }
 }
+\subsection{DOCUMENTATION}{
+  \itemize{
+    \item Complete documentation is now published at
+    \url{https://drj001.github.io/ASMap/}, as a set of articles covering
+    each function, the technical basis of the MSTmap algorithm and a
+    fully worked example. The documentation has been substantially
+    revised in the process. Notably, code that was previously displayed
+    but never executed is now run when the articles are built, which
+    uncovered several examples that no longer worked: \code{plot.rf},
+    \code{plot.missing} and \code{plot.map} have not been exported by
+    \pkg{qtl} for some time and are now given as \code{plotRF},
+    \code{plotMissing} and \code{plotMap}.
+    \item The comprehensive PDF vignette has been retired and replaced by
+    a short HTML vignette, \code{vignette("ASMap")}, which introduces the
+    package and points to the articles for complete detail. The package
+    build therefore no longer requires LaTeX, removing the class of
+    failure that led to the archiving of version 1.0-8.
+    \item Corrected the package bibliography, in which four entries
+    contained unexpanded LaTeX macros, one entry listed an incorrect
+    URL, and the authors of the MSTmap reference were separated in a way
+    that caused them to be reordered when rendered.
+  }
+}
 \subsection{BUG FIXES}{
   \itemize{
     \item \code{pushCross} and \code{pullCross} used the \code{type}
