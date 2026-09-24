@@ -1,22 +1,19 @@
 # Heat maps
 
-## Improved heat map
+The most informative single check on a constructed linkage map is a heat
+map combining the estimated pairwise recombination fractions between
+markers with the LOD scores expressing the strength of linkage between
+each pair. Let $`r_{ij}`$ denote the estimated recombination fraction
+between markers $`i`$ and $`j`$; the LOD score is then a test of no
+linkage, $`r_{ij} = 0.5`$. High LOD scores indicate rejection of that
+hypothesis and therefore strong linkage between the pair.
 
-A visual diagnostic that is very useful for checking how well a linkage
-map is constructed is a heat map that combines the estimates of the
-pairwise recombination fraction (RF) between markers as well as LOD
-scores reflecting the the strength of linkage between each pair. Let the
-estimate of RF between marker $`i`$ and $`j`$ be $`r_{ij}`$ then the LOD
-score is a test of no linkage ($`r_{ij} = 0.5`$). Higher LOD scores
-indicate that the hypothesis of no linkage is rejected and the strength
-of the connection between the pair of markers is strong.
+## The R/qtl display and its limitations
 
-In R/qtl users can plot the heat map of pairwise linkage between markers
-using [`plotRF()`](https://rdrr.io/pkg/qtl/man/plot.rf.html). The
-[`plotRF()`](https://rdrr.io/pkg/qtl/man/plot.rf.html) version of
-`mapDH` is given in the figure below. In this plot strong pairwise
-linkages between markers are represented as “hot” or red areas and weak
-pairwise linkages between markers are displayed as “cold” or blue areas.
+R/qtl provides [`plotRF()`](https://rdrr.io/pkg/qtl/man/plot.rf.html)
+for this purpose ([Broman and Wu 2014](#ref-br14)). Strong pairwise
+linkages appear as hot, or red, areas and weak linkages as cold, or
+blue, areas.
 
 ``` r
 
@@ -26,50 +23,37 @@ plotRF(mapDH)
     Warning in plotRF(mapDH): Running est.rf.
 
 ![Heat map of the constructed linkage map mapDH using
-\`plotRF()\`.](heat-maps_files/figure-html/plotrffig-1.png)
+plotRF().](heat-maps_files/figure-html/plotrffig-1.png)
 
 Heat map of the constructed linkage map mapDH using
 [`plotRF()`](https://rdrr.io/pkg/qtl/man/plot.rf.html).
 
-Unfortunately the plot contains some inadequacies that are mostly
-pointed out in the documentation (see
-[`?plotRF`](https://rdrr.io/pkg/qtl/man/plot.rf.html)). “Recombination
-fractions are transformed by -4(log2(r)+1) to make them on the same sort
-of scale as LOD scores. Values of LOD or the transformed recombination
-fraction that are above 12 are set to 12.” This transformation and the
-arbitrary threshold induce multiple restrictions on the visualization of
-the heat map. Firstly, the LOD score is highly dependent on the number
-of individuals in the population and the upper limit of 12 may be a
-vastly inadequate representation of the pairwise linkage between some
-markers. In the figure below this latter inadequacy is displayed as red
-or hot areas of linkage between markers that should otherwise be cooler
-colours. Additionally, the actual estimated recombination fractions are
-not displayed in the upper triangle of the heat map and colour legends
-matching the numerical LOD and RF’s are not present. From a visual
-standpoint, it is well known the rainbow colour spectrum is perceptually
-inadequate for representing diverging numerical data.
+The display has several limitations, most of which are noted in its own
+documentation: recombination fractions are transformed by
+$`-4(\log_2(r)+1)`$ to bring them onto a scale comparable with LOD
+scores, and values of either quantity exceeding 12 are set to 12.
 
-R/ASMap contains an improved version of the heat map called
-[`heatMap()`](https://drj001.github.io/ASMap/reference/heatMap.md) that
-rectifies the numerical and visual issues of the **qtl** heat map.
+This transformation and the fixed threshold impose three restrictions.
 
-``` r
+1.  The LOD score depends strongly on the number of individuals in the
+    population, so an upper limit of 12 may represent the pairwise
+    linkage between some markers very poorly. In the figure above this
+    appears as hot areas of linkage between markers that should be
+    rendered in cooler colours.
+2.  The estimated recombination fractions are not themselves displayed
+    in the upper triangle, and no legends relate the colours to the
+    numerical LOD scores and recombination fractions.
+3.  The rainbow colour spectrum is perceptually unsuited to the
+    representation of diverging numerical data.
 
-heatMap(x, chr, mark, what = c("both", "lod", "rf"), lmax = 12,
-             rmin = 0, markDiagonal = FALSE, color = rev(rainbow(256, start =
-             0, end = 2/3)), ...)
-```
+## The ASMap display
 
-The function independently plots the LOD score on the bottom triangle of
-the heatmap as well as the actual estimated recombination fractions on
-the upper triangle. The function also releases the arbitrary threshold
-on the LOD score and recombination fractions by providing a user defined
-`lmax` and `rmin` argument that is adjustable to suit the population
-size and any requirements of the plot required. For example, the figure
-below shows the
 [`heatMap()`](https://drj001.github.io/ASMap/reference/heatMap.md)
-equivalent of [`plotRF()`](https://rdrr.io/pkg/qtl/man/plot.rf.html) for
-the linkage map `mapDH` made with the call
+addresses each of these. LOD scores are plotted on the lower triangle
+and the estimated recombination fractions, untransformed, on the upper.
+The fixed threshold is replaced by the user-defined arguments `lmax` and
+`rmin`, which may be set to suit the population size and the
+requirements of the plot.
 
 ``` r
 
@@ -84,22 +68,49 @@ heatMap().](heat-maps_files/figure-html/heat2-1.png)
 Heat map of the constructed linkage map mapDH using
 [`heatMap()`](https://drj001.github.io/ASMap/reference/heatMap.md).
 
-The instantly visual difference between the figures is the chosen colour
-palette. R/ASMap uses a diverging colour palette `"Spectral"` from the
-default color palettes of **RColorBrewer**. The palette softens the plot
-and provides a gentle dinstinction between strongly linked and weakly
-linked markers. The plot also includes a legend for the LOD score and
-recombination fractions on either side of the figure below. As the
-estimated recombination fractions are being freely plotted without
-transformation, the complete scale is included in the heat map. This
-scale also includes estimated recombination fractions that are above the
-theoretical threshold of 0.5. By increasing this scale beyond 0.5,
-potential regions where markers out of phase with other markers can be
-recognised. The key to obtaining an “accurate” heat map is to match the
-heat of the LOD scores to the heat of the estimated recombination
-fractions and setting `lmax = 50` achieves this goal. Similar to
-[`plotRF()`](https://rdrr.io/pkg/qtl/man/plot.rf.html), the
-[`heatMap()`](https://drj001.github.io/ASMap/reference/heatMap.md)
-function allows subsetting of the linkage map by `chr`. In addition,
-users can further subset the linkage groups using the argument `mark` by
-indexing a set of markers within linkage groups defined by `chr`.
+The most immediate difference is the colour palette. ASMap uses the
+diverging `"Spectral"` palette of **RColorBrewer**, which softens the
+display and draws a gentler distinction between strongly and weakly
+linked markers. Separate legends for the LOD scores and the
+recombination fractions appear on either side of the plot.
+
+Because the recombination fractions are plotted without transformation,
+the complete scale is shown, including values above the theoretical
+threshold of 0.5. Extending the scale beyond 0.5 in this way allows
+regions in which markers are out of phase with their neighbours to be
+recognised.
+
+## Matching the two scales
+
+> An accurate heat map is obtained when the heat of the LOD scores
+> matches the heat of the estimated recombination fractions. Setting
+> `lmax = 50` achieves this for `mapDH`; a different population size
+> will require a different value.
+
+This matching is the reason `lmax` exists as an argument rather than a
+constant. Where the two triangles disagree visibly, the LOD threshold
+rather than the map is usually at fault.
+
+## Subsetting the display
+
+As with [`plotRF()`](https://rdrr.io/pkg/qtl/man/plot.rf.html), the map
+may be subset by linkage group through `chr`. The `mark` argument
+subsets further, indexing a set of markers within the linkage groups
+nominated by `chr`, which is useful for examining a suspected junction
+between two groups at close range.
+
+## Further reading
+
+- [Diagnosing genotypes and
+  markers](https://drj001.github.io/ASMap/articles/diagnostics.md) —
+  numerical counterparts to this graphical check
+- [Worked example
+  II](https://drj001.github.io/ASMap/articles/worked-example-refinement.md)
+  — heat maps used to identify linkage groups requiring merging
+- [`heatMap()`](https://drj001.github.io/ASMap/reference/heatMap.md) —
+  full argument documentation
+
+## References
+
+Broman, K. W, and H Wu. 2014. *: Tools for Analayzing QTL Experiments*.
+<http://www.CRAN.R-project.org/src/contrib/Archive/qtl/>.

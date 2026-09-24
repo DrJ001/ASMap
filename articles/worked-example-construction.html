@@ -85,70 +85,66 @@
 
     
     
-<p>This chapter involves the complete linkage map construction process
-for a barley Backcross population that contains 3024 markers genotyped
-on 326 individuals in an unconstructed marker set formatted as an R/qtl
-object with class <code>"bc"</code>. The data is available from the
-R/ASMap package by typing</p>
+<p>This article works through the construction of a linkage map for a
+barley backcross population, comprising 3,023 markers genotyped on 326
+individuals and supplied as an unconstructed R/qtl object of class
+<code>"bc"</code>. The refinement of the resulting map is continued in
+<a href="worked-example-refinement.html">Worked example II</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mapBCu</span>, package <span class="op">=</span> <span class="st">"ASMap"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="pre-construction">Pre-construction<a class="anchor" aria-label="anchor" href="#pre-construction"></a>
 </h2>
-<p>The construction of a linkage map does not usually just involve
-applying a construction algorithm to a supplied set of genetic marker
-data. It is always prudent to go through a pre-construction checklist to
-ensure that the best quality genotypes/markers are being used to
-construct the linkage map.</p>
-<p>A non-exhaustive ordered checklist for an unconstructed marker set
-could be</p>
+<p>Construction seldom consists of applying an algorithm to marker data
+as supplied. It is prudent to work through a checklist beforehand, to
+establish that the genotypes and markers being used are of the best
+available quality. The following is a non-exhaustive but ordered list
+for an unconstructed marker set.</p>
 <ol style="list-style-type: decimal">
-<li><p>Check missing allele scores across markers for each genotype as
-well as across genotypes for each marker. Markers or genotypes with a
-high proportion of missing information could indicate problems with the
-physical genotyping.</p></li>
-<li><p>Check for genetic clones or individuals that have a high
-proportion of matching allelic information between them.</p></li>
-<li><p>Check markers for excessive segregation distortion. Highly
-distorted markers may not map to unique locations.</p></li>
-<li><p>Check markers for switched alleles. These markers will not
-cluster or link well with other markers during the construction process
-and it is therefore preferred to repair their alignment before
-proceeding.</p></li>
-<li><p>Check for co-locating markers. For large linkage maps it would be
-more computationally efficient from a construction standpoint to
-temporarily omit markers that are co-located with other
-markers.</p></li>
+<li>Check missing allele scores, both across markers for each genotype
+and across genotypes for each marker. A high proportion of missing
+information may indicate problems with the physical genotyping.</li>
+<li>Check for genetic clones, or individuals sharing a high proportion
+of matching allelic information.</li>
+<li>Check markers for excessive segregation distortion. Highly distorted
+markers may not map to a unique location.</li>
+<li>Check markers for switched alleles. Such markers will not cluster or
+link well during construction, and it is preferable to repair their
+alignment beforehand.</li>
+<li>Check for co-locating markers. For large maps it is computationally
+more efficient to omit markers co-located with others, at least
+temporarily.</li>
 </ol>
-<p>R/qtl provides a very simple graphical tool for checking the
-structure of missing allele score across the genotypes and the
-markers.</p>
+<div class="section level3">
+<h3 id="missing-allele-scores">Missing allele scores<a class="anchor" aria-label="anchor" href="#missing-allele-scores"></a>
+</h3>
+<p>R/qtl provides a simple graphical check on the structure of missing
+scores across both genotypes and markers.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/plot.missing.html" class="external-link">plotMissing</a></span><span class="op">(</span><span class="va">mapBCu</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="worked-example-construction_files/figure-html/ex3-1.png" class="r-plt" alt="Plot of the missing allele scores for the unconstructed map mapBCu" width="100%"><p class="caption">
-Plot of the missing allele scores for the unconstructed map mapBCu
+<img src="worked-example-construction_files/figure-html/ex3-1.png" class="r-plt" alt="Missing allele scores for the unconstructed map mapBCu." width="100%"><p class="caption">
+Missing allele scores for the unconstructed map mapBCu.
 </p>
 </div>
-<p>the figure below shows the resulting plot for this command. The
-darkest lines on the plot indicate there are some genotypes with large
-amounts of missing data. This could indicate poor physical genotyping of
-these lines and they should be removed before proceeding. The plot also
-reveals the markers have a large number of typed allele values across
-the range of genotypes. The R/ASMap function <code><a href="../reference/statGen.html">statGen()</a></code> can
-be used to identify the genotypes with a certain number of missing
-values. These genotypes are then omitted using the usual functions
-available in R/qtl.</p>
+<p>The darkest lines indicate genotypes carrying large amounts of
+missing data, which may reflect poor physical genotyping; these should
+be removed before proceeding. The markers are otherwise well scored
+across the range of genotypes. <code><a href="../reference/statGen.html">statGen()</a></code> identifies the
+genotypes concerned, which are then removed using the usual R/qtl
+facilities.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/statGen.html">statGen</a></span><span class="op">(</span><span class="va">mapBCu</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, stat.type <span class="op">=</span> <span class="st">"miss"</span><span class="op">)</span></span>
 <span><span class="va">mapBC1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">mapBCu</span>, ind <span class="op">=</span> <span class="va">sg</span><span class="op">$</span><span class="va">miss</span> <span class="op">&lt;</span> <span class="fl">1600</span><span class="op">)</span></span></code></pre></div>
-<p>From a map construction point of view, highly related individuals can
-enhance segregation distortion of markers. It is therefore wise to
-determine a course of action such as removal of individuals or the
-creation of consensus genotypes before proceeding with any further
-pre-construction diagnostics. The R/ASMap function
-<code><a href="../reference/genClones.html">genClones()</a></code> discussed in section Genetic clones can be used
-to identify and report genetic clones.</p>
+</div>
+<div class="section level3">
+<h3 id="genetic-clones">Genetic clones<a class="anchor" aria-label="anchor" href="#genetic-clones"></a>
+</h3>
+<p>Highly related individuals inflate the segregation distortion of
+markers, so a course of action, whether removal of individuals or the
+formation of consensus genotypes, should be settled before further
+diagnosis. <code><a href="../reference/genClones.html">genClones()</a></code> identifies and reports them; see <a href="diagnostics.html">Diagnosing genotypes and markers</a> for the
+function itself.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/genClones.html">genClones</a></span><span class="op">(</span><span class="va">mapBC1</span>, tol <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
 <span><span class="va">gc</span><span class="op">$</span><span class="va">cgd</span></span></code></pre></div>
@@ -171,17 +167,16 @@ to identify and report genetic clones.</p>
 16 BC205 BC190 1.0000  2886    0       7    130    11
 17 BC286 BC285 1.0000  2920    0       1    102    12
 18 BC325 BC314 1.0000  2911    0       4    108    13</code></pre>
-<p>The table shows 13 groups of genotypes that share a proportion of
-their alleles greater than 0.95. The supplied additional statistics show
-that the first group contains three pairs of genotypes that had matched
-pairs of alleles from 1620 markers or less. These pairs also   1400
-markers where an allele was present for one genotype and missing for
-another. Based on this, there is not enough evidence to suspect these
-pairs may be clones and they are removed from the table. The
-<code><a href="../reference/fixClones.html">fixClones()</a></code> function can then be used to form consensus
-genotypes for the remaining groups of clones in the table.</p>
+<p>Thirteen groups share more than 0.95 of their alleles. The
+accompanying statistics require interpretation rather than acceptance.
+The first group contains three pairs matched on 1,620 markers or fewer,
+and those same pairs have approximately 1,400 markers at which an allele
+was present for one genotype and missing for the other. That is
+insufficient evidence of cloning, and the group is therefore removed
+from the table before consensus genotypes are formed for the
+remainder.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cgd</span> <span class="op">&lt;-</span> <span class="va">gc</span><span class="op">$</span><span class="va">cgd</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">5</span><span class="op">)</span>,<span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="va">cgd</span> <span class="op">&lt;-</span> <span class="va">gc</span><span class="op">$</span><span class="va">cgd</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>, <span class="op">]</span></span>
 <span><span class="va">mapBC2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fixClones.html">fixClones</a></span><span class="op">(</span><span class="va">mapBC1</span>, <span class="va">cgd</span>, consensus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">mapBC2</span><span class="op">$</span><span class="va">pheno</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">mapBC2</span><span class="op">$</span><span class="va">pheno</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <pre><code> [1] "BC039_BC052_BC168" "BC060_BC067"       "BC086_BC135"      
@@ -189,31 +184,23 @@ genotypes for the remaining groups of clones in the table.</p>
  [7] "BC138_BC204"       "BC141_BC147"       "BC144_BC193"      
 [10] "BC161_BC162"       "BC190_BC205"       "BC285_BC286"      
 [13] "BC314_BC325"      </code></pre>
-<p>At this juncture it is wise to check the segregation distortion
-statistics of the markers. Segregation distortion is phenomenon where
-the observed allelic frequencies at a specific locus deviate from
-expected allelic frequencies due to Mendelian genetics. It is well known
-that this distortion can occur from physical laboratorial processes or
-it may also occur in local genomic regions from underlying biological
-and genetic mechanisms <span class="citation">(<a href="#ref-lytt91">Lyttle 1991</a>)</span>.</p>
-<p>The level of segregation distortion, the allelic proportions and the
-missing value proportion across the genome can be graphically
-represented using the marker profiling function
-<code><a href="../reference/profileMark.html">profileMark()</a></code> and the result is displayed in the figure
-below.</p>
-<p>Setting <code>crit.val = "bonf"</code> annotates the markers that
-have a p-value for the test of segregation distortion lower than the
-family wide bonferroni adjusted alpha level of 0.05/no.of.markers on
-each of the figures in each panel. Additional plotting parameters
-<code>layout = c(1,4)</code>, <code>type="p"</code> and
-<code>cex = 0.5</code> are passed to the high level lattice plotting
-function <code><a href="https://rdrr.io/pkg/lattice/man/xyplot.html" class="external-link">xyplot()</a></code> to provide a more aesthetically pleasing
-plot. The plot indicates there are numerous markers that are considered
-to be significantly distorted with three highly distorted markers. The
-plot also indicates that the missing value proportion of the markers
-does not exceed 20%.</p>
+</div>
+<div class="section level3">
+<h3 id="segregation-distortion">Segregation distortion<a class="anchor" aria-label="anchor" href="#segregation-distortion"></a>
+</h3>
+<p>Segregation distortion is the phenomenon whereby observed allelic
+frequencies at a locus deviate from those expected under Mendelian
+genetics. It may arise from laboratory processes, or in local genomic
+regions from underlying biological mechanisms <span class="citation">(<a href="#ref-lytt91">Lyttle 1991</a>)</span>.</p>
+<p>The extent of distortion, the allelic proportions and the proportion
+of missing values may be displayed together with
+<code><a href="../reference/profileMark.html">profileMark()</a></code>. Setting <code>crit.val = "bonf"</code>
+annotates markers whose p-value for the test of segregation distortion
+falls below a family-wise Bonferroni adjusted level of 0.05 divided by
+the number of markers.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/profileMark.html">profileMark</a></span><span class="op">(</span><span class="va">mapBC2</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seg.dist"</span>, <span class="st">"prop"</span>, <span class="st">"miss"</span><span class="op">)</span>, crit.val <span class="op">=</span> <span class="st">"bonf"</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span>, cex <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/profileMark.html">profileMark</a></span><span class="op">(</span><span class="va">mapBC2</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seg.dist"</span>, <span class="st">"prop"</span>, <span class="st">"miss"</span><span class="op">)</span>, crit.val <span class="op">=</span> <span class="st">"bonf"</span>,</span>
+<span>            layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span>, cex <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="worked-example-construction_files/figure-html/ex8-1.png" class="r-plt" alt="For individual markers, the negative log10 p-value for the test of segregation distortion, the proportion of each contributing allele and the proportion of missing values." width="100%"><p class="caption">
 For individual markers, the negative log10 p-value for the test of
@@ -221,21 +208,27 @@ segregation distortion, the proportion of each contributing allele and
 the proportion of missing values.
 </p>
 </div>
-<p>The highly distorted markers can easily be dropped using</p>
+<p>Numerous markers are significantly distorted, three of them highly
+so, and the proportion of missing values does not exceed 20% for any
+marker. The three extreme markers are dropped on the basis of their
+allele proportions.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/statMark.html">statMark</a></span><span class="op">(</span><span class="va">mapBC2</span>, stat.type <span class="op">=</span> <span class="st">"marker"</span><span class="op">)</span><span class="op">$</span><span class="va">marker</span><span class="op">$</span><span class="va">AB</span></span>
-<span><span class="va">mapBC3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/drop.markers.html" class="external-link">drop.markers</a></span><span class="op">(</span><span class="va">mapBC2</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/markernames.html" class="external-link">markernames</a></span><span class="op">(</span><span class="va">mapBC2</span><span class="op">)</span><span class="op">[</span><span class="va">mm</span> <span class="op">&gt;</span> <span class="fl">0.98</span><span class="op">]</span>,<span class="fu"><a href="https://rdrr.io/pkg/qtl/man/markernames.html" class="external-link">markernames</a></span><span class="op">(</span><span class="va">mapBC2</span><span class="op">)</span><span class="op">[</span><span class="va">mm</span> <span class="op">&lt;</span> <span class="fl">0.2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Without a constructed map it is impossible to determine the origin of
-the segregation distortion. However, the blind use of distorted markers
-may also create linkage map construction problems. It may be more
-sensible to place the distorted markers aside and construct the map with
-less problematic markers. Once the linkage map is constructed the more
-problematic markers can be introduced to determine whether they have a
-useful or deleterious effect on the map. The R/ASMap functions
-<code><a href="../reference/pullCross.html">pullCross()</a></code> and <code><a href="../reference/pushCross.html">pushCross()</a></code> are designed to
-take advantage of this scenario. To showcase their use in this example,
-they are also used to pull markers with 10-20% missing values as well as
-co-located markers.</p>
+<span><span class="va">mapBC3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/drop.markers.html" class="external-link">drop.markers</a></span><span class="op">(</span><span class="va">mapBC2</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/markernames.html" class="external-link">markernames</a></span><span class="op">(</span><span class="va">mapBC2</span><span class="op">)</span><span class="op">[</span><span class="va">mm</span> <span class="op">&gt;</span> <span class="fl">0.98</span><span class="op">]</span>,</span>
+<span>                                 <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/markernames.html" class="external-link">markernames</a></span><span class="op">(</span><span class="va">mapBC2</span><span class="op">)</span><span class="op">[</span><span class="va">mm</span> <span class="op">&lt;</span> <span class="fl">0.2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="setting-markers-aside">Setting markers aside<a class="anchor" aria-label="anchor" href="#setting-markers-aside"></a>
+</h3>
+<p>Without a constructed map the origin of the segregation distortion
+cannot be determined. Using distorted markers indiscriminately may
+nonetheless create problems during construction. The more prudent course
+is to set the distorted markers aside, construct the map from the less
+problematic remainder, and then reintroduce them to establish whether
+their effect is beneficial or deleterious. <code><a href="../reference/pullCross.html">pullCross()</a></code> and
+<code><a href="../reference/pushCross.html">pushCross()</a></code> exist for this purpose; see <a href="pulling-and-pushing.html">Pulling and pushing markers</a>. Here
+they are also used to set aside markers with 10 to 20% missing values,
+and co-located markers.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapBC3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullCross.html">pullCross</a></span><span class="op">(</span><span class="va">mapBC3</span>, type <span class="op">=</span> <span class="st">"missing"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>miss.thresh <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mapBC3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullCross.html">pullCross</a></span><span class="op">(</span><span class="va">mapBC3</span>, type <span class="op">=</span> <span class="st">"seg.distortion"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>seg.thresh <span class="op">=</span> <span class="st">"bonf"</span><span class="op">)</span><span class="op">)</span></span>
@@ -244,38 +237,42 @@ co-located markers.</p>
 <pre><code>[1] "geno"           "pheno"          "missing"        "seg.distortion"
 [5] "co.located"    </code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">mapBC3</span><span class="op">$</span><span class="va">missing</span><span class="op">$</span><span class="va">data</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">mapBC3</span><span class="op">$</span><span class="va">seg.dist</span><span class="op">$</span><span class="va">data</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">mapBC3</span><span class="op">$</span><span class="va">co.located</span><span class="op">$</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">mapBC3</span><span class="op">$</span><span class="va">missing</span><span class="op">$</span><span class="va">data</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">mapBC3</span><span class="op">$</span><span class="va">seg.dist</span><span class="op">$</span><span class="va">data</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">mapBC3</span><span class="op">$</span><span class="va">co.located</span><span class="op">$</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>[1] 847</code></pre>
-<p>A total of 847 markers are removed and placed aside in their
-respective elements and the map is now constructed with the remaining
-2173 markers.</p>
+<p>A total of 847 markers have been set aside in their respective
+elements, leaving 2,173 markers from which the map is constructed.</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="mstmap-construction">MSTmap construction<a class="anchor" aria-label="anchor" href="#mstmap-construction"></a>
+<h2 id="construction">Construction<a class="anchor" aria-label="anchor" href="#construction"></a>
 </h2>
-<p>The curated genetic marker data in <code>mapBC3</code> can now be
-constructed using the <code>mstmap.cross</code> function available in
-R/ASMap.</p>
+<p>The curated marker data in <code>mapBC3</code> may now be passed to
+<code><a href="../reference/mstmap.cross.html">mstmap()</a></code>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapBC4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapBC3</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, p.value <span class="op">=</span> <span class="fl">1e-12</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC4</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mapBC4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapBC3</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>,</span>
+<span>                 p.value <span class="op">=</span> <span class="fl">1e-12</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 9
+The size of the linkage groups are: 574 473 75  551 32  188 160 110 10  
+The number of bins in each linkage group: 182   204 31  191 18  91  73  60  6   </code></pre>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC4</span><span class="op">)</span></span></code></pre></div>
 <pre><code>       L.1        L.2        L.3        L.4        L.5        L.6        L.7 
 304.910957 266.240647  78.982131 252.281760  33.226962 233.485952 153.315888 
        L.8        L.9 
 106.290403   6.657526 </code></pre>
-<p>By setting <code>bychr = FALSE</code> the complete set of marker data
-from <code>mapBC3</code> is bulked and constructed from scratch. This
-construction involves the clustering of markers to linkage groups and
-then the optimal ordering of markers within each linkage group. An
-initial check of the figure below, indicates for a population size of
-309 the <code>p.value</code> should be set to <code>1e-12</code> to
-ensure a 30cM threshold when clustering markers to linkage groups. The
-newly constructed linkage map contains 9 linkage groups each containing
-markers that are optimally ordered. The performance of the MSTmap
-construction can be checked by plotting the heat map of pairwise
-recombination fractions between markers and their pairwise LOD score of
-linkage using the R/ASMap function <code><a href="../reference/heatMap.html">heatMap()</a></code></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>Setting <code>bychr = FALSE</code> bulks the complete marker set and
+constructs from first principles, clustering the markers into linkage
+groups and then ordering the markers within each. For a population of
+309 individuals, <code>p.value = 1e-12</code> gives a threshold of
+approximately 30 cM before markers in distinct clusters are linked; the
+relationship is set out in <a href="mstmap-algorithm.html">How the
+MSTmap algorithm works</a>. The resulting map contains nine linkage
+groups, each optimally ordered.</p>
+<div class="section level3">
+<h3 id="assessment-by-heat-map">Assessment by heat map<a class="anchor" aria-label="anchor" href="#assessment-by-heat-map"></a>
+</h3>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatMap.html">heatMap</a></span><span class="op">(</span><span class="va">mapBC4</span>, lmax <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
 <pre><code>Warning in heatMap(mapBC4, lmax = 70): Running est.rf.</code></pre>
 <div class="figure" style="text-align: center">
@@ -283,82 +280,127 @@ linkage using the R/ASMap function <code><a href="../reference/heatMap.html">hea
 Heat map of the constructed linkage map mapBC4.
 </p>
 </div>
-<p>As discussed in section Improved heat map, an aesthetic heat map is
-attained when the heat on the upper triangle of the plot used for the
-pairwise estimated recombination fractions matches the heat of the
-pairwise LOD scores. the figure below displays the heat map and shows
-this was achieved by setting <code>lmax = 70</code>. The heat map also
-shows consistent heat across the markers within linkage groups
-indicating strong linkage between nearby markers. The linkage groups
-appear to be very distinctly clustered.</p>
-<p>Although the heat map is indicating the construction process was
-successful it does not highlight subtle problems that may be existing in
-the constructed linkage map. As stated in section Genotype and
-marker/interval profiling one of the key quality characteristics of a
-well constructed linkage map is an appropriate recombination rate of the
-the genotypes. For this barley Backcross population each line is
-considered to be independent with an expected recombination rate of   14
-across the genome. The current linkage map contains linkage groups that
-exceed the theoretical cutoff of 200cM indicating there may be genotypes
-with inflated recombination rates. This can easily be ascertained from
-the <code><a href="../reference/profileGen.html">profileGen()</a></code> function available in R/ASMap.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/profileGen.html">profileGen</a></span><span class="op">(</span><span class="va">mapBC4</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xo"</span>,<span class="st">"dxo"</span>,<span class="st">"miss"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"Genotype"</span>, xo.lambda <span class="op">=</span> <span class="fl">14</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">2</span>, cex <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
+<p>As discussed in <a href="heat-maps.html">Heat maps</a>, an accurate
+display is obtained when the heat of the recombination fractions on the
+upper triangle matches that of the LOD scores, which
+<code>lmax = 70</code> achieves here. The heat is consistent across the
+markers within each linkage group, indicating strong linkage between
+neighbouring markers, and the groups appear distinctly clustered.</p>
+</div>
+<div class="section level3">
+<h3 id="assessment-by-recombination-rate">Assessment by recombination rate<a class="anchor" aria-label="anchor" href="#assessment-by-recombination-rate"></a>
+</h3>
+<p>A successful heat map does not expose subtler problems. One of the
+key characteristics of a well constructed map is an appropriate
+recombination rate among the genotypes. For this population each line is
+considered independent with an expected rate of approximately 14 across
+the genome, yet the map contains linkage groups exceeding the
+theoretical cutoff of 200 cM, which suggests genotypes with inflated
+rates.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/profileGen.html">profileGen</a></span><span class="op">(</span><span class="va">mapBC4</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xo"</span>, <span class="st">"dxo"</span>, <span class="st">"miss"</span><span class="op">)</span>,</span>
+<span>                 id <span class="op">=</span> <span class="st">"Genotype"</span>, xo.lambda <span class="op">=</span> <span class="fl">14</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>                 cex <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="worked-example-construction_files/figure-html/ex15-1.png" class="r-plt" alt="For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC4" width="100%"><p class="caption">
+<img src="worked-example-construction_files/figure-html/ex15-1.png" class="r-plt" alt="For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC4." width="100%"><p class="caption">
 For individual genotypes, the number of recombinations, double
-recombinations and missing values for mapBC4
+recombinations and missing values for mapBC4.
 </p>
 </div>
-<p>the figure below show the number of recombinations, double
-recombination and missing values for each of 309 genotypes. The plot
-also annotates the genotypes that have recombination rates significantly
-above the expected recombination rate of 14. A total of seven lines have
-recombination rates above 20 and the plots also show that these lines
-have excessive missing values. To ensure the extra list elements
+<p>Seven lines have recombination rates above 20, and the same lines
+carry excessive missing values.</p>
+<blockquote>
+<p>The offending genotypes are removed with <code><a href="../reference/subsetCross.html">subsetCross()</a></code>
+rather than <code>subset.cross()</code>, so that the
 <code>"co.located"</code>, <code>"seg.distortion"</code> and
-<code>"missing"</code> of the object are subsetted and updated
-appropriately, the offending genotypes are removed using the R/ASMap
-function <code><a href="../reference/subsetCross.html">subsetCross()</a></code>. The linkage map is then be
-reconstructed.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code>"missing"</code> elements are subset and their statistics
+recalculated alongside the map. Those statistics govern which markers
+are later restored.</p>
+</blockquote>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapBC5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsetCross.html">subsetCross</a></span><span class="op">(</span><span class="va">mapBC4</span>, ind <span class="op">=</span> <span class="op">!</span><span class="va">pg</span><span class="op">$</span><span class="va">xo.lambda</span><span class="op">)</span></span>
-<span><span class="va">mapBC6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapBC5</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, p.value <span class="op">=</span> <span class="fl">1e-12</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC6</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">mapBC6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapBC5</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                 p.value <span class="op">=</span> <span class="fl">1e-12</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 1
+The size of the linkage groups are: 574 
+The number of bins in each linkage group: 171   
+Number of linkage groups: 1
+The size of the linkage groups are: 473 
+The number of bins in each linkage group: 197   
+Number of linkage groups: 1
+The size of the linkage groups are: 75  
+The number of bins in each linkage group: 28    
+Number of linkage groups: 1
+The size of the linkage groups are: 551 
+The number of bins in each linkage group: 186   
+Number of linkage groups: 1
+The size of the linkage groups are: 32  
+The number of bins in each linkage group: 17    
+Number of linkage groups: 1
+The size of the linkage groups are: 188 
+The number of bins in each linkage group: 90    
+Number of linkage groups: 1
+The size of the linkage groups are: 160 
+The number of bins in each linkage group: 72    
+Number of linkage groups: 1
+The size of the linkage groups are: 110 
+The number of bins in each linkage group: 59    
+Number of linkage groups: 1
+The size of the linkage groups are: 10  
+The number of bins in each linkage group: 5 </code></pre>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC6</span><span class="op">)</span></span></code></pre></div>
 <pre><code>       L.1        L.2        L.3        L.4        L.5        L.6        L.7 
 229.578103 223.170605  65.806120 214.380402  27.297642 191.060846 140.114968 
        L.8        L.9 
  88.687053   4.875885 </code></pre>
-<p>Users can check the recombination rates of the remaining genotypes in
-the re-constructed map are now within respectable limits. As a result
-the lengths of the linkage groups have dropped dramatically.</p>
-<p>It is also useful to graphically display statistics of the markers
-and intervals of the current constructed linkage map. For example, the
-figure below shows the marker profiles of the -log10 p-value for the
-test of segregation distortion, the allele proportions and the number of
-double crossovers. It also displays the interval profile of the number
-of recombinations occurring between adjacent markers. This plot reveals
-many things that are useful for the next phase of the construction
-process.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/profileMark.html">profileMark</a></span><span class="op">(</span><span class="va">mapBC6</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seg.dist"</span>,<span class="st">"prop"</span>,<span class="st">"dxo"</span>,<span class="st">"recomb"</span><span class="op">)</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">5</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
+<p>The linkage group lengths have fallen considerably, and the
+recombination rates of the remaining genotypes may be confirmed to lie
+within acceptable limits.</p>
+</div>
+<div class="section level3">
+<h3 id="marker-and-interval-profiles">Marker and interval profiles<a class="anchor" aria-label="anchor" href="#marker-and-interval-profiles"></a>
+</h3>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/profileMark.html">profileMark</a></span><span class="op">(</span><span class="va">mapBC6</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seg.dist"</span>, <span class="st">"prop"</span>, <span class="st">"dxo"</span>, <span class="st">"recomb"</span><span class="op">)</span>,</span>
+<span>            layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="worked-example-construction_files/figure-html/ex18-1.png" class="r-plt" alt="Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions and the number of double of crossovers as well as the interval profile of the number of recombinations between adjacent markers in mapBC6." width="100%"><p class="caption">
-Marker profiles of the -log10 p-value for the test of segregation
-distortion, allele proportions and the number of double of crossovers as
-well as the interval profile of the number of recombinations between
-adjacent markers in mapBC6.
+<img src="worked-example-construction_files/figure-html/ex18-1.png" class="r-plt" alt="Marker profiles of segregation distortion, allele proportions and double crossovers, with the interval profile of recombinations between adjacent markers in mapBC6." width="100%"><p class="caption">
+Marker profiles of the negative log10 p-value for the test of
+segregation distortion, allele proportions and the number of double
+crossovers, together with the interval profile of the number of
+recombinations between adjacent markers in mapBC6.
 </p>
 </div>
-<p>The plot instantly reveals the success of the map construction
-process with no more than one double crossover being found at any marker
-and very few being found in total. The plot also reveals the extent of
-the biological distortion that can occur within a linkage group. A close
-look at the segregation distortion and allele proportion plots shows the
-linkage group L.3 and the short linkage group L.5 have profiles that
-could be joined if the linkage groups were merged. In addition, L.8 and
-L.9 also have profiles that could be joined if the linkage groups were
-combined. This will be discussed in more detail in the next section.</p>
+<p>The profiles confirm the success of the construction: no more than
+one double crossover occurs at any marker, and very few in total. They
+also show the extent of biological distortion that can arise within a
+linkage group.</p>
+<p>Closer inspection of the segregation distortion and allele proportion
+panels indicates that linkage group L.3 and the short group L.5 have
+profiles that would join were the groups merged, and similarly for L.8
+and L.9. That possibility is pursued in <a href="worked-example-refinement.html">Worked example II</a>.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="further-reading">Further reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
+</h2>
+<ul>
+<li>
+<a href="worked-example-refinement.html">Worked example II</a> —
+reintroducing the markers set aside, merging linkage groups and
+post-construction development</li>
+<li>
+<a href="diagnostics.html">Diagnosing genotypes and markers</a> —
+the diagnostic functions used above</li>
+<li>
+<a href="pulling-and-pushing.html">Pulling and pushing markers</a> —
+the mechanism for setting markers aside</li>
+</ul>
+</div>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-lytt91" class="csl-entry">
 Lyttle, T. W. 1991. <span>“Segregation Distorters.”</span> <em>Annula

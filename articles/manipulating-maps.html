@@ -13,9 +13,9 @@
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Manipulating linkage maps">
-<meta name="description" content="Breaking, merging, subsetting and combining linkage maps, and fast estimation of genetic distances.
+<meta name="description" content="Breaking, merging, combining and subsetting linkage maps, and rapid estimation of genetic distances.
 ">
-<meta property="og:description" content="Breaking, merging, subsetting and combining linkage maps, and fast estimation of genetic distances.
+<meta property="og:description" content="Breaking, merging, combining and subsetting linkage maps, and rapid estimation of genetic distances.
 ">
 </head>
 <body>
@@ -85,215 +85,223 @@
 
     
     
+<p>Construction is rarely a single operation. Linkage groups may need to
+be broken or merged, maps built on different marker platforms may need
+to be combined, and individuals may need to be removed. The functions
+described here perform these operations on an R/qtl cross object while
+preserving the additional structures ASMap places within it.</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th>Function</th>
+<th>Operation</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/breakCross.html"><code>breakCross()</code></a></td>
+<td>Split linkage groups at nominated markers</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/mergeCross.html"><code>mergeCross()</code></a></td>
+<td>Combine nominated linkage groups into one</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/combineMap.html"><code>combineMap()</code></a></td>
+<td>Merge separate cross objects into a single map</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/subsetCross.html"><code>subsetCross()</code></a></td>
+<td>Subset genotypes or linkage groups consistently</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/quickEst.html"><code>quickEst()</code></a></td>
+<td>Estimate genetic distances rapidly</td>
+</tr>
+</tbody>
+</table>
 <div class="section level2">
-<h2 id="miscellaneous-additional-rqtl-functions">Miscellaneous additional R/qtl functions<a class="anchor" aria-label="anchor" href="#miscellaneous-additional-rqtl-functions"></a>
+<h2 id="breaking-and-merging-linkage-groups">Breaking and merging linkage groups<a class="anchor" aria-label="anchor" href="#breaking-and-merging-linkage-groups"></a>
 </h2>
-<div class="section level3">
-<h3 id="breaking-and-merging-linkage-groups">Breaking and merging linkage groups<a class="anchor" aria-label="anchor" href="#breaking-and-merging-linkage-groups"></a>
-</h3>
-<p>During the linkage map construction process there may be a
-requirement to break or merge linkage groups. R/ASMap provides two
-functions to achieve this.</p>
+<p>The <code>split</code> argument of <code><a href="../reference/breakCross.html">breakCross()</a></code> takes a
+list whose elements are named by the linkage groups to be split, and
+which contain the markers <strong>immediately preceding</strong> each
+split point. Splitting 3B after its seventh marker and 6A after its
+fifteenth is therefore expressed as follows.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/breakCross.html">breakCross</a></span><span class="op">(</span><span class="va">cross</span>, split <span class="op">=</span> <span class="cn">NULL</span>, suffix <span class="op">=</span> <span class="st">"numeric"</span>, sep <span class="op">=</span> <span class="st">"."</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/mergeCross.html">mergeCross</a></span><span class="op">(</span><span class="va">cross</span>, merge <span class="op">=</span> <span class="cn">NULL</span>, gap <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<p>The <code><a href="../reference/breakCross.html">breakCross()</a></code> function allows users to break linkage
-groups in a variety ways. The <code>split</code> argument takes a list
-with elements named by the linkage group names that require splitting
-and containing the markers that immediately proceed where the splits are
-to be made. For example, a split of the linkage group 3B and 6A linkage
-map <code>mapDH</code> after the seventh and fifteenth marker
-respectively can be easily made using</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapDHb1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/breakCross.html">breakCross</a></span><span class="op">(</span><span class="va">mapDH</span>, split <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"3B"</span> <span class="op">=</span> <span class="st">"3B.m.7"</span>,<span class="st">"6A"</span> <span class="op">=</span> <span class="st">"6A.m.15"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">mapDHb1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/breakCross.html">breakCross</a></span><span class="op">(</span><span class="va">mapDH</span>, split <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"3B"</span> <span class="op">=</span> <span class="st">"3B.m.7"</span>, <span class="st">"6A"</span> <span class="op">=</span> <span class="st">"6A.m.15"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHb1</span><span class="op">)</span></span></code></pre></div>
 <pre><code>  1A  1B1  1B2   1D   2A   2B  2D1  2D2   3A 3B.1 3B.2   3D   4A   4B   4D   5A 
   41    5   33   10   40   35    8   13   37    7   23    6   30   32    6   54 
   5B   5D 6A.1 6A.2   6B   6D   7A   7B   7D 
   56    6   15   12   41   15   33   37    4 </code></pre>
-<p>The <code>split</code> argument is flexible and can handle multiple
-linkage groups as well as multiple markers within linkage groups. The
-default use of the <code>suffix</code> argument produces a numerical
-suffix attachment to the original linkage groups being split with a
-separated by <code>sep</code>. Users can also provide their own complete
-names for the new split linkage groups by explicitly naming them in the
-<code>suffix</code> argument.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapDHb2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/breakCross.html">breakCross</a></span><span class="op">(</span><span class="va">mapDH</span>, split <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"3B"</span> <span class="op">=</span> <span class="st">"3B.m.7"</span><span class="op">)</span>, suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"3B"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3B1"</span>,<span class="st">"3B2"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<p>Multiple linkage groups, and multiple split points within a group,
+may be handled in a single call. By default a numeric suffix is appended
+to the name of the group being split, separated by <code>sep</code>.
+Complete names for the new groups may be supplied instead by naming them
+explicitly in <code>suffix</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mapDHb2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/breakCross.html">breakCross</a></span><span class="op">(</span><span class="va">mapDH</span>, split <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"3B"</span> <span class="op">=</span> <span class="st">"3B.m.7"</span><span class="op">)</span>,</span>
+<span>                      suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"3B"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3B1"</span>, <span class="st">"3B2"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHb2</span><span class="op">)</span></span></code></pre></div>
 <pre><code> 1A 1B1 1B2  1D  2A  2B 2D1 2D2  3A 3B1 3B2  3D  4A  4B  4D  5A  5B  5D  6A  6B 
  41   5  33  10  40  35   8  13  37   7  23   6  30  32   6  54  56   6  27  41 
  6D  7A  7B  7D 
  15  33  37   4 </code></pre>
-<p>The <code><a href="../reference/mergeCross.html">mergeCross()</a></code> function provides a method for merging
-linkage groups. Its argument <code>merge</code> requires a list with
-elements named by the proposed linkage group names required and
-containing the linkage groups to be merged. For the linkage map
-<code>mapDHb1</code> containing split linkage groups 3B and 6A created
-by a call to <code><a href="../reference/breakCross.html">breakCross()</a></code> the call to
-<code><a href="../reference/mergeCross.html">mergeCross()</a></code> would be</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapDHm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mergeCross.html">mergeCross</a></span><span class="op">(</span><span class="va">mapDHb1</span>, merge <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"3B"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3B.1"</span>,<span class="st">"3B.2"</span><span class="op">)</span>,<span class="st">"6A"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"6A.1"</span>,<span class="st">"6A.2"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<p><code><a href="../reference/mergeCross.html">mergeCross()</a></code> performs the converse operation. Its
+<code>merge</code> argument takes a list whose elements are named by the
+proposed linkage group names and which contain the groups to be
+merged.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mapDHm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mergeCross.html">mergeCross</a></span><span class="op">(</span><span class="va">mapDHb1</span>, merge <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"3B"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3B.1"</span>, <span class="st">"3B.2"</span><span class="op">)</span>,</span>
+<span>                                           <span class="st">"6A"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"6A.1"</span>, <span class="st">"6A.2"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHm</span><span class="op">)</span></span></code></pre></div>
 <pre><code> 1A 1B1 1B2  1D  2A  2B 2D1 2D2  3A  3B  3D  4A  4B  4D  5A  5B  5D  6A  6B  6D 
  41   5  33  10  40  35   8  13  37  30   6  30  32   6  54  56   6  27  41  15 
  7A  7B  7D 
  33  37   4 </code></pre>
-<p>It should be noted that this function places an artificial genetic
-distance gap between the merged linkage groups set by the
-<code>gap</code> argument. Accurate distance estimation would require a
-separate map estimation procedure after the merging has taken place.</p>
+<blockquote>
+<p><code><a href="../reference/mergeCross.html">mergeCross()</a></code> inserts an artificial genetic distance gap
+between the merged groups, governed by the <code>gap</code> argument.
+The distances across the join are therefore not estimates, and a
+separate estimation step is required after merging.</p>
+</blockquote>
 </div>
-<div class="section level3">
-<h3 id="rapid-genetic-distance-estimation">Rapid genetic distance estimation<a class="anchor" aria-label="anchor" href="#rapid-genetic-distance-estimation"></a>
-</h3>
-<p>The linkage map estimation function in R/qtl called
-<code><a href="https://rdrr.io/pkg/qtl/man/est.map.html" class="external-link">est.map()</a></code> can be invoked individually or can be applied
-through <code><a href="https://rdrr.io/pkg/qtl/man/read.cross.html" class="external-link">read.cross()</a></code> when setting the argument
-<code>estimate.map = TRUE</code>. The function applies the multi-locus
-hidden Markov model technology of <span class="citation">(<a href="#ref-lg87">Lander and Green 1987</a>)</span> to perform its
-calculations. Unfortunately this technology is computationally
-cumbersome if there are many markers on a linkage group and becomes more
-so if there are many missing allele calls and genotyping errors
-present.</p>
-<p>R/ASMap contains a small map estimation function that circumvents
-this computational burden.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/quickEst.html">quickEst</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">chr</span>, map.function <span class="op">=</span> <span class="st">"kosambi"</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
-<p>The function makes use of another function in R/qtl called
-<code><a href="https://rdrr.io/pkg/qtl/man/argmax.geno.html" class="external-link">argmax.geno()</a></code>. This function is also a multi-locus hidden
-Markov algorithm that uses the observed markers present in a linkage
-group to impute pseudo-markers at any chosen cM genetic distance. In
-this case, we only require a reconstruction or imputation at the markers
-themselves. For the most accurate imputation to occur there needs to be
-an estimate of genetic distance already in place. To obtain an initial
-estimate of distance <code><a href="https://rdrr.io/pkg/qtl/man/est.rf.html" class="external-link">est.rf()</a></code> is called within each linkage
-group defined by <code>chr</code> and recombination fractions are
-converted to genetic distances based on <code>map.function</code>.
-Unlike <code><a href="https://rdrr.io/pkg/qtl/man/est.map.html" class="external-link">est.map()</a></code> the <code><a href="../reference/quickEst.html">quickEst()</a></code> function lives
-up to its namesake by providing the quickest genetic distance
-calculations for large linkage maps.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">map1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/est.map.html" class="external-link">est.map</a></span><span class="op">(</span><span class="va">mapDH</span>, map.function <span class="op">=</span> <span class="st">"kosambi"</span><span class="op">)</span></span>
-<span><span class="va">map1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">map1</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">map1</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">map2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quickEst.html">quickEst</a></span><span class="op">(</span><span class="va">mapDH</span>, map.function <span class="op">=</span> <span class="st">"kosambi"</span><span class="op">)</span></span>
-<span><span class="va">map2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">map2</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">map2</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/plot.map.html" class="external-link">plotMap</a></span><span class="op">(</span><span class="va">map1</span>, <span class="va">map2</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="manipulating-maps_files/figure-html/quick2-1.png" class="r-plt" alt="Comparison of `mapDH` using `est.map` and `quickEst`." width="100%"><p class="caption">
-Comparison of <code>mapDH</code> using <code>est.map</code> and
-<code>quickEst</code>.
-</p>
-</div>
-<p>The linkage map <code>mapDH</code> was re-estimated using
-<code><a href="https://rdrr.io/pkg/qtl/man/est.map.html" class="external-link">est.map()</a></code> and <code><a href="../reference/quickEst.html">quickEst()</a></code> and a comparison of
-the resulting maps are given in the figure below. The graphic indicates
-that there negligible changes in marker placement and overall linkage
-group distances between the two linkage maps.</p>
-</div>
-<div class="section level3">
-<h3 id="subsetting-in-rasmap">Subsetting in R/ASMap<a class="anchor" aria-label="anchor" href="#subsetting-in-rasmap"></a>
-</h3>
-<p>The functions <code><a href="../reference/pullCross.html">pullCross()</a></code> and <code><a href="../reference/pushCross.html">pushCross()</a></code>
-described in section Pulling and pushing markers are used to create and
-manipulate extra list elements <code>"co.located"</code>,
-<code>"seg.distortion"</code> and <code>"missing"</code> associated with
-different marker types. Each element contains a data element consisting
-of a marker matrix equivalent in row dimension to the marker elements of
-the linkage map they were pulled from. Unfortunately, these list
-elements are not recognized by the native R/qtl functions. If the R/qtl
-function <code>subset.cross()</code> is used to subset the object to a
-reduced number of individuals then the data component of each of these
-elements will not be subsetted accordingly. In addition, the statistics
-in the table component of the elements <code>"seg.distortion"</code> and
-<code>"missing"</code> will be incorrect for the newly subsetted linkage
-map.</p>
-<p>The <code><a href="../reference/subsetCross.html">subsetCross()</a></code> function available in the R/ASMap
-package contains identical functionality to <code>subset.cross</code>
-but also ensures the data components of the extra list elements
-<code>"co.located"</code>, <code>"seg.distortion"</code> and
-<code>"missing"</code> are subsetted to match the linkage map. In
-addition, for elements <code>"seg.distortion"</code> and
-<code>"missing"</code> it also updates the table components to reflect
-the newly subsetted map. This update ensures that
-<code><a href="../reference/pushCross.html">pushCross()</a></code> uses the most accurate information when
-deciding which markers to push back into the linkage map.</p>
-<p>Using the default <code>seg.thresh = 0.05</code> for the linkage map
-<code>mapDH</code>, distorted markers are pulled from the map</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapDH.s</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullCross.html">pullCross</a></span><span class="op">(</span><span class="va">mapDH</span>, type <span class="op">=</span> <span class="st">"seg.distortion"</span><span class="op">)</span></span>
-<span><span class="va">mapDH.s</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsetCross.html">subsetCross</a></span><span class="op">(</span><span class="va">mapDH.s</span>, ind <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">218</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">mapDH.s</span><span class="op">$</span><span class="va">seg.distortion</span><span class="op">$</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span></code></pre></div>
-<pre><code>[1] 216</code></pre>
-<p>In this example the use of <code><a href="../reference/subsetCross.html">subsetCross()</a></code> ensures that
-the data component of the <code>"seg.distortion"</code> element is the
-same dimension as the map. The table element is also updated to ensure
-the statistics are correct for the reduced subset of lines.</p>
-</div>
-<div class="section level3">
-<h3 id="combining-maps">Combining maps<a class="anchor" aria-label="anchor" href="#combining-maps"></a>
-</h3>
-<p>Over the period of time that I have been involved in linkage map
-construction there has been many occasions where I have required a
-function that could merge R/qtl cross objects together in an intelligent
-manner. For example, the merging of two linkage maps from the same
-population that were independently built with markers from two different
-platforms. This idea was the motivation behind the
-<code><a href="../reference/combineMap.html">combineMap()</a></code> function in the R/ASMap package. The aim of
-the function was to merge linkage maps based on map information,
-readying the combined linkage groups for reconstruction through an
-efficient linkage map construction process such as
-<code><a href="../reference/mstmap.cross.html">mstmap.cross()</a></code>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/combineMap.html">combineMap</a></span><span class="op">(</span><span class="va">...</span>, id <span class="op">=</span> <span class="st">"Genotype"</span>, keep.all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>The function takes an unlimited number of maps through the
-<code>...</code> argument. The linkage maps must all have the same cross
-class structure and contain the same genotype identifier
-<code>id</code>. At the current stage of writing this vignette the
-function required unique maker names across all linkage maps. This is
-expected to be relaxed at a later date so linkage maps that share
-markers, such as nested association mapping populations, can be merged
-effectively.</p>
-<p>The merging of the maps happens intelligently using several
-components of the map. Firstly the linkage maps are merged based on
-commonality between the genotypes. If <code>keep.all = TRUE</code> the
-new combined linkage map is “padded out” with missing values where
-genotypes are not shared. If <code>keep.all= FALSE</code> the combined
-map is reduced to genotypes that are shared among all linkage maps.
-Secondly, if linkage group names are shared between maps then the
-markers from the shared linkage groups are merged. To exemplify its use
-a duplicate of <code>mapDH</code> is made and 10 linkage group names
-have been altered, with the marker names inside each of the linkage
-groups also altered to ensure they are unique.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="section level2">
+<h2 id="combining-maps">Combining maps<a class="anchor" aria-label="anchor" href="#combining-maps"></a>
+</h2>
+<p>A recurring requirement in linkage map construction is the merging of
+cross objects, for instance where two maps of the same population have
+been built independently from markers on different platforms.
+<code><a href="../reference/combineMap.html">combineMap()</a></code> addresses this, merging maps on the basis of
+their map information so that the combined linkage groups are ready for
+reconstruction by <code><a href="../reference/mstmap.cross.html">mstmap.cross()</a></code>.</p>
+<p>Any number of maps may be supplied. They must share the same cross
+class structure and the same genotype identifier <code>id</code>, and
+marker names must be unique across all of the maps supplied.</p>
+<p>Merging proceeds in two stages. Maps are first merged on the
+genotypes they have in common: with <code>keep.all = TRUE</code> the
+combined map is padded with missing values where genotypes are not
+shared, whereas with <code>keep.all = FALSE</code> it is reduced to
+those genotypes common to every map. Linkage groups bearing the same
+name across maps are then merged, and groups whose names are not shared
+are retained separately.</p>
+<p>The example below duplicates <code>mapDH</code>, renames ten of its
+linkage groups and alters the marker names within each group to ensure
+uniqueness.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapDH1</span> <span class="op">&lt;-</span> <span class="va">mapDH</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mapDH1</span><span class="op">$</span><span class="va">geno</span><span class="op">)</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">14</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"L"</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
-<span><span class="va">mapDH1</span><span class="op">$</span><span class="va">geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">mapDH1</span><span class="op">$</span><span class="va">geno</span>, <span class="kw">function</span><span class="op">(</span><span class="va">el</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mapDH1</span><span class="op">$</span><span class="va">geno</span><span class="op">)</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">14</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"L"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
+<span><span class="va">mapDH1</span><span class="op">$</span><span class="va">geno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">mapDH1</span><span class="op">$</span><span class="va">geno</span>, <span class="kw">function</span><span class="op">(</span><span class="va">el</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">el</span><span class="op">$</span><span class="va">map</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">el</span><span class="op">$</span><span class="va">data</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">el</span><span class="op">$</span><span class="va">map</span><span class="op">)</span>, <span class="st">"A"</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
-<span>  <span class="va">el</span><span class="op">}</span><span class="op">)</span></span>
+<span>  <span class="va">el</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="va">mapDHc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combineMap.html">combineMap</a></span><span class="op">(</span><span class="va">mapDH</span>, <span class="va">mapDH1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHc</span><span class="op">)</span></span></code></pre></div>
 <pre><code> 1A 1B1 1B2  1D  2A  2B 2D1 2D2  3A  3B  3D  4A  4B  4D  5A  5B  5D  6A  6B  6D 
  82  10  66  20  40  35   8  13  37  30   6  30  32   6 108 112  12  54  82  30 
  7A  7B  7D  L1  L2  L3  L4  L5  L6  L7  L8  L9 L10 
  66  74   8  40  35   8  13  37  30   6  30  32   6 </code></pre>
-<p>The resulting combined map includes a combined marker set for the
-linkage groups that shared the same name and distinct linkage groups for
-unshared names. Again, note the function only merges the linkage maps
-and does not reconstruct the final combined linkage map.</p>
-<p>The advantages of this function may not be obvious at a first glance.
-If an attempt is made to completely reconstruct the super set of linkage
-maps, rather than combine them first, the identification of linkage
-groups is lost. This function serves to preserve the important identity
-of linkage groups. More examples of its use in common map construction
-procedures will be explored in section chapter Post-construction linkage
-map development of the next chapter.</p>
+<p>The combined map holds a merged marker set for those linkage groups
+that shared a name, and distinct groups for those that did not.</p>
+<blockquote>
+<p><code><a href="../reference/combineMap.html">combineMap()</a></code> merges maps but does not reconstruct the
+result, and it applies no consensus map algorithm. Chromosome identity
+and genetic distances are taken from the first appearance of a marker
+across the maps supplied. Run <code><a href="../reference/mstmap.cross.html">mstmap()</a></code> afterwards.</p>
+</blockquote>
+<p>The value of combining before reconstructing is not immediately
+obvious. Reconstructing the union of several maps directly would discard
+the identity of the linkage groups; combining first preserves it.
+Applications of this in practice are given in <a href="worked-example-refinement.html">Worked example II</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="subsetting">Subsetting<a class="anchor" aria-label="anchor" href="#subsetting"></a>
+</h2>
+<p><code><a href="../reference/pullCross.html">pullCross()</a></code> and <code><a href="../reference/pushCross.html">pushCross()</a></code> create the
+additional list elements <code>"co.located"</code>,
+<code>"seg.distortion"</code> and <code>"missing"</code>, each holding a
+marker matrix whose row dimension matches the marker elements of the map
+it was drawn from. These elements are not known to R/qtl.</p>
+<blockquote>
+<p>Using <code>subset.cross()</code> on an object carrying those
+elements will subset the map but <strong>not</strong> the elements
+within it. Their data components will retain the removed individuals,
+and the statistics in the tables of the <code>"seg.distortion"</code>
+and <code>"missing"</code> elements will no longer describe the map.
+Nothing reports this.</p>
+</blockquote>
+<p><code><a href="../reference/subsetCross.html">subsetCross()</a></code> provides the functionality of
+<code>subset.cross()</code> while subsetting those data components to
+match, and additionally recalculates the table components of the
+<code>"seg.distortion"</code> and <code>"missing"</code> elements. That
+recalculation matters, because <code><a href="../reference/pushCross.html">pushCross()</a></code> consults those
+statistics when deciding which markers to restore.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mapDH.s</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pullCross.html">pullCross</a></span><span class="op">(</span><span class="va">mapDH</span>, type <span class="op">=</span> <span class="st">"seg.distortion"</span><span class="op">)</span></span>
+<span><span class="va">mapDH.s</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsetCross.html">subsetCross</a></span><span class="op">(</span><span class="va">mapDH.s</span>, ind <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">218</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">mapDH.s</span><span class="op">$</span><span class="va">seg.distortion</span><span class="op">$</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span></code></pre></div>
+<pre><code>[1] 216</code></pre>
+<p>The data component of the <code>"seg.distortion"</code> element now
+has the same dimension as the map.</p>
+</div>
+<div class="section level2">
+<h2 id="rapid-genetic-distance-estimation">Rapid genetic distance estimation<a class="anchor" aria-label="anchor" href="#rapid-genetic-distance-estimation"></a>
+</h2>
+<p>The map estimation function of R/qtl, <code><a href="https://rdrr.io/pkg/qtl/man/est.map.html" class="external-link">est.map()</a></code>, applies
+the multi-locus hidden Markov model of <span class="citation">Lander and
+Green (<a href="#ref-lg87">1987</a>)</span>. That approach is
+computationally demanding for linkage groups carrying many markers, and
+increasingly so in the presence of missing allele calls and genotyping
+errors.</p>
+<p><code><a href="../reference/quickEst.html">quickEst()</a></code> circumvents this by a different route. It
+calls <code><a href="https://rdrr.io/pkg/qtl/man/argmax.geno.html" class="external-link">argmax.geno()</a></code> from R/qtl, itself a multi-locus hidden
+Markov algorithm, but requires reconstruction only at the markers
+themselves rather than at imputed pseudo-markers. Accurate imputation
+requires an initial estimate of genetic distance, which is obtained by
+calling <code><a href="https://rdrr.io/pkg/qtl/man/est.rf.html" class="external-link">est.rf()</a></code> within each linkage group nominated by
+<code>chr</code> and converting the recombination fractions to distances
+according to <code>map.function</code>.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">map1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/est.map.html" class="external-link">est.map</a></span><span class="op">(</span><span class="va">mapDH</span>, map.function <span class="op">=</span> <span class="st">"kosambi"</span><span class="op">)</span></span>
+<span><span class="va">map1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">map1</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">map1</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">map2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quickEst.html">quickEst</a></span><span class="op">(</span><span class="va">mapDH</span>, map.function <span class="op">=</span> <span class="st">"kosambi"</span><span class="op">)</span></span>
+<span><span class="va">map2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">map2</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">map2</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/plot.map.html" class="external-link">plotMap</a></span><span class="op">(</span><span class="va">map1</span>, <span class="va">map2</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="manipulating-maps_files/figure-html/quick2-1.png" class="r-plt" alt="Comparison of mapDH estimated using est.map() and using quickEst()." width="100%"><p class="caption">
+Comparison of <code>mapDH</code> estimated using <code><a href="https://rdrr.io/pkg/qtl/man/est.map.html" class="external-link">est.map()</a></code>
+and using <code><a href="../reference/quickEst.html">quickEst()</a></code>.
+</p>
+</div>
+<p>The comparison shows negligible differences in marker placement and
+in overall linkage group distances between the two methods.</p>
+</div>
+<div class="section level2">
+<h2 id="further-reading">Further reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
+</h2>
+<ul>
+<li>
+<a href="pulling-and-pushing.html">Pulling and pushing markers</a> —
+the elements that make <code><a href="../reference/subsetCross.html">subsetCross()</a></code> necessary</li>
+<li>
+<a href="worked-example-refinement.html">Worked example II</a> —
+merging linkage groups and combining maps in practice</li>
+<li>
+<a href="constructing-a-map.html">Constructing a linkage map</a> —
+reconstruction after any of these operations</li>
+</ul>
+</div>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-lg87" class="csl-entry">
 Lander, E. S, and P Green. 1987. <span>“Construction of Multilocus
 Genetic Linkage Maps in Humans.”</span> <em>Proceedings of the National
 Academy of Science</em> 84: 2363–67.
-</div>
 </div>
 </div>
 </div>

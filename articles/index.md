@@ -14,7 +14,8 @@
   map](https://drj001.github.io/ASMap/articles/constructing-a-map.md):
 
   The two construction functions, for a data frame of marker scores and
-  for an R/qtl cross object, and the MSTmap parameters they share.
+  for an R/qtl cross object, and the arguments that govern their
+  behaviour.
 
 - [Pulling and pushing
   markers](https://drj001.github.io/ASMap/articles/pulling-and-pushing.md):
@@ -25,18 +26,18 @@
 - [Diagnosing genotypes and
   markers](https://drj001.github.io/ASMap/articles/diagnostics.md):
 
-  Numerical and graphical profiling of individual genotypes, markers and
-  intervals, and the identification of genetic clones.
+  Numerical and graphical profiling of individual genotypes, of markers
+  and of intervals, and the detection of genetic clones.
 
 - [Heat maps](https://drj001.github.io/ASMap/articles/heat-maps.md):
 
   Displaying pairwise recombination fractions and LOD scores of linkage
-  together, with a separate legend for each.
+  together, with an independent legend for each.
 
 - [Manipulating linkage
   maps](https://drj001.github.io/ASMap/articles/manipulating-maps.md):
 
-  Breaking, merging, subsetting and combining linkage maps, and fast
+  Breaking, merging, combining and subsetting linkage maps, and rapid
   estimation of genetic distances.
 
 ### Worked example
@@ -51,8 +52,8 @@
 - [Worked example II:
   refinement](https://drj001.github.io/ASMap/articles/worked-example-refinement.md):
 
-  Continuing the barley backcross example: pushing the held-back markers
-  into the map, merging linkage groups to the expected seven, and
+  Continuing the barley backcross example: reintroducing the markers
+  held aside, merging linkage groups to the expected seven, and
   post-construction development including fine mapping.
 
 ### Background
@@ -68,5 +69,5 @@
 - [Notes on the MSTmap
   algorithm](https://drj001.github.io/ASMap/articles/algorithm-notes.md):
 
-  How genetic distances are calculated, and what the mvest.bc and
-  detectBadData arguments actually do.
+  How genetic distances may become inflated, and what the mvest.bc and
+  detectBadData arguments do in practice.

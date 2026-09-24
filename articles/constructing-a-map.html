@@ -13,9 +13,9 @@
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Constructing a linkage map">
-<meta name="description" content="The two construction functions, for a data frame of marker scores and for an R/qtl cross object, and the MSTmap parameters they share.
+<meta name="description" content="The two construction functions, for a data frame of marker scores and for an R/qtl cross object, and the arguments that govern their behaviour.
 ">
-<meta property="og:description" content="The two construction functions, for a data frame of marker scores and for an R/qtl cross object, and the MSTmap parameters they share.
+<meta property="og:description" content="The two construction functions, for a data frame of marker scores and for an R/qtl cross object, and the arguments that govern their behaviour.
 ">
 </head>
 <body>
@@ -85,137 +85,156 @@
 
     
     
-<p>This chapter explores the R/ASMap functions in greater depth and
-shows how they can be used to efficiently explore, manipulate and
-construct genetic linkage maps. It will also showcase the graphical
-tools that will allow efficient diagnosis of linkage map problems post
-construction.</p>
-<p>The package contains multiple data sets listed as follows</p>
-<dl>
-<dt><strong>mapDH</strong></dt>
-<dd>
-<p>: A constructed genetic linkage map for a Doubled Haploid population
-in the form of an R/qtl object. The genetic linkage map contains a total
-of 599 markers spanning 23 linkage groups genotyped across 218
-individuals. The linkage map contains a small set of co-located markers
-and a small set of markers with excessive segregation distortion</p>
-</dd>
-<dt><strong>mapDHf</strong></dt>
-<dd>
-<p>: An unconstructed version of <code>mapDH</code> in the form a data
-frame. The data frame has dimensions 599
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>×</mi><annotation encoding="application/x-tex">\times</annotation></semantics></math>
-218 and the rows (markers) have been randomized.</p>
-</dd>
-<dt><strong>mapBCu</strong></dt>
-<dd>
-<p>: An unconstructed set of markers for a backcross population in the
-form of an R/qtl object. The marker set contains a total of 3023 markers
-genotyped on 326 individuals. This marker set can be used in conjunction
-with the detailed process presented in chapter to construct a genetic
-linkage map.</p>
-</dd>
-<dt><strong>mapBC</strong></dt>
-<dd>
-<p>: A constructed linkage map of <code>mapBCu</code> in the form of an
-R/qtl object. The linkage map contains a total of 3019 markers genotyped
-on 300 individuals.</p>
-</dd>
-<dt><strong>mapF2</strong></dt>
-<dd>
-<p>: A simulated linkage map for a self-pollinated F2 population
-consisting of 700 markers spanning 7 linkage groups genotyped across 250
-individuals.</p>
-</dd>
-</dl>
-<p>Each of these data sets is accessible using commands similar to</p>
+<p>ASMap provides two construction functions, both methods of the
+<code><a href="../reference/mstmap.cross.html">mstmap()</a></code> generic. They differ only in the object they
+accept: a data frame of marker scores, or an R/qtl <code>cross</code>
+object. Both expose the full set of MSTmap parameters documented at <a href="http://alumni.cs.ucr.edu/~yonghui/mstmap.html" class="external-link uri">http://alumni.cs.ucr.edu/~yonghui/mstmap.html</a>.</p>
+<p>The algorithm underlying them is described in <a href="mstmap-algorithm.html">How the MSTmap algorithm works</a>, and the
+practical behaviour of the <code>mvest.bc</code> and
+<code>detectBadData</code> arguments in <a href="algorithm-notes.html">Notes on the MSTmap algorithm</a>.</p>
+<div class="section level2">
+<h2 id="example-data">Example data<a class="anchor" aria-label="anchor" href="#example-data"></a>
+</h2>
+<p>The package supplies five data sets, described in full on their
+reference pages. The datasets are not lazy-loaded and require an
+explicit <code><a href="https://rdrr.io/r/utils/data.html" class="external-link">data()</a></code> call.</p>
+<table class="table">
+<colgroup>
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+</colgroup>
+<thead><tr class="header">
+<th>Data set</th>
+<th>Form</th>
+<th>Individuals</th>
+<th>Markers</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/mapDH.html"><code>mapDH</code></a></td>
+<td>cross</td>
+<td>218</td>
+<td>599</td>
+<td>Constructed doubled haploid map, 23 linkage groups, containing a few
+co-located and distorted markers</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/mapDHf.html"><code>mapDHf</code></a></td>
+<td>data frame</td>
+<td>218</td>
+<td>599</td>
+<td>Unconstructed form of <code>mapDH</code>, with the marker rows
+randomised</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/mapBCu.html"><code>mapBCu</code></a></td>
+<td>cross</td>
+<td>326</td>
+<td>3023</td>
+<td>Unconstructed backcross marker set</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/mapBC.html"><code>mapBC</code></a></td>
+<td>cross</td>
+<td>300</td>
+<td>3019</td>
+<td>Constructed form of <code>mapBCu</code>
+</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/mapF2.html"><code>mapF2</code></a></td>
+<td>cross</td>
+<td>250</td>
+<td>700</td>
+<td>Simulated selfed F2 map, 7 linkage groups</td>
+</tr>
+</tbody>
+</table>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mapDHf</span>, package <span class="op">=</span> <span class="st">"ASMap"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mapDH</span>, package <span class="op">=</span> <span class="st">"ASMap"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mapBCu</span>, package <span class="op">=</span> <span class="st">"ASMap"</span><span class="op">)</span></span></code></pre></div>
+</div>
 <div class="section level2">
-<h2 id="map-construction-functions">Map construction functions<a class="anchor" aria-label="anchor" href="#map-construction-functions"></a>
+<h2 id="construction-from-a-data-frame">Construction from a data frame<a class="anchor" aria-label="anchor" href="#construction-from-a-data-frame"></a>
 </h2>
-<p>The R/ASMap package contains two linkage map construction functions
-that allow users to fully utilize the MSTmap parameters listed at <a href="http://alumni.cs.ucr.edu/~yonghui/mstmap.html" class="external-link uri">http://alumni.cs.ucr.edu/~yonghui/mstmap.html</a>. Some
-additional information on aspects of the MSTmap algorithm and the
-appropriate use of the arguments <code>mvest.bc</code> and
-<code>detectBadData</code> is given in Chapter .</p>
-<div class="section level3">
-<h3 id="mstmap-data-frame">
-<code>mstmap.data.frame()</code><a class="anchor" aria-label="anchor" href="#mstmap-data-frame"></a>
-</h3>
-<p>The first of these functions allows users to input a data frame of
-genetic markers ready for construction. For a more detailed explanation
-of the arguments users should consult the help documentation found by
-typing <code><a href="../reference/mstmap.data.frame.html">?mstmap.data.frame</a></code> in R.</p>
+<p><a href="../reference/mstmap.data.frame.html"><code>mstmap.data.frame()</code></a>
+accepts a data frame of marker scores. Its required layout derives from
+the marker file used by the standalone MSTmap software: <strong>markers
+in rows and genotypes in columns</strong>, with marker names in the
+<code>rownames</code> and genotype names in the <code>names</code>.
+Every column must be of class <code>"character"</code> rather than a
+factor, which is most easily ensured through the
+<code>stringsAsFactors = FALSE</code> argument of any
+<code>data.frame</code> method. Spaces in marker or genotype names
+should be avoided; where found they are replaced by a hyphen.</p>
+<p>The allelic coding is strict, and depends on the population type
+given to <code>pop.type</code>.</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th><code>pop.type</code></th>
+<th>Population</th>
+<th>Allele coding</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>"BC"</code></td>
+<td>Backcross</td>
+<td>
+<code>"A"</code> or <code>"a"</code>, and <code>"B"</code> or
+<code>"b"</code>
+</td>
+</tr>
+<tr class="even">
+<td><code>"DH"</code></td>
+<td>Doubled haploid</td>
+<td>
+<code>"A"</code> or <code>"a"</code>, and <code>"B"</code> or
+<code>"b"</code>
+</td>
+</tr>
+<tr class="odd">
+<td><code>"ARIL"</code></td>
+<td>Advanced recombinant inbred</td>
+<td>
+<code>"A"</code> or <code>"a"</code>, and <code>"B"</code> or
+<code>"b"</code>; heterozygotes assumed already set to missing</td>
+</tr>
+<tr class="even">
+<td><code>"RILn"</code></td>
+<td>Recombinant inbred, <em>n</em> levels of selfing</td>
+<td>As above, with phase-unknown heterozygotes coded
+<code>"X"</code>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Missing scores are denoted <code>"U"</code> or <code>"-"</code> for
+all population types.</p>
+<p><code>mapDHf</code> is an unconstructed doubled haploid marker set of
+599 markers scored on 218 individuals, formatted for input to this
+function.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/mstmap.data.frame.html">mstmap.data.frame</a></span><span class="op">(</span><span class="va">object</span>, pop.type <span class="op">=</span> <span class="st">"DH"</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>,</span>
-<span>      objective.fun <span class="op">=</span> <span class="st">"COUNT"</span>, p.value <span class="op">=</span> <span class="fl">1e-06</span>, noMap.dist <span class="op">=</span> <span class="fl">15</span>,</span>
-<span>      noMap.size <span class="op">=</span> <span class="fl">0</span>, miss.thresh <span class="op">=</span> <span class="fl">1</span>, mvest.bc <span class="op">=</span> <span class="cn">FALSE</span>, detectBadData <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>      as.cross <span class="op">=</span> <span class="cn">TRUE</span>, return.imputed <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
-<p>The explicit form of the data frame <code>object</code> is borne from
-the syntax of the marker file required for using the stand alone MSTmap
-software. It must have markers in rows and genotypes in columns. Marker
-names are required to be in the <code>rownames</code> component of the
-object with genotype names residing in the <code>names</code>. Spaces in
-any of the marker or genotype names should be avoided but will be
-replaced with a “-” if found. Each of the columns of the data frame must
-be of class <code>"character"</code> (not factors). If converting from a
-matrix, this can easily be achieved by using the
-<code>stringAsFactors = FALSE</code> argument for any
-<code>data.frame</code> method.</p>
-<p>The available populations that can be passed to <code>pop.type</code>
-are <code>"BC"</code> Backcross, <code>"DH"</code> Doubled Haploid,
-<code>"ARIL"</code> Advanced Recombinant Inbred and <code>"RILn"</code>
-Recombinant Inbred with n levels of selfing. The allelic content of the
-markers in the <code>object</code> must be explicitly adhered to. For
-<code>pop.type</code> <code>"BC"</code>, <code>"DH"</code> or
-<code>"ARIL"</code> the two allele types should be represented as
-(<code>"A"</code> or <code>"a"</code>) and (<code>"B"</code> or
-<code>"b"</code>). Thus for <code>pop.type = "ARIL"</code> it is assumed
-the minimal number of heterozygotes have been set to missing. For
-non-advanced RIL populations (<code>pop.type = "RILn"</code>) phase
-unknown heterozygotes should be represented as <code>"X"</code>. For all
-populations, missing marker scores should be represented as
-(<code>"U"</code> or <code>"-"</code>).</p>
-<p>Users need to be aware that the <code>p.value</code> argument plays
-an important role in determining the clustering of markers to distinct
-linkage groups. Section Clustering shows the separation of marker groups
-is highly dependent on the the number of individuals in the population.
-For this reason, some trial and error may be required to determine an
-appropriate <code>p.value</code> for the linkage map being
-constructed.</p>
-<p>Although this function contains arguments that utilize the complete
-set of available MSTmap parameters it is less flexible than its sister
-function <code><a href="../reference/mstmap.cross.html">mstmap.cross()</a></code> (see section textttmstmap.cross())
-that uses the flexible structure of an R/qtl <code>"cross"</code>
-object. For this reason, it is recommended that users set
-<code>as.cross = TRUE</code> to ensure the constructed object is
-returned as a R/qtl cross object with an appropriate class structure.
-For population types <code>"BC"</code> and <code>"DH"</code> the class
-of the constructed object is given <code>"bc"</code> and
-<code>"dh"</code> respectively. For <code>"RILn"</code> the
-<strong>qtl</strong> package conversion function
-<code>convert2bcsft</code> is used to ensure the class of the object is
-assigned <code>"bcsft"</code> with arguments <code>F.gen = n</code> and
-<code>BC.gen = 0</code>. For <code>"ARIL"</code> populations the
-constructed object is given the class <code>"riself"</code>. The correct
-assignation of these classes ensures the objects can be used
-synergistically with the suite of functions available in the R/qtl
-package as well as other functions in the R/ASMap package.</p>
-<p>The R/ASMap package contains an unconstructed Doubled Haploid marker
-set <code>mapDHf</code> with 599 markers genotyped across 218
-individuals. The marker set is formatted correctly for input into the
-<code><a href="../reference/mstmap.data.frame.html">mstmap.data.frame()</a></code> function.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">testd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDHf</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, as.cross <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">testd</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">testd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDHf</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, as.cross <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 24
+The size of the linkage groups are: 56  54  35  41  4   37  6   30  40  27  37  13  15  10  21  6   32  33  33  41  6   9   5   8   
+The number of bins in each linkage group: 55    53  34  41  3   36  6   29  40  27  36  13  14  9   21  5   32  33  32  41  5   8   4   7   </code></pre>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">testd</span><span class="op">)</span></span></code></pre></div>
 <pre><code> L1  L2  L3  L4  L5  L6  L7  L8  L9 L10 L11 L12 L13 L14 L15 L16 L17 L18 L19 L20 
  56  54  35  41   4  37   6  30  40  27  37  13  15  10  21   6  32  33  33  41 
 L21 L22 L23 L24 
   6   9   5   8 </code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">testd</span><span class="op">)</span></span></code></pre></div>
 <pre><code>        L1         L2         L3         L4         L5         L6         L7 
 142.806369 181.935011  97.376797 115.405242  21.660902 108.162200  13.256931 
@@ -225,65 +244,113 @@ L21 L22 L23 L24
  98.211685   8.738474 109.472813  60.913640 134.491476 103.954898  18.019891 
        L22        L23        L24 
   7.801089   7.810474  19.196583 </code></pre>
-<p>As <code>as.cross = TRUE</code> the usual functions available in the
-R/qtl package are available for use on the returned object.</p>
+<p>Setting <code>as.cross = TRUE</code> is recommended, since it returns
+an R/qtl cross object of the appropriate class and thereby makes the
+facilities of both packages available for subsequent work. The class
+assigned depends on the population type.</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th><code>pop.type</code></th>
+<th>Class assigned</th>
+<th>Mechanism</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>"BC"</code></td>
+<td><code>"bc"</code></td>
+<td>Direct</td>
+</tr>
+<tr class="even">
+<td><code>"DH"</code></td>
+<td><code>"dh"</code></td>
+<td>Direct</td>
+</tr>
+<tr class="odd">
+<td><code>"ARIL"</code></td>
+<td><code>"riself"</code></td>
+<td>Direct</td>
+</tr>
+<tr class="even">
+<td><code>"RILn"</code></td>
+<td><code>"bcsft"</code></td>
+<td>Via <code><a href="https://rdrr.io/pkg/qtl/man/qtl-internal.html" class="external-link">qtl::convert2bcsft()</a></code> with <code>F.gen = n</code>,
+<code>BC.gen = 0</code>
+</td>
+</tr>
+</tbody>
+</table>
+<p>With <code>as.cross = FALSE</code> the map is returned instead as a
+data frame carrying additional columns for the linkage group, marker
+position and genetic distance.</p>
 </div>
-<div class="section level3">
-<h3 id="mstmap-cross">
-<code>mstmap.cross()</code><a class="anchor" aria-label="anchor" href="#mstmap-cross"></a>
-</h3>
-<p>The second linkage map construction function allows users to input an
-unconstructed or constructed linkage map in the form of an R/qtl cross
-object. See <code><a href="../reference/mstmap.cross.html">?mstmap.cross</a></code> for a more detailed
-description.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/mstmap.cross.html">mstmap.cross</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">chr</span>, id <span class="op">=</span> <span class="st">"Genotype"</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>       suffix <span class="op">=</span> <span class="st">"numeric"</span>, anchor <span class="op">=</span> <span class="cn">FALSE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>,</span>
-<span>       objective.fun <span class="op">=</span> <span class="st">"COUNT"</span>, p.value <span class="op">=</span> <span class="fl">1e-06</span>, noMap.dist <span class="op">=</span> <span class="fl">15</span>,</span>
-<span>       noMap.size <span class="op">=</span> <span class="fl">0</span>, miss.thresh <span class="op">=</span> <span class="fl">1</span>, mvest.bc <span class="op">=</span> <span class="cn">FALSE</span>, detectBadData <span class="op">=</span></span>
-<span>       <span class="cn">FALSE</span>, return.imputed <span class="op">=</span> <span class="cn">FALSE</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
-<p>The cross <code>object</code> needs to inherit from one of the
-allowable classes available in the R/qtl package, namely
-<code>"bc","dh","riself","bcsft"</code> where <code>"bc"</code> is a
-Backcross <code>"dh"</code> is Doubled Haploid, <code>"riself"</code> is
-an advanced Recombinant Inbred and <code>"bcsft"</code> is a
-Backcross/Self.</p>
-<p>It is important to understand how these classes are encoded into the
-object for the specific populations. If <code><a href="https://rdrr.io/pkg/qtl/man/read.cross.html" class="external-link">read.cross()</a></code> is
-used to read in any bi-parental populations it will be given the class
-<code>"bc"</code>. Doubled Haploid populations can be changed to
-<code>"dh"</code> just by changing the class. For the purpose of linkage
-map construction, both classes <code>"bc"</code> and <code>"dh"</code>
-will produce equivalent results. For non-advanced Recombinant Inbred
-populations markers are required to be fully informative (i.e. contain 3
-distinct allele types such as AA, BB for parental homozygotes and AB for
-phase unknown heterozygotes) and the use of <code><a href="https://rdrr.io/pkg/qtl/man/read.cross.html" class="external-link">read.cross()</a></code>
-will result in the cross object being given a class <code>"f2"</code>.
-The level of selfing is required to be encoded into the object by
-applying one of the two conversion functions available in the R/qtl
-package. For a population that has been generated by selfing
+<div class="section level2">
+<h2 id="construction-from-a-cross-object">Construction from a cross object<a class="anchor" aria-label="anchor" href="#construction-from-a-cross-object"></a>
+</h2>
+<p><a href="../reference/mstmap.cross.html"><code>mstmap.cross()</code></a>
+accepts an unconstructed or constructed map held in an R/qtl cross
+object, and is the more flexible of the two. The object must inherit one
+of the classes <code>"bc"</code>, <code>"dh"</code>,
+<code>"riself"</code> or <code>"bcsft"</code>, a restriction that guards
+against attempting construction for the more complex population types
+R/qtl supports.</p>
+<p>How these classes arise matters in practice.
+<code><a href="https://rdrr.io/pkg/qtl/man/read.cross.html" class="external-link">read.cross()</a></code> assigns the class <code>"bc"</code> to any
+bi-parental population. Doubled haploid populations may be assigned
+<code>"dh"</code> simply by changing the class; for the purpose of
+construction the two are equivalent.</p>
+<p>Non-advanced recombinant inbred populations require fully informative
+markers, that is three distinct allele types, and
+<code><a href="https://rdrr.io/pkg/qtl/man/read.cross.html" class="external-link">read.cross()</a></code> will assign them the class <code>"f2"</code>.
+The level of selfing must then be encoded by conversion:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th>Population</th>
+<th>Conversion</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Selfed
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
-times, the conversion function <code>convertbcsft</code> can be used by
-setting the arguments <code>F.gen = n</code> and
-<code>BC.gen = 0</code>. This will attach a class <code>"bcsft"</code>
-to the object. Populations that are genuine advanced RILs can be
-converted using the <code>convert2riself</code> function. This function
-will replace any remaining heterozygosity, if it exists, with missing
-values and attach the class <code>"riself"</code> to the object.</p>
-<p>Similar to the <code><a href="../reference/mstmap.data.frame.html">mstmap.data.frame()</a></code> function, users need
-to be aware that the <code>p.value</code> argument is highly dependent
-on the number of individuals in the population and may require some
-trial and error to ascertain an appropriate value. After construction
-the cross object is returned with an identical class structure as the
-inputted object. All R/qtl and R/ASMap package functions can be used
-synergistically with this object.</p>
-<div class="section level4">
-<h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
-</h4>
-<p>The constructed linkage map <code>mapDH</code> available in the
-R/ASMap package will be used to showcase the flexibility of this
-function. Before attempting re-construction, some preliminary output of
-<code>mapDH</code> is presented.</p>
+times</td>
+<td>
+<code>qtl::convert2bcsft(F.gen = n, BC.gen = 0)</code>, giving class
+<code>"bcsft"</code>
+</td>
+</tr>
+<tr class="even">
+<td>Genuine advanced RIL</td>
+<td>
+<code><a href="https://rdrr.io/pkg/qtl/man/convert2riself.html" class="external-link">qtl::convert2riself()</a></code>, giving class
+<code>"riself"</code> and replacing any residual heterozygosity with
+missing values</td>
+</tr>
+</tbody>
+</table>
+<p>The object is returned with the same class structure it was given, so
+that all functions of both packages remain applicable.</p>
+<blockquote>
+<p>For both functions, the <code>p.value</code> argument governs the
+separation of markers into linkage groups and is strongly dependent on
+population size. Some experimentation is generally required. See <a href="mstmap-algorithm.html">Clustering markers into linkage groups</a>
+for the relationship, which may be examined directly with
+<code><a href="../reference/pValue.html">pValue()</a></code>.</p>
+</blockquote>
+</div>
+<div class="section level2">
+<h2 id="modes-of-reconstruction">Modes of reconstruction<a class="anchor" aria-label="anchor" href="#modes-of-reconstruction"></a>
+</h2>
+<p>The constructed map <code>mapDH</code> illustrates the flexibility of
+<code><a href="../reference/mstmap.cross.html">mstmap.cross()</a></code>. Its 23 linkage groups are named, and the
+markers within each are named according to their order.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDH</span><span class="op">)</span></span></code></pre></div>
 <pre><code> 1A 1B1 1B2  1D  2A  2B 2D1 2D2  3A  3B  3D  4A  4B  4D  5A  5B  5D  6A  6B  6D 
@@ -298,25 +365,66 @@ function. Before attempting re-construction, some preliminary output of
 58.568087 81.061896 
 attr(,"class")
 [1] "A"</code></pre>
-<p>The output shows that there are 23 groups that have been
-appropriately been assigned linkage group or chromosome names. The
-markers within each linkage group have been named according to the order
-of the markers.</p>
-<p><strong>Example 1: Completely construct or reconstruct a linkage
-map.</strong></p>
-<p>To completely re-construct this map set the argument
-<code>bychr = FALSE</code>. This will bulk the genetic data from all
-linkage groups, re-cluster the markers into groups and then optimally
-order the markers within each linkage group. This linkage map is small
-so these two tasks happen almost instantaneously.</p>
+<p>The four modes below are selected through <code>bychr</code>,
+<code>chr</code> and <code>anchor</code>.</p>
+<table class="table">
+<colgroup>
+<col width="25%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
+</colgroup>
+<thead><tr class="header">
+<th>Requirement</th>
+<th><code>bychr</code></th>
+<th><code>chr</code></th>
+<th>Effect on linkage groups</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Rebuild the entire map</td>
+<td><code>FALSE</code></td>
+<td>unset</td>
+<td>Re-clustered and renamed</td>
+</tr>
+<tr class="even">
+<td>Re-order within existing groups</td>
+<td><code>TRUE</code></td>
+<td>unset</td>
+<td>Retained, possibly split</td>
+</tr>
+<tr class="odd">
+<td>Rebuild nominated groups only</td>
+<td><code>FALSE</code></td>
+<td>set</td>
+<td>Nominated groups re-clustered</td>
+</tr>
+<tr class="even">
+<td>Re-order nominated groups only</td>
+<td><code>TRUE</code></td>
+<td>set</td>
+<td>Nominated groups retained</td>
+</tr>
+</tbody>
+</table>
+<div class="section level3">
+<h3 id="complete-reconstruction">Complete reconstruction<a class="anchor" aria-label="anchor" href="#complete-reconstruction"></a>
+</h3>
+<p>Setting <code>bychr = FALSE</code> combines the marker data from all
+linkage groups, re-clusters the markers and orders them within each
+resulting group.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapDHa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDH</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHa</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mapDHa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDH</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 24
+The size of the linkage groups are: 41  5   33  10  40  35  8   13  37  30  6   9   21  32  6   54  56  6   27  41  15  33  37  4   
+The number of bins in each linkage group: 41    4   33  9   40  34  7   13  36  29  5   8   21  32  6   53  55  5   27  41  14  32  36  3   </code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHa</span><span class="op">)</span></span></code></pre></div>
 <pre><code> L.1 L.10 L.11 L.12 L.13 L.14 L.15 L.16 L.17 L.18 L.19  L.2 L.20 L.21 L.22 L.23 
   41   30    6    9   21   32    6   54   56    6   27    5   41   15   33   37 
 L.24  L.3  L.4  L.5  L.6  L.7  L.8  L.9 
    4   33   10   40   35    8   13   37 </code></pre>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/pull.map.html" class="external-link">pull.map</a></span><span class="op">(</span><span class="va">mapDHa</span><span class="op">)</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <pre><code>  4A.m.9   4A.m.7   4A.m.8   4A.m.6   4A.m.5   4A.m.3   4A.m.4   4A.m.2 
 0.000000 1.835687 1.835687 2.294415 2.753144 3.670678 4.129406 6.424595 
@@ -324,73 +432,239 @@ L.24  L.3  L.4  L.5  L.6  L.7  L.8  L.9
 7.801089 
 attr(,"class")
 [1] "A"</code></pre>
-<p>The reconstructed map contains 24 linkage groups with the extra
-linkage group coming from a minor split in 4A. As the linkage map is
-constructed from scratch, it assumed that former linkage group names are
-no longer required. A standard “L.” prefix is provided for the new
-linkage group names. This example also indicates that MSTmap by default
-does not respect the inputted marker order.</p>
-<p><strong>Example 2: Optimally order markers within linkage groups of
-an established map.</strong></p>
-<p>It may be necessary to only perform marker ordering within already
-established linkage groups. This can be achieved by setting
-<code>bychr = TRUE</code>. In some cases it also be preferable to ensure
-the marker orders of the linkage groups are respected and this can be
-achieved by setting <code>anchor = TRUE.</code></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapDHb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDH</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, anchor <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHb</span><span class="op">)</span></span></code></pre></div>
+<p>The reconstructed map contains 24 linkage groups, the additional
+group arising from a minor split in 4A. Because the map is built from
+first principles the former linkage group names are discarded and a
+standard <code>"L."</code> prefix applied. This example also shows that
+MSTmap does not, by default, respect the marker order it was given.</p>
+</div>
+<div class="section level3">
+<h3 id="ordering-within-established-groups">Ordering within established groups<a class="anchor" aria-label="anchor" href="#ordering-within-established-groups"></a>
+</h3>
+<p>Where only the order within existing linkage groups is at issue, set
+<code>bychr = TRUE</code>. Setting <code>anchor = TRUE</code>
+additionally causes the inputted marker orders to be respected.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mapDHb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDH</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, anchor <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 1
+The size of the linkage groups are: 41  
+The number of bins in each linkage group: 41    
+Number of linkage groups: 1
+The size of the linkage groups are: 5   
+The number of bins in each linkage group: 4 
+Number of linkage groups: 1
+The size of the linkage groups are: 33  
+The number of bins in each linkage group: 33    
+Number of linkage groups: 1
+The size of the linkage groups are: 10  
+The number of bins in each linkage group: 9 
+Number of linkage groups: 1
+The size of the linkage groups are: 40  
+The number of bins in each linkage group: 40    
+Number of linkage groups: 1
+The size of the linkage groups are: 35  
+The number of bins in each linkage group: 34    
+Number of linkage groups: 1
+The size of the linkage groups are: 8   
+The number of bins in each linkage group: 7 
+Number of linkage groups: 1
+The size of the linkage groups are: 13  
+The number of bins in each linkage group: 13    
+Number of linkage groups: 1
+The size of the linkage groups are: 37  
+The number of bins in each linkage group: 36    
+Number of linkage groups: 1
+The size of the linkage groups are: 30  
+The number of bins in each linkage group: 29    
+Number of linkage groups: 1
+The size of the linkage groups are: 6   
+The number of bins in each linkage group: 5 
+Number of linkage groups: 2
+The size of the linkage groups are: 9   21  
+The number of bins in each linkage group: 8 21  
+Number of linkage groups: 1
+The size of the linkage groups are: 32  
+The number of bins in each linkage group: 32    
+Number of linkage groups: 1
+The size of the linkage groups are: 6   
+The number of bins in each linkage group: 6 
+Number of linkage groups: 1
+The size of the linkage groups are: 54  
+The number of bins in each linkage group: 53    
+Number of linkage groups: 1
+The size of the linkage groups are: 56  
+The number of bins in each linkage group: 55    
+Number of linkage groups: 1
+The size of the linkage groups are: 6   
+The number of bins in each linkage group: 5 
+Number of linkage groups: 1
+The size of the linkage groups are: 27  
+The number of bins in each linkage group: 27    
+Number of linkage groups: 1
+The size of the linkage groups are: 41  
+The number of bins in each linkage group: 41    
+Number of linkage groups: 1
+The size of the linkage groups are: 15  
+The number of bins in each linkage group: 14    
+Number of linkage groups: 1
+The size of the linkage groups are: 33  
+The number of bins in each linkage group: 32    
+Number of linkage groups: 1
+The size of the linkage groups are: 37  
+The number of bins in each linkage group: 36    
+Number of linkage groups: 1
+The size of the linkage groups are: 4   
+The number of bins in each linkage group: 3 </code></pre>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHb</span><span class="op">)</span></span></code></pre></div>
 <pre><code>  1A  1B1  1B2   1D   2A   2B  2D1  2D2   3A   3B   3D 4A.1 4A.2   4B   4D   5A 
   41    5   33   10   40   35    8   13   37   30    6    9   21   32    6   54 
   5B   5D   6A   6B   6D   7A   7B   7D 
   56    6   27   41   15   33   37    4 </code></pre>
-<p>This map is identical to <code>mapDH</code> with the exception that
-chromosome 4A has been split into two linkage groups. As
-<code>bychr = TRUE</code> the function understands the origin of the
-linkage group was 4A and consequently uses it as a prefix in the naming
-of the two new linkage groups.</p>
-<p><strong>Example 3: Optimally order markers within linkage groups of
-an established map without breaking linkage groups.</strong></p>
-<p>The splitting of the linkage groups in the last example only occurred
-due to choice of default <code>p.value = 1e-06</code> set in the
-function. A slight change to this <code>p.value</code> will ensure that
-4A remains linked during the algorithm.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapDHc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDH</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, anchor <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, p.value <span class="op">=</span> <span class="fl">1e-04</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHc</span><span class="op">)</span></span></code></pre></div>
+<p>The result is identical to <code>mapDH</code> except that 4A has been
+split in two. As <code>bychr = TRUE</code>, the function recognises the
+origin of the group and uses 4A as a prefix in naming the two new
+groups.</p>
+</div>
+<div class="section level3">
+<h3 id="ordering-without-splitting">Ordering without splitting<a class="anchor" aria-label="anchor" href="#ordering-without-splitting"></a>
+</h3>
+<p>The split above arose solely from the default
+<code>p.value = 1e-06</code>. Relaxing it keeps 4A intact.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mapDHc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDH</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, anchor <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                 trace <span class="op">=</span> <span class="cn">FALSE</span>, p.value <span class="op">=</span> <span class="fl">1e-04</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 1
+The size of the linkage groups are: 41  
+The number of bins in each linkage group: 41    
+Number of linkage groups: 1
+The size of the linkage groups are: 5   
+The number of bins in each linkage group: 4 
+Number of linkage groups: 1
+The size of the linkage groups are: 33  
+The number of bins in each linkage group: 33    
+Number of linkage groups: 1
+The size of the linkage groups are: 10  
+The number of bins in each linkage group: 9 
+Number of linkage groups: 1
+The size of the linkage groups are: 40  
+The number of bins in each linkage group: 40    
+Number of linkage groups: 1
+The size of the linkage groups are: 35  
+The number of bins in each linkage group: 34    
+Number of linkage groups: 1
+The size of the linkage groups are: 8   
+The number of bins in each linkage group: 7 
+Number of linkage groups: 1
+The size of the linkage groups are: 13  
+The number of bins in each linkage group: 13    
+Number of linkage groups: 1
+The size of the linkage groups are: 37  
+The number of bins in each linkage group: 36    
+Number of linkage groups: 1
+The size of the linkage groups are: 30  
+The number of bins in each linkage group: 29    
+Number of linkage groups: 1
+The size of the linkage groups are: 6   
+The number of bins in each linkage group: 5 
+Number of linkage groups: 1
+The size of the linkage groups are: 30  
+The number of bins in each linkage group: 29    
+Number of linkage groups: 1
+The size of the linkage groups are: 32  
+The number of bins in each linkage group: 32    
+Number of linkage groups: 1
+The size of the linkage groups are: 6   
+The number of bins in each linkage group: 6 
+Number of linkage groups: 1
+The size of the linkage groups are: 54  
+The number of bins in each linkage group: 53    
+Number of linkage groups: 1
+The size of the linkage groups are: 56  
+The number of bins in each linkage group: 55    
+Number of linkage groups: 1
+The size of the linkage groups are: 6   
+The number of bins in each linkage group: 5 
+Number of linkage groups: 1
+The size of the linkage groups are: 27  
+The number of bins in each linkage group: 27    
+Number of linkage groups: 1
+The size of the linkage groups are: 41  
+The number of bins in each linkage group: 41    
+Number of linkage groups: 1
+The size of the linkage groups are: 15  
+The number of bins in each linkage group: 14    
+Number of linkage groups: 1
+The size of the linkage groups are: 33  
+The number of bins in each linkage group: 32    
+Number of linkage groups: 1
+The size of the linkage groups are: 37  
+The number of bins in each linkage group: 36    
+Number of linkage groups: 1
+The size of the linkage groups are: 4   
+The number of bins in each linkage group: 3 </code></pre>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHc</span><span class="op">)</span></span></code></pre></div>
 <pre><code> 1A 1B1 1B2  1D  2A  2B 2D1 2D2  3A  3B  3D  4A  4B  4D  5A  5B  5D  6A  6B  6D 
  41   5  33  10  40  35   8  13  37  30   6  30  32   6  54  56   6  27  41  15 
  7A  7B  7D 
  33  37   4 </code></pre>
-<p>An identical result can be achieved by setting
-<code>p.value = 2</code> or any number greater than 1. Doing this
-instructs the MSTmap algorithm to not split linkage groups regardless of
-how weak the linkages are between markers within any group. Users should
-be aware that if this latter method is used then linkage groups that
-contain groups of markers separated by a substantial distance (i.e. very
-weak linkages) may suffer from local orientation problems.</p>
-<p><strong>Example 4: Reconstruct map within predefined linkage groups
-of an established map.</strong></p>
-<p>There may only be a need to reconstruct a predefined set of linkage
-groups. By setting the <code>chr</code> argument and
-<code>bychr = FALSE</code> users can determine which linkage groups
-require the complete reconstruction using MSTmap.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapDHd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDH</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mapDH</span><span class="op">$</span><span class="va">geno</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, p.value <span class="op">=</span> <span class="fl">1e-04</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHd</span><span class="op">)</span></span></code></pre></div>
+<p>The same result follows from <code>p.value = 2</code>, or any value
+greater than unity, which instructs the algorithm not to split linkage
+groups however weak the linkages within them.</p>
+<blockquote>
+<p>Suppressing splitting entirely carries a cost. A linkage group
+containing sets of markers separated by a substantial distance, and
+therefore weakly linked, may suffer local orientation problems.</p>
+</blockquote>
+</div>
+<div class="section level3">
+<h3 id="reconstruction-of-nominated-groups">Reconstruction of nominated groups<a class="anchor" aria-label="anchor" href="#reconstruction-of-nominated-groups"></a>
+</h3>
+<p>Supplying <code>chr</code> together with <code>bychr = FALSE</code>
+restricts complete reconstruction to the nominated linkage groups.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mapDHd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapDH</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mapDH</span><span class="op">$</span><span class="va">geno</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                 dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, p.value <span class="op">=</span> <span class="fl">1e-04</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 3
+The size of the linkage groups are: 41  5   33  
+The number of bins in each linkage group: 41    4   33  </code></pre>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapDHd</span><span class="op">)</span></span></code></pre></div>
 <pre><code> 1D  2A  2B 2D1 2D2  3A  3B  3D  4A  4B  4D  5A  5B  5D  6A  6B  6D  7A  7B  7D 
  10  40  35   8  13  37  30   6  30  32   6  54  56   6  27  41  15  33  37   4 
 L.1 L.2 L.3 
  41   5  33 </code></pre>
-<p>Again, the algorithm assumes that the original linkage group names
-are no longer necessary and defines new ones. An obvious extension of
-this example is to set <code>bychr = TRUE</code> and then the algorithm
-will order markers within the predefined linkage groups stipulated by
-<code>chr</code>. Similar to the previous example, an appropriate choice
-of <code>p.value</code> will ensure that linkage groups remain
-unbroken.</p>
+<p>Here too the original group names are discarded and new ones defined.
+Setting <code>bychr = TRUE</code> instead orders markers within the
+groups nominated by <code>chr</code>, and an appropriate
+<code>p.value</code> will keep those groups unbroken.</p>
 </div>
 </div>
+<div class="section level2">
+<h2 id="further-reading">Further reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
+</h2>
+<ul>
+<li>
+<a href="mstmap-algorithm.html">How the MSTmap algorithm works</a> —
+the basis of <code>objective.fun</code>, <code>p.value</code>,
+<code>mvest.bc</code> and <code>detectBadData</code>
+</li>
+<li>
+<a href="pulling-and-pushing.html">Pulling and pushing markers</a> —
+curating the marker set before construction</li>
+<li>
+<a href="worked-example-construction.html">Worked example I</a> —
+construction applied to an unconstructed barley backcross</li>
+<li>
+<a href="../reference/mstmap.cross.html"><code>mstmap.cross()</code></a>,
+<a href="../reference/mstmap.data.frame.html"><code>mstmap.data.frame()</code></a>
+— full argument documentation</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

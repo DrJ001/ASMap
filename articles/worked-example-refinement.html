@@ -13,9 +13,9 @@
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Worked example II: refinement">
-<meta name="description" content="Continuing the barley backcross example: pushing the held-back markers into the map, merging linkage groups to the expected seven, and post-construction development including fine mapping.
+<meta name="description" content="Continuing the barley backcross example: reintroducing the markers held aside, merging linkage groups to the expected seven, and post-construction development including fine mapping.
 ">
-<meta property="og:description" content="Continuing the barley backcross example: pushing the held-back markers into the map, merging linkage groups to the expected seven, and post-construction development including fine mapping.
+<meta property="og:description" content="Continuing the barley backcross example: reintroducing the markers held aside, merging linkage groups to the expected seven, and post-construction development including fine mapping.
 ">
 </head>
 <body>
@@ -90,211 +90,276 @@
 the map as it stood at the end of <a href="worked-example-construction.html">Worked example I</a>.</p>
 </blockquote>
 <div class="section level2">
-<h2 id="pushing-back-markers">Pushing back markers<a class="anchor" aria-label="anchor" href="#pushing-back-markers"></a>
+<h2 id="reintroducing-the-markers-set-aside">Reintroducing the markers set aside<a class="anchor" aria-label="anchor" href="#reintroducing-the-markers-set-aside"></a>
 </h2>
-<p>In this section the markers that were originally placed aside in the
-pre-construction of the linkage map will be pushed back into the
-constructed linkage map and the map carefully re-diagnosed. To begin the
-515 external markers that have between 10% and 20% missing values
-residing in the list element <code>"missing"</code> are pushed back in
-using <code><a href="../reference/pushCross.html">pushCross()</a></code></p>
+<p>The markers placed aside during pre-construction are now returned to
+the constructed map, which is then re-diagnosed. The 515 markers
+carrying between 10% and 20% missing values, held in the
+<code>"missing"</code> element, are restored first.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapBC6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pushCross.html">pushCross</a></span><span class="op">(</span><span class="va">mapBC6</span>, type <span class="op">=</span> <span class="st">"missing"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>miss.thresh <span class="op">=</span> <span class="fl">0.22</span>, max.rf <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>The parameter <code>miss.thresh = 0.22</code> is used to ensure that
-all markers with a threshold less 0.22 are pushed back into the linkage
-map. Note, this pushing mechanism is not re-constructing the map and
-only assigns the markers to the most suitable linkage group. At this
-point it is worth re-plotting the heatmap to check whether the push has
-been successful. In this vignette we will confine the graphic to linkage
-groups L.3, L.5, L.8 and L.9 to determine whether the extra markers have
-provided useful additional information about the possible merging of the
-groups. The resulting heat map is given in the figure below.</p>
+<code class="sourceCode R"><span><span class="va">mapBC6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pushCross.html">pushCross</a></span><span class="op">(</span><span class="va">mapBC6</span>, type <span class="op">=</span> <span class="st">"missing"</span>,</span>
+<span>                    pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>miss.thresh <span class="op">=</span> <span class="fl">0.22</span>, max.rf <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>A threshold of <code>miss.thresh = 0.22</code> ensures that all
+markers below that proportion are restored. Recall that this mechanism
+assigns markers to the most suitable linkage group but does not
+reconstruct the map.</p>
+<p>It is worth re-examining the heat map at this point to establish
+whether the restoration has been successful. The display is confined to
+linkage groups L.3, L.5, L.8 and L.9, to determine whether the
+additional markers bear on the possible merging of those groups.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatMap.html">heatMap</a></span><span class="op">(</span><span class="va">mapBC6</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L.3"</span>,<span class="st">"L.5"</span>,<span class="st">"L.8"</span>,<span class="st">"L.9"</span><span class="op">)</span>, lmax <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatMap.html">heatMap</a></span><span class="op">(</span><span class="va">mapBC6</span>, chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L.3"</span>, <span class="st">"L.5"</span>, <span class="st">"L.8"</span>, <span class="st">"L.9"</span><span class="op">)</span>, lmax <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="worked-example-refinement_files/figure-html/ex21-1.png" class="r-plt" alt="Heat map of the constructed linkage map mapBC6." width="100%"><p class="caption">
-Heat map of the constructed linkage map mapBC6.
+<img src="worked-example-refinement_files/figure-html/ex21-1.png" class="r-plt" alt="Heat map of linkage groups L.3, L.5, L.8 and L.9 of mapBC6." width="100%"><p class="caption">
+Heat map of linkage groups L.3, L.5, L.8 and L.9 of mapBC6.
 </p>
 </div>
-<p>It is clear from the heat map that there are genuine linkages between
-L.3 and L.5 as well as L.8 and L.9. These two sets of linkage groups can
-be merged using <code><a href="../reference/mergeCross.html">mergeCross()</a></code> and the linkage group names
-are renamed to form the optimal 7 linkage groups that are required for
-the barley genome.</p>
+<p>Genuine linkage is evident between L.3 and L.5, and between L.8 and
+L.9. These two pairs are merged with <code><a href="../reference/mergeCross.html">mergeCross()</a></code> and the
+groups renamed, giving the seven linkage groups expected for the barley
+genome.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mapBC6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mergeCross.html">mergeCross</a></span><span class="op">(</span><span class="va">mapBC6</span>, merge <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"L.3"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L.3"</span>,<span class="st">"L.5"</span><span class="op">)</span>, <span class="st">"L.8"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L.8"</span>,<span class="st">"L.9"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">mapBC6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mergeCross.html">mergeCross</a></span><span class="op">(</span><span class="va">mapBC6</span>, merge <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"L.3"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L.3"</span>, <span class="st">"L.5"</span><span class="op">)</span>,</span>
+<span>                                          <span class="st">"L.8"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L.8"</span>, <span class="st">"L.9"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mapBC6</span><span class="op">$</span><span class="va">geno</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"L."</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
-<span><span class="va">mapBC7</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapBC6</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC7</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">mapBC7</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapBC6</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>,</span>
+<span>                 p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 1
+The size of the linkage groups are: 680 
+The number of bins in each linkage group: 196   
+Number of linkage groups: 1
+The size of the linkage groups are: 570 
+The number of bins in each linkage group: 213   
+Number of linkage groups: 1
+The size of the linkage groups are: 172 
+The number of bins in each linkage group: 72    
+Number of linkage groups: 1
+The size of the linkage groups are: 673 
+The number of bins in each linkage group: 205   
+Number of linkage groups: 1
+The size of the linkage groups are: 233 
+The number of bins in each linkage group: 99    
+Number of linkage groups: 1
+The size of the linkage groups are: 192 
+The number of bins in each linkage group: 83    
+Number of linkage groups: 1
+The size of the linkage groups are: 166 
+The number of bins in each linkage group: 84    </code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC7</span><span class="op">)</span></span></code></pre></div>
 <pre><code>     L.1      L.2      L.3      L.4      L.5      L.6      L.7 
 242.4104 233.1945 162.6205 224.1773 201.1503 147.7669 159.5308 </code></pre>
-<p>As the optimal number of linkage groups have been identified the
-re-construction of the map is performed by linkage group only through
-setting the <code>p.value = 2</code>. At this point there is no need to
-anchor the map during construction as orientation of linkage groups has
-not been formally identified. The linkage group lengths of L.1, L.2 and
-L.4 are slightly elevated indicating excessive recombination across
-these groups. The reason for this inflation is quickly understood by
-checking the profile of the genotypes again using
-<code><a href="../reference/profileGen.html">profileGen()</a></code></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pg1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/profileGen.html">profileGen</a></span><span class="op">(</span><span class="va">mapBC7</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xo"</span>,<span class="st">"dxo"</span>,<span class="st">"miss"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"Genotype"</span>, xo.lambda <span class="op">=</span> <span class="fl">14</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">2</span>, cex <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
+<p>Since the optimal number of linkage groups has been established,
+reconstruction proceeds by linkage group alone, through
+<code>p.value = 2</code>. Anchoring is unnecessary here, as the
+orientation of the groups has not yet been formally determined.</p>
+<p>The lengths of L.1, L.2 and L.4 are somewhat elevated, indicating
+excessive recombination across those groups. The cause is apparent from
+the genotype profiles.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pg1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/profileGen.html">profileGen</a></span><span class="op">(</span><span class="va">mapBC7</span>, bychr <span class="op">=</span> <span class="cn">FALSE</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xo"</span>, <span class="st">"dxo"</span>, <span class="st">"miss"</span><span class="op">)</span>,</span>
+<span>                  id <span class="op">=</span> <span class="st">"Genotype"</span>, xo.lambda <span class="op">=</span> <span class="fl">14</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>                  cex <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="worked-example-refinement_files/figure-html/ex24-1.png" class="r-plt" alt="For individual genotypes, the number of recombinations, double recombinations and missing values for mapBC7." width="100%"><p class="caption">
 For individual genotypes, the number of recombinations, double
 recombinations and missing values for mapBC7.
 </p>
 </div>
-<p>the figure below shows the genotype profiles for the 302 barley
-lines. The introduction of the markers with missing value proportions
-between 10% and 20% into the linkage map has highlighted two more
-problematic lines that have a high proportion of missing values across
-the genome. Again, these should be removed using
-<code><a href="../reference/subsetCross.html">subsetCross()</a></code> and the map reconstructed.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>Introducing the markers with 10 to 20% missing values has exposed two
+further problematic lines carrying a high proportion of missing values
+across the genome. These are removed and the map reconstructed.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapBC8</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsetCross.html">subsetCross</a></span><span class="op">(</span><span class="va">mapBC7</span>, ind <span class="op">=</span> <span class="op">!</span><span class="va">pg1</span><span class="op">$</span><span class="va">xo.lambda</span><span class="op">)</span></span>
-<span><span class="va">mapBC9</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapBC8</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC9</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">mapBC9</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapBC8</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                 p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 1
+The size of the linkage groups are: 680 
+The number of bins in each linkage group: 192   
+Number of linkage groups: 1
+The size of the linkage groups are: 570 
+The number of bins in each linkage group: 210   
+Number of linkage groups: 1
+The size of the linkage groups are: 172 
+The number of bins in each linkage group: 70    
+Number of linkage groups: 1
+The size of the linkage groups are: 673 
+The number of bins in each linkage group: 203   
+Number of linkage groups: 1
+The size of the linkage groups are: 233 
+The number of bins in each linkage group: 98    
+Number of linkage groups: 1
+The size of the linkage groups are: 192 
+The number of bins in each linkage group: 83    
+Number of linkage groups: 1
+The size of the linkage groups are: 166 
+The number of bins in each linkage group: 83    </code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC9</span><span class="op">)</span></span></code></pre></div>
 <pre><code>     L.1      L.2      L.3      L.4      L.5      L.6      L.7 
 225.7900 223.3063 157.0592 206.4801 194.3003 145.7554 149.2467 </code></pre>
-<p>The removal of these two lines will not have a deleterious effect on
-the number of linkage groups and therefore the linkage map should be
-reconstructed by linkage group only. The length of most linkage groups
-has now been appreciably reduced. the figure below displays the
-segregation distortion and allele proportion profiles for the markers
-from using <code><a href="../reference/profileMark.html">profileMark()</a></code> again.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/profileMark.html">profileMark</a></span><span class="op">(</span><span class="va">mapBC9</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seg.dist"</span>,<span class="st">"prop"</span><span class="op">)</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
+<p>Removing two lines does not affect the number of linkage groups, so
+reconstruction is again by linkage group only. The lengths of most
+groups are now appreciably reduced.</p>
+</div>
+<div class="section level2">
+<h2 id="restoring-the-distorted-markers">Restoring the distorted markers<a class="anchor" aria-label="anchor" href="#restoring-the-distorted-markers"></a>
+</h2>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/profileMark.html">profileMark</a></span><span class="op">(</span><span class="va">mapBC9</span>, stat.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"seg.dist"</span>, <span class="st">"prop"</span><span class="op">)</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>            type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="worked-example-refinement_files/figure-html/ex27-1.png" class="r-plt" alt="Marker profiles of the -log10 p-value for the test of segregation distortion, allele proportions for mapBC9" width="100%"><p class="caption">
-Marker profiles of the -log10 p-value for the test of segregation
-distortion, allele proportions for mapBC9
+<img src="worked-example-refinement_files/figure-html/ex27-1.png" class="r-plt" alt="Marker profiles of segregation distortion and allele proportions for mapBC9." width="100%"><p class="caption">
+Marker profiles of the negative log10 p-value for the test of
+segregation distortion and the allele proportions for mapBC9.
 </p>
 </div>
-<p>The plot indicates a spike of segregation distortion on L.2 that does
-not appear to be biological and should be removed. The plot also
-indicates the significant distortion regions on L.3, L.6 and L.7
-indicating some of the markers with missing value proportions between
-10% and 20% pushed back into the linkage map also had some degree of
-segregation distortion. The marker positions on the x-axis of the plot
-suggests these regions are sparse. The 295 external markers in the list
-element <code>"seg.distortion"</code> may hold the key to this sparsity
-and are pushed back to determine their effect on the linkage map.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/markernames.html" class="external-link">markernames</a></span><span class="op">(</span><span class="va">mapBC9</span>, <span class="st">"L.2"</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="../reference/statMark.html">statMark</a></span><span class="op">(</span><span class="va">mapBC9</span>, chr <span class="op">=</span> <span class="st">"L.2"</span>, stat.type <span class="op">=</span> <span class="st">"marker"</span><span class="op">)</span><span class="op">$</span><span class="va">marker</span><span class="op">$</span><span class="va">neglog10P</span> <span class="op">&gt;</span> <span class="fl">6</span><span class="op">]</span></span>
+<p>A spike of segregation distortion appears on L.2 which does not
+appear to be biological in origin and should be removed. Significant
+distortion is also apparent on L.3, L.6 and L.7, indicating that some of
+the markers with 10 to 20% missing values restored earlier carry a
+degree of distortion themselves. The marker positions on the horizontal
+axis suggest these regions are sparse. The 295 markers held in the
+<code>"seg.distortion"</code> element may account for that sparsity, and
+are restored to establish their effect.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/markernames.html" class="external-link">markernames</a></span><span class="op">(</span><span class="va">mapBC9</span>, <span class="st">"L.2"</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="../reference/statMark.html">statMark</a></span><span class="op">(</span><span class="va">mapBC9</span>, chr <span class="op">=</span> <span class="st">"L.2"</span>,</span>
+<span>                                          stat.type <span class="op">=</span> <span class="st">"marker"</span><span class="op">)</span><span class="op">$</span><span class="va">marker</span><span class="op">$</span><span class="va">neglog10P</span> <span class="op">&gt;</span> <span class="fl">6</span><span class="op">]</span></span>
 <span><span class="va">mapBC10</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/drop.markers.html" class="external-link">drop.markers</a></span><span class="op">(</span><span class="va">mapBC9</span>, <span class="va">dm</span><span class="op">)</span></span>
-<span><span class="va">mapBC11</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pushCross.html">pushCross</a></span><span class="op">(</span><span class="va">mapBC10</span>, type <span class="op">=</span> <span class="st">"seg.distortion"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>seg.ratio <span class="op">=</span> <span class="st">"70:30"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">mapBC12</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapBC11</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>, p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC12</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC9</span><span class="op">)</span>, <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">mapBC11</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pushCross.html">pushCross</a></span><span class="op">(</span><span class="va">mapBC10</span>, type <span class="op">=</span> <span class="st">"seg.distortion"</span>,</span>
+<span>                     pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>seg.ratio <span class="op">=</span> <span class="st">"70:30"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">mapBC12</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">mapBC11</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, dist.fun <span class="op">=</span> <span class="st">"kosambi"</span>,</span>
+<span>                  p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 1
+The size of the linkage groups are: 680 
+The number of bins in each linkage group: 192   
+Number of linkage groups: 1
+The size of the linkage groups are: 570 
+The number of bins in each linkage group: 210   
+Number of linkage groups: 1
+The size of the linkage groups are: 328 
+The number of bins in each linkage group: 93    
+Number of linkage groups: 1
+The size of the linkage groups are: 673 
+The number of bins in each linkage group: 203   
+Number of linkage groups: 1
+The size of the linkage groups are: 233 
+The number of bins in each linkage group: 98    
+Number of linkage groups: 1
+The size of the linkage groups are: 278 
+The number of bins in each linkage group: 97    
+Number of linkage groups: 1
+The size of the linkage groups are: 218 
+The number of bins in each linkage group: 98    </code></pre>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC12</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/chrlen.html" class="external-link">chrlen</a></span><span class="op">(</span><span class="va">mapBC9</span><span class="op">)</span>, <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <pre><code>     L.1      L.2      L.3      L.4      L.5      L.6      L.7 
  0.20398  1.11431  0.60228 -0.92150  0.86448 -0.25043 -6.29943 </code></pre>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapBC12</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/nmar.html" class="external-link">nmar</a></span><span class="op">(</span><span class="va">mapBC10</span><span class="op">)</span></span></code></pre></div>
 <pre><code>L.1 L.2 L.3 L.4 L.5 L.6 L.7 
   0   1 156   0   0  86  52 </code></pre>
-<p>After checking the table element of the <code>"seg.distortion"</code>
-element, a 70:30 distortion ratio was chosen to ensure all the markers
-were pushed back into the linkage map. After the pushing was complete,
-the linkage map was reconstructed and linkage group lengths only changed
-negligibly from the previous version of the map with distorted markers
-removed. This suggests the extra markers have been inserted successfully
-with nearly all distorted markers being pushed into L.3, L.6 and
-L.7.</p>
-<p>To finalise the map the 39 co-locating markers residing in the
-<code>"co.located"</code> list element of the object are pushed back
-into the linkage map and placed adjacent to the markers they were
-co-located with. Note that all external co-located markers have an
-immediate linkage group assignation.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<p>A distortion ratio of 70:30 was chosen, after inspection of the table
+held in the <code>"seg.distortion"</code> element, to ensure that all
+markers were restored. The linkage group lengths change only negligibly
+from the previous map with the distorted markers removed, which
+indicates that the additional markers have been inserted successfully,
+nearly all of them into L.3, L.6 and L.7.</p>
+<p>Finally the 39 co-locating markers held in the
+<code>"co.located"</code> element are restored, each placed adjacent to
+the marker it co-locates with. Markers of this type carry an immediate
+linkage group assignment.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapBC</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pushCross.html">pushCross</a></span><span class="op">(</span><span class="va">mapBC12</span>, type <span class="op">=</span> <span class="st">"co.located"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">mapBC</span><span class="op">)</span></span></code></pre></div>
 <pre><code>[1] "geno"  "pheno"</code></pre>
-<p>A check of the final structure of the object shows the extra list
-elements have been removed and only the <code>"pheno"</code> and
-<code>"geno"</code> list elements remain. Users can graphically plot the
-genotypes and marker/interval profiles to diagnostically assess the
-final linkage map. These plots have been omitted from this report for
-brevity. The final linkage map has statistics given in the table
-below.</p>
-<table class="table">
-<caption>Table of statistics for the final linkage map, mapBC</caption>
+<p>The additional elements have been removed from the object, leaving
+only <code>"pheno"</code> and <code>"geno"</code>. The final map has the
+following structure.</p>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="10%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+</colgroup>
 <thead><tr class="header">
 <th></th>
-<th align="right">L.1</th>
-<th align="right">L.2</th>
-<th align="right">L.3</th>
-<th align="right">L.4</th>
-<th align="right">L.5</th>
-<th align="right">L.6</th>
-<th align="right">L.7</th>
-<th align="right">Total</th>
-<th align="right">Ave.</th>
+<th>L.1</th>
+<th>L.2</th>
+<th>L.3</th>
+<th>L.4</th>
+<th>L.5</th>
+<th>L.6</th>
+<th>L.7</th>
+<th>Total</th>
+<th>Average</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>No. of markers</td>
-<td align="right">681</td>
-<td align="right">593</td>
-<td align="right">335</td>
-<td align="right">679</td>
-<td align="right">233</td>
-<td align="right">279</td>
-<td align="right">219</td>
-<td align="right">3019</td>
-<td align="right">431</td>
+<td>Number of markers</td>
+<td>681</td>
+<td>593</td>
+<td>335</td>
+<td>679</td>
+<td>233</td>
+<td>279</td>
+<td>219</td>
+<td>3019</td>
+<td>431</td>
 </tr>
 <tr class="even">
-<td>Lengths</td>
-<td align="right">225.9</td>
-<td align="right">224.4</td>
-<td align="right">157.6</td>
-<td align="right">205.5</td>
-<td align="right">195.1</td>
-<td align="right">145.5</td>
-<td align="right">142.9</td>
-<td align="right">1297.2</td>
-<td align="right">185.3</td>
+<td>Length (cM)</td>
+<td>225.9</td>
+<td>224.4</td>
+<td>157.6</td>
+<td>205.5</td>
+<td>195.1</td>
+<td>145.5</td>
+<td>142.9</td>
+<td>1297.2</td>
+<td>185.3</td>
 </tr>
 <tr class="odd">
-<td>Ave. interval</td>
-<td align="right">0.33</td>
-<td align="right">0.39</td>
-<td align="right">0.48</td>
-<td align="right">0.31</td>
-<td align="right">0.84</td>
-<td align="right">0.53</td>
-<td align="right">0.66</td>
-<td align="right"></td>
-<td align="right">0.51</td>
+<td>Average interval (cM)</td>
+<td>0.33</td>
+<td>0.39</td>
+<td>0.48</td>
+<td>0.31</td>
+<td>0.84</td>
+<td>0.53</td>
+<td>0.66</td>
+<td></td>
+<td>0.51</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section level2">
-<h2 id="post-construction-linkage-map-development">Post-construction linkage map development<a class="anchor" aria-label="anchor" href="#post-construction-linkage-map-development"></a>
+<h2 id="post-construction-development">Post-construction development<a class="anchor" aria-label="anchor" href="#post-construction-development"></a>
 </h2>
-<p>After a linkage map is constructed it is very common to attempt
-linkage map development through the insertion of additional markers.
-This may be a simple fine mapping exercise where the linkage group is
-known in advance for an additional set of markers or it may be a more
-complex tasks such as the insertion of markers from an older linkage map
-into a newly constructed map. The procedure to successfully achieve
-either of these can be problematic. For example, there may need to be
-external manipulation, such as removal of non-concurrent genotypes,
-before the additional set of markers is inserted into the map.
-Additionally, in some cases, the linkage map may need to be partially or
-completely reconstructed. An unfortunate result of this reconstruction
-process is the possible loss of known linkage group identities.</p>
-<p>R/ASMap provides functionality to insert additional markers into an
-established linkage map without losing important linkage group
-identification. The methods applied in this section assume the
-additional markers, as well as the constructed linkage map, are R/qtl
-cross objects of the same class. The methods are best described by
-presenting several examples that mimic common post-construction linkage
-map development tasks. In these examples additional markers will be
-obtained by randomly selecting markers from the final linkage map,
-<code>mapBC</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p>It is common to develop a linkage map further by inserting additional
+markers. This may be a straightforward fine mapping exercise, in which
+the linkage group of the additional markers is known in advance, or a
+more involved task such as inserting markers from an older map into a
+newly constructed one.</p>
+<p>Either can be problematic. External manipulation, such as the removal
+of non-concurrent genotypes, may be required before insertion, and the
+map may need partial or complete reconstruction afterwards. An
+unfortunate consequence of reconstruction is the potential loss of known
+linkage group identities.</p>
+<p>ASMap allows additional markers to be inserted while preserving those
+identities. The methods below assume that the additional markers and the
+constructed map are R/qtl cross objects of the same class. In each
+example the additional markers are obtained by sampling from the final
+map, <code>mapBC</code>.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">add1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/drop.markers.html" class="external-link">drop.markers</a></span><span class="op">(</span><span class="va">mapBC</span>, <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/markernames.html" class="external-link">markernames</a></span><span class="op">(</span><span class="va">mapBC</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3019</span>, <span class="fl">2700</span>, replace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">mapBCs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/drop.markers.html" class="external-link">drop.markers</a></span><span class="op">(</span><span class="va">mapBC</span>, <span class="fu"><a href="https://rdrr.io/pkg/qtl/man/markernames.html" class="external-link">markernames</a></span><span class="op">(</span><span class="va">add1</span><span class="op">)</span><span class="op">)</span></span>
@@ -306,88 +371,136 @@ obtained by randomly selecting markers from the final linkage map,
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">add3</span><span class="op">$</span><span class="va">geno</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"ALL"</span></span>
 <span><span class="va">add3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">add3</span>, chr <span class="op">=</span> <span class="st">"ALL"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
-<h3 id="combining-two-linkage-maps-of-the-same-population">Combining two linkage maps of the same population<a class="anchor" aria-label="anchor" href="#combining-two-linkage-maps-of-the-same-population"></a>
+<h3 id="combining-two-maps-of-the-same-population">Combining two maps of the same population<a class="anchor" aria-label="anchor" href="#combining-two-maps-of-the-same-population"></a>
 </h3>
-<p>Many populations that are currently being researched have been
-genotyped on multiple platforms and separate maps constructed for one or
-both of the populations. For example, a linkage map may have been
-constructed from markers genotyped on the new Illumina 90K SNP (Single
-Nucleotide Polymorphism) array but the population may also have a legacy
-linkage map constructed from markers stemming from SSRs (Single Sequence
-Repeats) or DaRTs (Diversity Array Technology). The <code>add1</code>
-R/qtl object mimics an older map of <code>mapBC</code> with 319 markers
-spanning the seven linkage groups. As the linkage groups are known
-between maps there is only a requirement to combine the maps in a
-sensible manner and reconstruct. This can be done efficiently in R/ASMap
-without external manipulation and loss of linkage group information.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>Populations are frequently genotyped on more than one platform, with
+separate maps constructed from each. A map built from an Illumina 90K
+SNP array, for instance, may coexist with a legacy map built from SSR or
+DArT markers. The <code>add1</code> object mimics such an older map of
+<code>mapBC</code>, with 319 markers spanning the seven linkage groups.
+Since the linkage groups are known in both maps, it remains only to
+combine them sensibly and reconstruct.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">add1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">add1</span>, ind <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">300</span><span class="op">)</span></span>
 <span><span class="va">full1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combineMap.html">combineMap</a></span><span class="op">(</span><span class="va">mapBCs</span>, <span class="va">add1</span>, keep.all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">full1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">full1</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, anchor <span class="op">=</span> <span class="cn">TRUE</span>, p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p>This example is a classic use of the R/ASMap function
-<code><a href="../reference/combineMap.html">combineMap()</a></code> described in section Combining maps. The two
-maps are first merged on their matching genotypes and, as the first
-genotype in <code>add1</code> has been removed, there are missing cells
-placed in the first genotype of <code>mapBCs</code> for the markers in
-<code>add1</code>. The <code><a href="../reference/combineMap.html">combineMap()</a></code> function also
-understands that both linkage maps share common linkage group names and
-places the markers from shared linkage groups together. The map is then
-reconstructed by linkage group using <code>p.value = 2</code> in the
-<code><a href="../reference/mstmap.cross.html">mstmap.cross()</a></code> call, ensuring the important identity of
-linkage groups are retained. In addition, setting
-<code>anchor = TRUE</code> will ensure that the orientation of the
-larger linkage map <code>mapBCs</code> is preserved.</p>
+<span><span class="va">full1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">full1</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, anchor <span class="op">=</span> <span class="cn">TRUE</span>, p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 1
+The size of the linkage groups are: 681 
+The number of bins in each linkage group: 192   
+Number of linkage groups: 1
+The size of the linkage groups are: 593 
+The number of bins in each linkage group: 209   
+Number of linkage groups: 1
+The size of the linkage groups are: 335 
+The number of bins in each linkage group: 93    
+Number of linkage groups: 1
+The size of the linkage groups are: 679 
+The number of bins in each linkage group: 202   
+Number of linkage groups: 1
+The size of the linkage groups are: 233 
+The number of bins in each linkage group: 99    
+Number of linkage groups: 1
+The size of the linkage groups are: 279 
+The number of bins in each linkage group: 97    
+Number of linkage groups: 1
+The size of the linkage groups are: 219 
+The number of bins in each linkage group: 98    </code></pre>
+<p>This is a characteristic application of <a href="../reference/combineMap.html"><code>combineMap()</code></a>,
+described in <a href="manipulating-maps.html">Manipulating linkage
+maps</a>. The maps are first merged on their matching genotypes; because
+the first genotype of <code>add1</code> has been removed, missing cells
+are inserted in the first genotype of <code>mapBCs</code> for the
+markers contributed by <code>add1</code>. The function recognises that
+both maps share linkage group names and places the markers from shared
+groups together. Reconstruction by linkage group with
+<code>p.value = 2</code> then retains those identities, and
+<code>anchor = TRUE</code> preserves the orientation of the larger
+map.</p>
 </div>
 <div class="section level3">
 <h3 id="fine-mapping">Fine mapping<a class="anchor" aria-label="anchor" href="#fine-mapping"></a>
 </h3>
-<p>In marker assisted selection breeding programmes it is common to
-increase the density of markers in a specific genomic region of a
-linkage group for the purpose of more accurately identifying the
-position of quantitative trait loci (QTL). This is known as fine
-mapping. For example, the <code>add2</code> object contains only markers
-from the L.1 linkage group of <code>mapBCs</code>. When the linkage
-group for the additional markers is known in advance and matches a
-linkage group in the constructed map, the insertion of the new markers
-is very similar to the previous section.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<p>In marker assisted selection it is common to increase marker density
+in a specific genomic region, so that the position of quantitative trait
+loci may be identified more accurately. The <code>add2</code> object
+contains markers from the L.1 group of <code>mapBCs</code> alone. Where
+the linkage group of the additional markers is known in advance and
+matches a group in the constructed map, insertion proceeds much as
+above.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">add2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">add2</span>, ind <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">300</span><span class="op">)</span></span>
 <span><span class="va">full2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combineMap.html">combineMap</a></span><span class="op">(</span><span class="va">mapBCs</span>, <span class="va">add2</span>, keep.all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">full2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">full2</span>, chr <span class="op">=</span> <span class="st">"L.1"</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, anchor <span class="op">=</span> <span class="cn">TRUE</span>, p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p>Again, the removal of the first genotype of <code>add2</code> will
-cause missing values to be added in the first genotype of
-<code>full2</code> for the markers that were in <code>add2</code>. The
-<code><a href="../reference/mstmap.cross.html">mstmap.cross()</a></code> call is also similar to the previous section
-with the exception that only the first linkage group L.1 needs optimal
-ordering.</p>
+<span><span class="va">full2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">full2</span>, chr <span class="op">=</span> <span class="st">"L.1"</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, anchor <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 1
+The size of the linkage groups are: 681 
+The number of bins in each linkage group: 192   </code></pre>
+<p>The removal of the first genotype of <code>add2</code> again
+introduces missing values in the first genotype of <code>full2</code>.
+The reconstruction differs only in that ordering is required within L.1
+alone.</p>
 </div>
 <div class="section level3">
 <h3 id="unknown-linkage-groups">Unknown linkage groups<a class="anchor" aria-label="anchor" href="#unknown-linkage-groups"></a>
 </h3>
-<p>There may be occasions when the linkage group identification of the
-additional markers is not known in advance. For example, an incomplete
-set of markers was used to construct the map or a secondary set of
-markers is available that come from an unconstructed linkage map. These
-additional markers can be pushed into a constructed linkage map
-efficiently using the functions available in R/ASMap. In this example
-the <code>add3</code> R/qtl object consists of one linkage group called
-<code>ALL</code> that contains all the markers that spanned the seven
-linkage groups in <code>add1</code>.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<p>The linkage group of the additional markers is not always known in
+advance. An incomplete marker set may have been used to construct the
+map, or a secondary set may be available from an unconstructed map. Here
+the <code>add3</code> object consists of a single group named
+<code>ALL</code> containing all the markers that spanned the seven
+groups of <code>add1</code>.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">add3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">add3</span>, ind <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">300</span><span class="op">)</span></span>
 <span><span class="va">full3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combineMap.html">combineMap</a></span><span class="op">(</span><span class="va">mapBCs</span>, <span class="va">add3</span>, keep.all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">full3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pushCross.html">pushCross</a></span><span class="op">(</span><span class="va">full3</span>, type <span class="op">=</span> <span class="st">"unlinked"</span>, unlinked.chr <span class="op">=</span> <span class="st">"ALL"</span><span class="op">)</span></span>
-<span><span class="va">full3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">full3</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">TRUE</span>, anchor <span class="op">=</span> <span class="cn">TRUE</span>, p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p>Again, <code><a href="../reference/combineMap.html">combineMap()</a></code> is used to merge the linkage maps to
-avoid the hassle of having to manually match the dimensions of the
-marker sets. The R/ASMap function <code><a href="../reference/pushCross.html">pushCross()</a></code> can then be
-used to push the additional markers into the constructed linkage map. By
-choosing the marker type argument <code>type = "unlinked"</code> and
-providing the <code>unlinked.chr = "ALL"</code> the function recognises
-that the markers require pushing back into the remaining linkage groups
-of <code>full3</code>. Again, the <code><a href="../reference/mstmap.cross.html">mstmap.cross()</a></code> call only
-requires optimal ordering of the markers within linkage groups.</p>
+<span><span class="va">full3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mstmap.cross.html">mstmap</a></span><span class="op">(</span><span class="va">full3</span>, bychr <span class="op">=</span> <span class="cn">TRUE</span>, trace <span class="op">=</span> <span class="cn">FALSE</span>, anchor <span class="op">=</span> <span class="cn">TRUE</span>, p.value <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Number of linkage groups: 1
+The size of the linkage groups are: 681 
+The number of bins in each linkage group: 192   
+Number of linkage groups: 1
+The size of the linkage groups are: 593 
+The number of bins in each linkage group: 209   
+Number of linkage groups: 1
+The size of the linkage groups are: 335 
+The number of bins in each linkage group: 93    
+Number of linkage groups: 1
+The size of the linkage groups are: 679 
+The number of bins in each linkage group: 202   
+Number of linkage groups: 1
+The size of the linkage groups are: 233 
+The number of bins in each linkage group: 99    
+Number of linkage groups: 1
+The size of the linkage groups are: 279 
+The number of bins in each linkage group: 97    
+Number of linkage groups: 1
+The size of the linkage groups are: 219 
+The number of bins in each linkage group: 98    </code></pre>
+<p><code><a href="../reference/combineMap.html">combineMap()</a></code> again merges the maps, avoiding any need to
+match the dimensions of the marker sets manually.
+<code><a href="../reference/pushCross.html">pushCross()</a></code> with <code>type = "unlinked"</code> and
+<code>unlinked.chr = "ALL"</code> then distributes the additional
+markers among the remaining linkage groups of <code>full3</code>, after
+which ordering within groups is all that is required.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="further-reading">Further reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
+</h2>
+<ul>
+<li>
+<a href="worked-example-construction.html">Worked example I</a> —
+the construction that precedes this article</li>
+<li>
+<a href="pulling-and-pushing.html">Pulling and pushing markers</a> —
+the mechanism used throughout</li>
+<li>
+<a href="manipulating-maps.html">Manipulating linkage maps</a> —
+<code><a href="../reference/combineMap.html">combineMap()</a></code> and <code><a href="../reference/mergeCross.html">mergeCross()</a></code> in detail</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -13,9 +13,9 @@
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Heat maps">
-<meta name="description" content="Displaying pairwise recombination fractions and LOD scores of linkage together, with a separate legend for each.
+<meta name="description" content="Displaying pairwise recombination fractions and LOD scores of linkage together, with an independent legend for each.
 ">
-<meta property="og:description" content="Displaying pairwise recombination fractions and LOD scores of linkage together, with a separate legend for each.
+<meta property="og:description" content="Displaying pairwise recombination fractions and LOD scores of linkage together, with an independent legend for each.
 ">
 </head>
 <body>
@@ -85,73 +85,64 @@
 
     
     
-<div class="section level2">
-<h2 id="improved-heat-map">Improved heat map<a class="anchor" aria-label="anchor" href="#improved-heat-map"></a>
-</h2>
-<p>A visual diagnostic that is very useful for checking how well a
-linkage map is constructed is a heat map that combines the estimates of
-the pairwise recombination fraction (RF) between markers as well as LOD
-scores reflecting the the strength of linkage between each pair. Let the
-estimate of RF between marker
+<p>The most informative single check on a constructed linkage map is a
+heat map combining the estimated pairwise recombination fractions
+between markers with the LOD scores expressing the strength of linkage
+between each pair. Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">r_{ij}</annotation></semantics></math>
+denote the estimated recombination fraction between markers
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
-be
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">r_{ij}</annotation></semantics></math>
-then the LOD score is a test of no linkage
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">r_{ij} = 0.5</annotation></semantics></math>).
-Higher LOD scores indicate that the hypothesis of no linkage is rejected
-and the strength of the connection between the pair of markers is
-strong.</p>
-<p>In R/qtl users can plot the heat map of pairwise linkage between
-markers using <code><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="external-link">plotRF()</a></code>. The <code><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="external-link">plotRF()</a></code> version
-of <code>mapDH</code> is given in the figure below. In this plot strong
-pairwise linkages between markers are represented as “hot” or red areas
-and weak pairwise linkages between markers are displayed as “cold” or
-blue areas.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>;
+the LOD score is then a test of no linkage,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">r_{ij} = 0.5</annotation></semantics></math>.
+High LOD scores indicate rejection of that hypothesis and therefore
+strong linkage between the pair.</p>
+<div class="section level2">
+<h2 id="the-rqtl-display-and-its-limitations">The R/qtl display and its limitations<a class="anchor" aria-label="anchor" href="#the-rqtl-display-and-its-limitations"></a>
+</h2>
+<p>R/qtl provides <code><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="external-link">plotRF()</a></code> for this purpose <span class="citation">(<a href="#ref-br14">Broman and Wu 2014</a>)</span>.
+Strong pairwise linkages appear as hot, or red, areas and weak linkages
+as cold, or blue, areas.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="external-link">plotRF</a></span><span class="op">(</span><span class="va">mapDH</span><span class="op">)</span></span></code></pre></div>
 <pre><code>Warning in plotRF(mapDH): Running est.rf.</code></pre>
 <div class="figure" style="text-align: center">
-<img src="heat-maps_files/figure-html/plotrffig-1.png" class="r-plt" alt="Heat map of the constructed linkage map mapDH using `plotRF()`." width="100%"><p class="caption">
+<img src="heat-maps_files/figure-html/plotrffig-1.png" class="r-plt" alt="Heat map of the constructed linkage map mapDH using plotRF()." width="100%"><p class="caption">
 Heat map of the constructed linkage map mapDH using
 <code><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="external-link">plotRF()</a></code>.
 </p>
 </div>
-<p>Unfortunately the plot contains some inadequacies that are mostly
-pointed out in the documentation (see <code><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="external-link">?plotRF</a></code>).
-“Recombination fractions are transformed by -4(log2(r)+1) to make them
-on the same sort of scale as LOD scores. Values of LOD or the
-transformed recombination fraction that are above 12 are set to 12.”
-This transformation and the arbitrary threshold induce multiple
-restrictions on the visualization of the heat map. Firstly, the LOD
-score is highly dependent on the number of individuals in the population
-and the upper limit of 12 may be a vastly inadequate representation of
-the pairwise linkage between some markers. In the figure below this
-latter inadequacy is displayed as red or hot areas of linkage between
-markers that should otherwise be cooler colours. Additionally, the
-actual estimated recombination fractions are not displayed in the upper
-triangle of the heat map and colour legends matching the numerical LOD
-and RF’s are not present. From a visual standpoint, it is well known the
-rainbow colour spectrum is perceptually inadequate for representing
-diverging numerical data.</p>
-<p>R/ASMap contains an improved version of the heat map called
-<code><a href="../reference/heatMap.html">heatMap()</a></code> that rectifies the numerical and visual issues of
-the <strong>qtl</strong> heat map.</p>
+<p>The display has several limitations, most of which are noted in its
+own documentation: recombination fractions are transformed by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>4</mn><mo stretchy="false" form="prefix">(</mo><msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mn>2</mn></msub><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">-4(\log_2(r)+1)</annotation></semantics></math>
+to bring them onto a scale comparable with LOD scores, and values of
+either quantity exceeding 12 are set to 12.</p>
+<p>This transformation and the fixed threshold impose three
+restrictions.</p>
+<ol style="list-style-type: decimal">
+<li>The LOD score depends strongly on the number of individuals in the
+population, so an upper limit of 12 may represent the pairwise linkage
+between some markers very poorly. In the figure above this appears as
+hot areas of linkage between markers that should be rendered in cooler
+colours.</li>
+<li>The estimated recombination fractions are not themselves displayed
+in the upper triangle, and no legends relate the colours to the
+numerical LOD scores and recombination fractions.</li>
+<li>The rainbow colour spectrum is perceptually unsuited to the
+representation of diverging numerical data.</li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="the-asmap-display">The ASMap display<a class="anchor" aria-label="anchor" href="#the-asmap-display"></a>
+</h2>
+<p><a href="../reference/heatMap.html"><code>heatMap()</code></a>
+addresses each of these. LOD scores are plotted on the lower triangle
+and the estimated recombination fractions, untransformed, on the upper.
+The fixed threshold is replaced by the user-defined arguments
+<code>lmax</code> and <code>rmin</code>, which may be set to suit the
+population size and the requirements of the plot.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatMap.html">heatMap</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">chr</span>, <span class="va">mark</span>, what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"both"</span>, <span class="st">"lod"</span>, <span class="st">"rf"</span><span class="op">)</span>, lmax <span class="op">=</span> <span class="fl">12</span>,</span>
-<span>             rmin <span class="op">=</span> <span class="fl">0</span>, markDiagonal <span class="op">=</span> <span class="cn">FALSE</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">rainbow</a></span><span class="op">(</span><span class="fl">256</span>, start <span class="op">=</span></span>
-<span>             <span class="fl">0</span>, end <span class="op">=</span> <span class="fl">2</span><span class="op">/</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
-<p>The function independently plots the LOD score on the bottom triangle
-of the heatmap as well as the actual estimated recombination fractions
-on the upper triangle. The function also releases the arbitrary
-threshold on the LOD score and recombination fractions by providing a
-user defined <code>lmax</code> and <code>rmin</code> argument that is
-adjustable to suit the population size and any requirements of the plot
-required. For example, the figure below shows the <code><a href="../reference/heatMap.html">heatMap()</a></code>
-equivalent of <code><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="external-link">plotRF()</a></code> for the linkage map
-<code>mapDH</code> made with the call</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/heatMap.html">heatMap</a></span><span class="op">(</span><span class="va">mapDH</span>, lmax <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></code></pre></div>
 <pre><code>Warning in heatMap(mapDH, lmax = 50): Running est.rf.</code></pre>
 <div class="figure" style="text-align: center">
@@ -160,28 +151,67 @@ Heat map of the constructed linkage map mapDH using
 <code><a href="../reference/heatMap.html">heatMap()</a></code>.
 </p>
 </div>
-<p>The instantly visual difference between the figures is the chosen
-colour palette. R/ASMap uses a diverging colour palette
-<code>"Spectral"</code> from the default color palettes of
-<strong>RColorBrewer</strong>. The palette softens the plot and provides
-a gentle dinstinction between strongly linked and weakly linked markers.
-The plot also includes a legend for the LOD score and recombination
-fractions on either side of the figure below. As the estimated
-recombination fractions are being freely plotted without transformation,
-the complete scale is included in the heat map. This scale also includes
-estimated recombination fractions that are above the theoretical
-threshold of 0.5. By increasing this scale beyond 0.5, potential regions
-where markers out of phase with other markers can be recognised. The key
-to obtaining an “accurate” heat map is to match the heat of the LOD
-scores to the heat of the estimated recombination fractions and setting
-<code>lmax = 50</code> achieves this goal. Similar to
-<code><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="external-link">plotRF()</a></code>, the <code><a href="../reference/heatMap.html">heatMap()</a></code> function allows
-subsetting of the linkage map by <code>chr</code>. In addition, users
-can further subset the linkage groups using the argument
-<code>mark</code> by indexing a set of markers within linkage groups
-defined by <code>chr</code>.</p>
+<p>The most immediate difference is the colour palette. ASMap uses the
+diverging <code>"Spectral"</code> palette of
+<strong>RColorBrewer</strong>, which softens the display and draws a
+gentler distinction between strongly and weakly linked markers. Separate
+legends for the LOD scores and the recombination fractions appear on
+either side of the plot.</p>
+<p>Because the recombination fractions are plotted without
+transformation, the complete scale is shown, including values above the
+theoretical threshold of 0.5. Extending the scale beyond 0.5 in this way
+allows regions in which markers are out of phase with their neighbours
+to be recognised.</p>
 </div>
-  </main>
+<div class="section level2">
+<h2 id="matching-the-two-scales">Matching the two scales<a class="anchor" aria-label="anchor" href="#matching-the-two-scales"></a>
+</h2>
+<blockquote>
+<p>An accurate heat map is obtained when the heat of the LOD scores
+matches the heat of the estimated recombination fractions. Setting
+<code>lmax = 50</code> achieves this for <code>mapDH</code>; a different
+population size will require a different value.</p>
+</blockquote>
+<p>This matching is the reason <code>lmax</code> exists as an argument
+rather than a constant. Where the two triangles disagree visibly, the
+LOD threshold rather than the map is usually at fault.</p>
+</div>
+<div class="section level2">
+<h2 id="subsetting-the-display">Subsetting the display<a class="anchor" aria-label="anchor" href="#subsetting-the-display"></a>
+</h2>
+<p>As with <code><a href="https://rdrr.io/pkg/qtl/man/plot.rf.html" class="external-link">plotRF()</a></code>, the map may be subset by linkage group
+through <code>chr</code>. The <code>mark</code> argument subsets
+further, indexing a set of markers within the linkage groups nominated
+by <code>chr</code>, which is useful for examining a suspected junction
+between two groups at close range.</p>
+</div>
+<div class="section level2">
+<h2 id="further-reading">Further reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
+</h2>
+<ul>
+<li>
+<a href="diagnostics.html">Diagnosing genotypes and markers</a> —
+numerical counterparts to this graphical check</li>
+<li>
+<a href="worked-example-refinement.html">Worked example II</a> —
+heat maps used to identify linkage groups requiring merging</li>
+<li>
+<a href="../reference/heatMap.html"><code>heatMap()</code></a> —
+full argument documentation</li>
+</ul>
+</div>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-br14" class="csl-entry">
+Broman, K. W, and H Wu. 2014. <em><span class="nocase">: Tools for
+Analayzing QTL Experiments</span></em>. <a href="http://www.CRAN.R-project.org/src/contrib/Archive/qtl/" class="external-link">http://www.CRAN.R-project.org/src/contrib/Archive/qtl/</a>.
+</div>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

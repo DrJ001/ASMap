@@ -1,49 +1,31 @@
 # Constructing a linkage map
 
-This chapter explores the R/ASMap functions in greater depth and shows
-how they can be used to efficiently explore, manipulate and construct
-genetic linkage maps. It will also showcase the graphical tools that
-will allow efficient diagnosis of linkage map problems post
-construction.
+ASMap provides two construction functions, both methods of the
+[`mstmap()`](https://drj001.github.io/ASMap/reference/mstmap.cross.md)
+generic. They differ only in the object they accept: a data frame of
+marker scores, or an R/qtl `cross` object. Both expose the full set of
+MSTmap parameters documented at
+[http://alumni.cs.ucr.edu/~yonghui/mstmap.html](http://alumni.cs.ucr.edu/~yonghui/mstmap.md).
 
-The package contains multiple data sets listed as follows
+The algorithm underlying them is described in [How the MSTmap algorithm
+works](https://drj001.github.io/ASMap/articles/mstmap-algorithm.md), and
+the practical behaviour of the `mvest.bc` and `detectBadData` arguments
+in [Notes on the MSTmap
+algorithm](https://drj001.github.io/ASMap/articles/algorithm-notes.md).
 
-- **mapDH**:
+## Example data
 
-  : A constructed genetic linkage map for a Doubled Haploid population
-  in the form of an R/qtl object. The genetic linkage map contains a
-  total of 599 markers spanning 23 linkage groups genotyped across 218
-  individuals. The linkage map contains a small set of co-located
-  markers and a small set of markers with excessive segregation
-  distortion
+The package supplies five data sets, described in full on their
+reference pages. The datasets are not lazy-loaded and require an
+explicit [`data()`](https://rdrr.io/r/utils/data.html) call.
 
-- **mapDHf**:
-
-  : An unconstructed version of `mapDH` in the form a data frame. The
-  data frame has dimensions 599 $`\times`$ 218 and the rows (markers)
-  have been randomized.
-
-- **mapBCu**:
-
-  : An unconstructed set of markers for a backcross population in the
-  form of an R/qtl object. The marker set contains a total of 3023
-  markers genotyped on 326 individuals. This marker set can be used in
-  conjunction with the detailed process presented in chapter to
-  construct a genetic linkage map.
-
-- **mapBC**:
-
-  : A constructed linkage map of `mapBCu` in the form of an R/qtl
-  object. The linkage map contains a total of 3019 markers genotyped on
-  300 individuals.
-
-- **mapF2**:
-
-  : A simulated linkage map for a self-pollinated F2 population
-  consisting of 700 markers spanning 7 linkage groups genotyped across
-  250 individuals.
-
-Each of these data sets is accessible using commands similar to
+| Data set | Form | Individuals | Markers | Description |
+|----|----|----|----|----|
+| [`mapDH`](https://drj001.github.io/ASMap/reference/mapDH.md) | cross | 218 | 599 | Constructed doubled haploid map, 23 linkage groups, containing a few co-located and distorted markers |
+| [`mapDHf`](https://drj001.github.io/ASMap/reference/mapDHf.md) | data frame | 218 | 599 | Unconstructed form of `mapDH`, with the marker rows randomised |
+| [`mapBCu`](https://drj001.github.io/ASMap/reference/mapBCu.md) | cross | 326 | 3023 | Unconstructed backcross marker set |
+| [`mapBC`](https://drj001.github.io/ASMap/reference/mapBC.md) | cross | 300 | 3019 | Constructed form of `mapBCu` |
+| [`mapF2`](https://drj001.github.io/ASMap/reference/mapF2.md) | cross | 250 | 700 | Simulated selfed F2 map, 7 linkage groups |
 
 ``` r
 
@@ -52,89 +34,44 @@ data(mapDH, package = "ASMap")
 data(mapBCu, package = "ASMap")
 ```
 
-## Map construction functions
+## Construction from a data frame
 
-The R/ASMap package contains two linkage map construction functions that
-allow users to fully utilize the MSTmap parameters listed at
-[http://alumni.cs.ucr.edu/~yonghui/mstmap.html](http://alumni.cs.ucr.edu/~yonghui/mstmap.md).
-Some additional information on aspects of the MSTmap algorithm and the
-appropriate use of the arguments `mvest.bc` and `detectBadData` is given
-in Chapter .
+[`mstmap.data.frame()`](https://drj001.github.io/ASMap/reference/mstmap.data.frame.md)
+accepts a data frame of marker scores. Its required layout derives from
+the marker file used by the standalone MSTmap software: **markers in
+rows and genotypes in columns**, with marker names in the `rownames` and
+genotype names in the `names`. Every column must be of class
+`"character"` rather than a factor, which is most easily ensured through
+the `stringsAsFactors = FALSE` argument of any `data.frame` method.
+Spaces in marker or genotype names should be avoided; where found they
+are replaced by a hyphen.
 
-### `mstmap.data.frame()`
+The allelic coding is strict, and depends on the population type given
+to `pop.type`.
 
-The first of these functions allows users to input a data frame of
-genetic markers ready for construction. For a more detailed explanation
-of the arguments users should consult the help documentation found by
-typing
-[`?mstmap.data.frame`](https://drj001.github.io/ASMap/reference/mstmap.data.frame.md)
-in R.
+| `pop.type` | Population | Allele coding |
+|----|----|----|
+| `"BC"` | Backcross | `"A"` or `"a"`, and `"B"` or `"b"` |
+| `"DH"` | Doubled haploid | `"A"` or `"a"`, and `"B"` or `"b"` |
+| `"ARIL"` | Advanced recombinant inbred | `"A"` or `"a"`, and `"B"` or `"b"`; heterozygotes assumed already set to missing |
+| `"RILn"` | Recombinant inbred, *n* levels of selfing | As above, with phase-unknown heterozygotes coded `"X"` |
+
+Missing scores are denoted `"U"` or `"-"` for all population types.
+
+`mapDHf` is an unconstructed doubled haploid marker set of 599 markers
+scored on 218 individuals, formatted for input to this function.
 
 ``` r
 
-mstmap.data.frame(object, pop.type = "DH", dist.fun = "kosambi",
-      objective.fun = "COUNT", p.value = 1e-06, noMap.dist = 15,
-      noMap.size = 0, miss.thresh = 1, mvest.bc = FALSE, detectBadData = FALSE,
-      as.cross = TRUE, return.imputed = TRUE, trace = FALSE, ...)
+testd <- mstmap(mapDHf, dist.fun = "kosambi", trace = FALSE, as.cross = TRUE)
 ```
 
-The explicit form of the data frame `object` is borne from the syntax of
-the marker file required for using the stand alone MSTmap software. It
-must have markers in rows and genotypes in columns. Marker names are
-required to be in the `rownames` component of the object with genotype
-names residing in the `names`. Spaces in any of the marker or genotype
-names should be avoided but will be replaced with a “-” if found. Each
-of the columns of the data frame must be of class `"character"` (not
-factors). If converting from a matrix, this can easily be achieved by
-using the `stringAsFactors = FALSE` argument for any `data.frame`
-method.
-
-The available populations that can be passed to `pop.type` are `"BC"`
-Backcross, `"DH"` Doubled Haploid, `"ARIL"` Advanced Recombinant Inbred
-and `"RILn"` Recombinant Inbred with n levels of selfing. The allelic
-content of the markers in the `object` must be explicitly adhered to.
-For `pop.type` `"BC"`, `"DH"` or `"ARIL"` the two allele types should be
-represented as (`"A"` or `"a"`) and (`"B"` or `"b"`). Thus for
-`pop.type = "ARIL"` it is assumed the minimal number of heterozygotes
-have been set to missing. For non-advanced RIL populations
-(`pop.type = "RILn"`) phase unknown heterozygotes should be represented
-as `"X"`. For all populations, missing marker scores should be
-represented as (`"U"` or `"-"`).
-
-Users need to be aware that the `p.value` argument plays an important
-role in determining the clustering of markers to distinct linkage
-groups. Section Clustering shows the separation of marker groups is
-highly dependent on the the number of individuals in the population. For
-this reason, some trial and error may be required to determine an
-appropriate `p.value` for the linkage map being constructed.
-
-Although this function contains arguments that utilize the complete set
-of available MSTmap parameters it is less flexible than its sister
-function
-[`mstmap.cross()`](https://drj001.github.io/ASMap/reference/mstmap.cross.md)
-(see section textttmstmap.cross()) that uses the flexible structure of
-an R/qtl `"cross"` object. For this reason, it is recommended that users
-set `as.cross = TRUE` to ensure the constructed object is returned as a
-R/qtl cross object with an appropriate class structure. For population
-types `"BC"` and `"DH"` the class of the constructed object is given
-`"bc"` and `"dh"` respectively. For `"RILn"` the **qtl** package
-conversion function `convert2bcsft` is used to ensure the class of the
-object is assigned `"bcsft"` with arguments `F.gen = n` and
-`BC.gen = 0`. For `"ARIL"` populations the constructed object is given
-the class `"riself"`. The correct assignation of these classes ensures
-the objects can be used synergistically with the suite of functions
-available in the R/qtl package as well as other functions in the R/ASMap
-package.
-
-The R/ASMap package contains an unconstructed Doubled Haploid marker set
-`mapDHf` with 599 markers genotyped across 218 individuals. The marker
-set is formatted correctly for input into the
-[`mstmap.data.frame()`](https://drj001.github.io/ASMap/reference/mstmap.data.frame.md)
-function.
+    Number of linkage groups: 24
+    The size of the linkage groups are: 56  54  35  41  4   37  6   30  40  27  37  13  15  10  21  6   32  33  33  41  6   9   5   8   
+    The number of bins in each linkage group: 55    53  34  41  3   36  6   29  40  27  36  13  14  9   21  5   32  33  32  41  5   8   4   7   
 
 ``` r
 
-testd <- mstmap(mapDHf, dist.fun = "kosambi", trace = TRUE, as.cross = TRUE)
 nmar(testd)
 ```
 
@@ -157,68 +94,65 @@ chrlen(testd)
            L22        L23        L24 
       7.801089   7.810474  19.196583 
 
-As `as.cross = TRUE` the usual functions available in the R/qtl package
-are available for use on the returned object.
+Setting `as.cross = TRUE` is recommended, since it returns an R/qtl
+cross object of the appropriate class and thereby makes the facilities
+of both packages available for subsequent work. The class assigned
+depends on the population type.
 
-### `mstmap.cross()`
+| `pop.type` | Class assigned | Mechanism |
+|----|----|----|
+| `"BC"` | `"bc"` | Direct |
+| `"DH"` | `"dh"` | Direct |
+| `"ARIL"` | `"riself"` | Direct |
+| `"RILn"` | `"bcsft"` | Via [`qtl::convert2bcsft()`](https://rdrr.io/pkg/qtl/man/qtl-internal.html) with `F.gen = n`, `BC.gen = 0` |
 
-The second linkage map construction function allows users to input an
-unconstructed or constructed linkage map in the form of an R/qtl cross
-object. See
-[`?mstmap.cross`](https://drj001.github.io/ASMap/reference/mstmap.cross.md)
-for a more detailed description.
+With `as.cross = FALSE` the map is returned instead as a data frame
+carrying additional columns for the linkage group, marker position and
+genetic distance.
 
-``` r
+## Construction from a cross object
 
-mstmap.cross(object, chr, id = "Genotype", bychr = TRUE,
-       suffix = "numeric", anchor = FALSE, dist.fun = "kosambi",
-       objective.fun = "COUNT", p.value = 1e-06, noMap.dist = 15,
-       noMap.size = 0, miss.thresh = 1, mvest.bc = FALSE, detectBadData =
-       FALSE, return.imputed = FALSE, trace = FALSE, ...)
-```
+[`mstmap.cross()`](https://drj001.github.io/ASMap/reference/mstmap.cross.md)
+accepts an unconstructed or constructed map held in an R/qtl cross
+object, and is the more flexible of the two. The object must inherit one
+of the classes `"bc"`, `"dh"`, `"riself"` or `"bcsft"`, a restriction
+that guards against attempting construction for the more complex
+population types R/qtl supports.
 
-The cross `object` needs to inherit from one of the allowable classes
-available in the R/qtl package, namely `"bc","dh","riself","bcsft"`
-where `"bc"` is a Backcross `"dh"` is Doubled Haploid, `"riself"` is an
-advanced Recombinant Inbred and `"bcsft"` is a Backcross/Self.
+How these classes arise matters in practice.
+[`read.cross()`](https://rdrr.io/pkg/qtl/man/read.cross.html) assigns
+the class `"bc"` to any bi-parental population. Doubled haploid
+populations may be assigned `"dh"` simply by changing the class; for the
+purpose of construction the two are equivalent.
 
-It is important to understand how these classes are encoded into the
-object for the specific populations. If
-[`read.cross()`](https://rdrr.io/pkg/qtl/man/read.cross.html) is used to
-read in any bi-parental populations it will be given the class `"bc"`.
-Doubled Haploid populations can be changed to `"dh"` just by changing
-the class. For the purpose of linkage map construction, both classes
-`"bc"` and `"dh"` will produce equivalent results. For non-advanced
-Recombinant Inbred populations markers are required to be fully
-informative (i.e. contain 3 distinct allele types such as AA, BB for
-parental homozygotes and AB for phase unknown heterozygotes) and the use
-of [`read.cross()`](https://rdrr.io/pkg/qtl/man/read.cross.html) will
-result in the cross object being given a class `"f2"`. The level of
-selfing is required to be encoded into the object by applying one of the
-two conversion functions available in the R/qtl package. For a
-population that has been generated by selfing $`n`$ times, the
-conversion function `convertbcsft` can be used by setting the arguments
-`F.gen = n` and `BC.gen = 0`. This will attach a class `"bcsft"` to the
-object. Populations that are genuine advanced RILs can be converted
-using the `convert2riself` function. This function will replace any
-remaining heterozygosity, if it exists, with missing values and attach
-the class `"riself"` to the object.
+Non-advanced recombinant inbred populations require fully informative
+markers, that is three distinct allele types, and
+[`read.cross()`](https://rdrr.io/pkg/qtl/man/read.cross.html) will
+assign them the class `"f2"`. The level of selfing must then be encoded
+by conversion:
 
-Similar to the
-[`mstmap.data.frame()`](https://drj001.github.io/ASMap/reference/mstmap.data.frame.md)
-function, users need to be aware that the `p.value` argument is highly
-dependent on the number of individuals in the population and may require
-some trial and error to ascertain an appropriate value. After
-construction the cross object is returned with an identical class
-structure as the inputted object. All R/qtl and R/ASMap package
-functions can be used synergistically with this object.
+| Population | Conversion |
+|----|----|
+| Selfed $`n`$ times | `qtl::convert2bcsft(F.gen = n, BC.gen = 0)`, giving class `"bcsft"` |
+| Genuine advanced RIL | [`qtl::convert2riself()`](https://rdrr.io/pkg/qtl/man/convert2riself.html), giving class `"riself"` and replacing any residual heterozygosity with missing values |
 
-#### Examples
+The object is returned with the same class structure it was given, so
+that all functions of both packages remain applicable.
 
-The constructed linkage map `mapDH` available in the R/ASMap package
-will be used to showcase the flexibility of this function. Before
-attempting re-construction, some preliminary output of `mapDH` is
-presented.
+> For both functions, the `p.value` argument governs the separation of
+> markers into linkage groups and is strongly dependent on population
+> size. Some experimentation is generally required. See [Clustering
+> markers into linkage
+> groups](https://drj001.github.io/ASMap/articles/mstmap-algorithm.md)
+> for the relationship, which may be examined directly with
+> [`pValue()`](https://drj001.github.io/ASMap/reference/pValue.md).
+
+## Modes of reconstruction
+
+The constructed map `mapDH` illustrates the flexibility of
+[`mstmap.cross()`](https://drj001.github.io/ASMap/reference/mstmap.cross.md).
+Its 23 linkage groups are named, and the markers within each are named
+according to their order.
 
 ``` r
 
@@ -242,21 +176,32 @@ pull.map(mapDH)[[4]]
     attr(,"class")
     [1] "A"
 
-The output shows that there are 23 groups that have been appropriately
-been assigned linkage group or chromosome names. The markers within each
-linkage group have been named according to the order of the markers.
+The four modes below are selected through `bychr`, `chr` and `anchor`.
 
-**Example 1: Completely construct or reconstruct a linkage map.**
+| Requirement                     | `bychr` | `chr` | Effect on linkage groups      |
+|---------------------------------|---------|-------|-------------------------------|
+| Rebuild the entire map          | `FALSE` | unset | Re-clustered and renamed      |
+| Re-order within existing groups | `TRUE`  | unset | Retained, possibly split      |
+| Rebuild nominated groups only   | `FALSE` | set   | Nominated groups re-clustered |
+| Re-order nominated groups only  | `TRUE`  | set   | Nominated groups retained     |
 
-To completely re-construct this map set the argument `bychr = FALSE`.
-This will bulk the genetic data from all linkage groups, re-cluster the
-markers into groups and then optimally order the markers within each
-linkage group. This linkage map is small so these two tasks happen
-almost instantaneously.
+### Complete reconstruction
+
+Setting `bychr = FALSE` combines the marker data from all linkage
+groups, re-clusters the markers and orders them within each resulting
+group.
 
 ``` r
 
-mapDHa <- mstmap(mapDH, bychr = FALSE, dist.fun = "kosambi", trace = TRUE)
+mapDHa <- mstmap(mapDH, bychr = FALSE, dist.fun = "kosambi", trace = FALSE)
+```
+
+    Number of linkage groups: 24
+    The size of the linkage groups are: 41  5   33  10  40  35  8   13  37  30  6   9   21  32  6   54  56  6   27  41  15  33  37  4   
+    The number of bins in each linkage group: 41    4   33  9   40  34  7   13  36  29  5   8   21  32  6   53  55  5   27  41  14  32  36  3   
+
+``` r
+
 nmar(mapDHa)
 ```
 
@@ -277,25 +222,95 @@ pull.map(mapDHa)[[4]]
     attr(,"class")
     [1] "A"
 
-The reconstructed map contains 24 linkage groups with the extra linkage
-group coming from a minor split in 4A. As the linkage map is constructed
-from scratch, it assumed that former linkage group names are no longer
-required. A standard “L.” prefix is provided for the new linkage group
-names. This example also indicates that MSTmap by default does not
-respect the inputted marker order.
+The reconstructed map contains 24 linkage groups, the additional group
+arising from a minor split in 4A. Because the map is built from first
+principles the former linkage group names are discarded and a standard
+`"L."` prefix applied. This example also shows that MSTmap does not, by
+default, respect the marker order it was given.
 
-**Example 2: Optimally order markers within linkage groups of an
-established map.**
+### Ordering within established groups
 
-It may be necessary to only perform marker ordering within already
-established linkage groups. This can be achieved by setting
-`bychr = TRUE`. In some cases it also be preferable to ensure the marker
-orders of the linkage groups are respected and this can be achieved by
-setting `anchor = TRUE.`
+Where only the order within existing linkage groups is at issue, set
+`bychr = TRUE`. Setting `anchor = TRUE` additionally causes the inputted
+marker orders to be respected.
 
 ``` r
 
-mapDHb <- mstmap(mapDH, bychr = TRUE, dist.fun = "kosambi", anchor = TRUE, trace = TRUE)
+mapDHb <- mstmap(mapDH, bychr = TRUE, dist.fun = "kosambi", anchor = TRUE, trace = FALSE)
+```
+
+    Number of linkage groups: 1
+    The size of the linkage groups are: 41  
+    The number of bins in each linkage group: 41    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 5   
+    The number of bins in each linkage group: 4 
+    Number of linkage groups: 1
+    The size of the linkage groups are: 33  
+    The number of bins in each linkage group: 33    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 10  
+    The number of bins in each linkage group: 9 
+    Number of linkage groups: 1
+    The size of the linkage groups are: 40  
+    The number of bins in each linkage group: 40    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 35  
+    The number of bins in each linkage group: 34    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 8   
+    The number of bins in each linkage group: 7 
+    Number of linkage groups: 1
+    The size of the linkage groups are: 13  
+    The number of bins in each linkage group: 13    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 37  
+    The number of bins in each linkage group: 36    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 30  
+    The number of bins in each linkage group: 29    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 6   
+    The number of bins in each linkage group: 5 
+    Number of linkage groups: 2
+    The size of the linkage groups are: 9   21  
+    The number of bins in each linkage group: 8 21  
+    Number of linkage groups: 1
+    The size of the linkage groups are: 32  
+    The number of bins in each linkage group: 32    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 6   
+    The number of bins in each linkage group: 6 
+    Number of linkage groups: 1
+    The size of the linkage groups are: 54  
+    The number of bins in each linkage group: 53    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 56  
+    The number of bins in each linkage group: 55    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 6   
+    The number of bins in each linkage group: 5 
+    Number of linkage groups: 1
+    The size of the linkage groups are: 27  
+    The number of bins in each linkage group: 27    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 41  
+    The number of bins in each linkage group: 41    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 15  
+    The number of bins in each linkage group: 14    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 33  
+    The number of bins in each linkage group: 32    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 37  
+    The number of bins in each linkage group: 36    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 4   
+    The number of bins in each linkage group: 3 
+
+``` r
+
 nmar(mapDHb)
 ```
 
@@ -304,22 +319,93 @@ nmar(mapDHb)
       5B   5D   6A   6B   6D   7A   7B   7D 
       56    6   27   41   15   33   37    4 
 
-This map is identical to `mapDH` with the exception that chromosome 4A
-has been split into two linkage groups. As `bychr = TRUE` the function
-understands the origin of the linkage group was 4A and consequently uses
-it as a prefix in the naming of the two new linkage groups.
+The result is identical to `mapDH` except that 4A has been split in two.
+As `bychr = TRUE`, the function recognises the origin of the group and
+uses 4A as a prefix in naming the two new groups.
 
-**Example 3: Optimally order markers within linkage groups of an
-established map without breaking linkage groups.**
+### Ordering without splitting
 
-The splitting of the linkage groups in the last example only occurred
-due to choice of default `p.value = 1e-06` set in the function. A slight
-change to this `p.value` will ensure that 4A remains linked during the
-algorithm.
+The split above arose solely from the default `p.value = 1e-06`.
+Relaxing it keeps 4A intact.
 
 ``` r
 
-mapDHc <- mstmap(mapDH, bychr = TRUE, dist.fun = "kosambi", anchor = TRUE, trace = TRUE, p.value = 1e-04)
+mapDHc <- mstmap(mapDH, bychr = TRUE, dist.fun = "kosambi", anchor = TRUE,
+                 trace = FALSE, p.value = 1e-04)
+```
+
+    Number of linkage groups: 1
+    The size of the linkage groups are: 41  
+    The number of bins in each linkage group: 41    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 5   
+    The number of bins in each linkage group: 4 
+    Number of linkage groups: 1
+    The size of the linkage groups are: 33  
+    The number of bins in each linkage group: 33    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 10  
+    The number of bins in each linkage group: 9 
+    Number of linkage groups: 1
+    The size of the linkage groups are: 40  
+    The number of bins in each linkage group: 40    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 35  
+    The number of bins in each linkage group: 34    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 8   
+    The number of bins in each linkage group: 7 
+    Number of linkage groups: 1
+    The size of the linkage groups are: 13  
+    The number of bins in each linkage group: 13    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 37  
+    The number of bins in each linkage group: 36    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 30  
+    The number of bins in each linkage group: 29    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 6   
+    The number of bins in each linkage group: 5 
+    Number of linkage groups: 1
+    The size of the linkage groups are: 30  
+    The number of bins in each linkage group: 29    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 32  
+    The number of bins in each linkage group: 32    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 6   
+    The number of bins in each linkage group: 6 
+    Number of linkage groups: 1
+    The size of the linkage groups are: 54  
+    The number of bins in each linkage group: 53    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 56  
+    The number of bins in each linkage group: 55    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 6   
+    The number of bins in each linkage group: 5 
+    Number of linkage groups: 1
+    The size of the linkage groups are: 27  
+    The number of bins in each linkage group: 27    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 41  
+    The number of bins in each linkage group: 41    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 15  
+    The number of bins in each linkage group: 14    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 33  
+    The number of bins in each linkage group: 32    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 37  
+    The number of bins in each linkage group: 36    
+    Number of linkage groups: 1
+    The size of the linkage groups are: 4   
+    The number of bins in each linkage group: 3 
+
+``` r
+
 nmar(mapDHc)
 ```
 
@@ -328,25 +414,31 @@ nmar(mapDHc)
      7A  7B  7D 
      33  37   4 
 
-An identical result can be achieved by setting `p.value = 2` or any
-number greater than 1. Doing this instructs the MSTmap algorithm to not
-split linkage groups regardless of how weak the linkages are between
-markers within any group. Users should be aware that if this latter
-method is used then linkage groups that contain groups of markers
-separated by a substantial distance (i.e. very weak linkages) may suffer
-from local orientation problems.
+The same result follows from `p.value = 2`, or any value greater than
+unity, which instructs the algorithm not to split linkage groups however
+weak the linkages within them.
 
-**Example 4: Reconstruct map within predefined linkage groups of an
-established map.**
+> Suppressing splitting entirely carries a cost. A linkage group
+> containing sets of markers separated by a substantial distance, and
+> therefore weakly linked, may suffer local orientation problems.
 
-There may only be a need to reconstruct a predefined set of linkage
-groups. By setting the `chr` argument and `bychr = FALSE` users can
-determine which linkage groups require the complete reconstruction using
-MSTmap.
+### Reconstruction of nominated groups
+
+Supplying `chr` together with `bychr = FALSE` restricts complete
+reconstruction to the nominated linkage groups.
 
 ``` r
 
-mapDHd <- mstmap(mapDH, chr = names(mapDH$geno)[1:3], bychr = FALSE, dist.fun = "kosambi", trace = TRUE, p.value = 1e-04)
+mapDHd <- mstmap(mapDH, chr = names(mapDH$geno)[1:3], bychr = FALSE,
+                 dist.fun = "kosambi", trace = FALSE, p.value = 1e-04)
+```
+
+    Number of linkage groups: 3
+    The size of the linkage groups are: 41  5   33  
+    The number of bins in each linkage group: 41    4   33  
+
+``` r
+
 nmar(mapDHd)
 ```
 
@@ -355,9 +447,25 @@ nmar(mapDHd)
     L.1 L.2 L.3 
      41   5  33 
 
-Again, the algorithm assumes that the original linkage group names are
-no longer necessary and defines new ones. An obvious extension of this
-example is to set `bychr = TRUE` and then the algorithm will order
-markers within the predefined linkage groups stipulated by `chr`.
-Similar to the previous example, an appropriate choice of `p.value` will
-ensure that linkage groups remain unbroken.
+Here too the original group names are discarded and new ones defined.
+Setting `bychr = TRUE` instead orders markers within the groups
+nominated by `chr`, and an appropriate `p.value` will keep those groups
+unbroken.
+
+## Further reading
+
+- [How the MSTmap algorithm
+  works](https://drj001.github.io/ASMap/articles/mstmap-algorithm.md) —
+  the basis of `objective.fun`, `p.value`, `mvest.bc` and
+  `detectBadData`
+- [Pulling and pushing
+  markers](https://drj001.github.io/ASMap/articles/pulling-and-pushing.md)
+  — curating the marker set before construction
+- [Worked example
+  I](https://drj001.github.io/ASMap/articles/worked-example-construction.md)
+  — construction applied to an unconstructed barley backcross
+- [`mstmap.cross()`](https://drj001.github.io/ASMap/reference/mstmap.cross.md),
+  [`mstmap.data.frame()`](https://drj001.github.io/ASMap/reference/mstmap.data.frame.md)
+  — full argument documentation
+
+## References

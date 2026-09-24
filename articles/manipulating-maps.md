@@ -1,31 +1,31 @@
 # Manipulating linkage maps
 
-## Miscellaneous additional R/qtl functions
+Construction is rarely a single operation. Linkage groups may need to be
+broken or merged, maps built on different marker platforms may need to
+be combined, and individuals may need to be removed. The functions
+described here perform these operations on an R/qtl cross object while
+preserving the additional structures ASMap places within it.
 
-### Breaking and merging linkage groups
+| Function | Operation |
+|----|----|
+| [`breakCross()`](https://drj001.github.io/ASMap/reference/breakCross.md) | Split linkage groups at nominated markers |
+| [`mergeCross()`](https://drj001.github.io/ASMap/reference/mergeCross.md) | Combine nominated linkage groups into one |
+| [`combineMap()`](https://drj001.github.io/ASMap/reference/combineMap.md) | Merge separate cross objects into a single map |
+| [`subsetCross()`](https://drj001.github.io/ASMap/reference/subsetCross.md) | Subset genotypes or linkage groups consistently |
+| [`quickEst()`](https://drj001.github.io/ASMap/reference/quickEst.md) | Estimate genetic distances rapidly |
 
-During the linkage map construction process there may be a requirement
-to break or merge linkage groups. R/ASMap provides two functions to
-achieve this.
+## Breaking and merging linkage groups
 
-``` r
-
-breakCross(cross, split = NULL, suffix = "numeric", sep = ".")
-mergeCross(cross, merge = NULL, gap = 5)
-```
-
-The
+The `split` argument of
 [`breakCross()`](https://drj001.github.io/ASMap/reference/breakCross.md)
-function allows users to break linkage groups in a variety ways. The
-`split` argument takes a list with elements named by the linkage group
-names that require splitting and containing the markers that immediately
-proceed where the splits are to be made. For example, a split of the
-linkage group 3B and 6A linkage map `mapDH` after the seventh and
-fifteenth marker respectively can be easily made using
+takes a list whose elements are named by the linkage groups to be split,
+and which contain the markers **immediately preceding** each split
+point. Splitting 3B after its seventh marker and 6A after its fifteenth
+is therefore expressed as follows.
 
 ``` r
 
-mapDHb1 <- breakCross(mapDH, split = list("3B" = "3B.m.7","6A" = "6A.m.15"))
+mapDHb1 <- breakCross(mapDH, split = list("3B" = "3B.m.7", "6A" = "6A.m.15"))
 nmar(mapDHb1)
 ```
 
@@ -34,16 +34,16 @@ nmar(mapDHb1)
       5B   5D 6A.1 6A.2   6B   6D   7A   7B   7D 
       56    6   15   12   41   15   33   37    4 
 
-The `split` argument is flexible and can handle multiple linkage groups
-as well as multiple markers within linkage groups. The default use of
-the `suffix` argument produces a numerical suffix attachment to the
-original linkage groups being split with a separated by `sep`. Users can
-also provide their own complete names for the new split linkage groups
-by explicitly naming them in the `suffix` argument.
+Multiple linkage groups, and multiple split points within a group, may
+be handled in a single call. By default a numeric suffix is appended to
+the name of the group being split, separated by `sep`. Complete names
+for the new groups may be supplied instead by naming them explicitly in
+`suffix`.
 
 ``` r
 
-mapDHb2 <- breakCross(mapDH, split = list("3B" = "3B.m.7"), suffix = list("3B" = c("3B1","3B2")))
+mapDHb2 <- breakCross(mapDH, split = list("3B" = "3B.m.7"),
+                      suffix = list("3B" = c("3B1", "3B2")))
 nmar(mapDHb2)
 ```
 
@@ -52,21 +52,15 @@ nmar(mapDHb2)
      6D  7A  7B  7D 
      15  33  37   4 
 
-The
 [`mergeCross()`](https://drj001.github.io/ASMap/reference/mergeCross.md)
-function provides a method for merging linkage groups. Its argument
-`merge` requires a list with elements named by the proposed linkage
-group names required and containing the linkage groups to be merged. For
-the linkage map `mapDHb1` containing split linkage groups 3B and 6A
-created by a call to
-[`breakCross()`](https://drj001.github.io/ASMap/reference/breakCross.md)
-the call to
-[`mergeCross()`](https://drj001.github.io/ASMap/reference/mergeCross.md)
-would be
+performs the converse operation. Its `merge` argument takes a list whose
+elements are named by the proposed linkage group names and which contain
+the groups to be merged.
 
 ``` r
 
-mapDHm <- mergeCross(mapDHb1, merge = list("3B" = c("3B.1","3B.2"),"6A" = c("6A.1","6A.2")))
+mapDHm <- mergeCross(mapDHb1, merge = list("3B" = c("3B.1", "3B.2"),
+                                           "6A" = c("6A.1", "6A.2")))
 nmar(mapDHm)
 ```
 
@@ -75,102 +69,93 @@ nmar(mapDHm)
      7A  7B  7D 
      33  37   4 
 
-It should be noted that this function places an artificial genetic
-distance gap between the merged linkage groups set by the `gap`
-argument. Accurate distance estimation would require a separate map
-estimation procedure after the merging has taken place.
+> [`mergeCross()`](https://drj001.github.io/ASMap/reference/mergeCross.md)
+> inserts an artificial genetic distance gap between the merged groups,
+> governed by the `gap` argument. The distances across the join are
+> therefore not estimates, and a separate estimation step is required
+> after merging.
 
-### Rapid genetic distance estimation
+## Combining maps
 
-The linkage map estimation function in R/qtl called
-[`est.map()`](https://rdrr.io/pkg/qtl/man/est.map.html) can be invoked
-individually or can be applied through
-[`read.cross()`](https://rdrr.io/pkg/qtl/man/read.cross.html) when
-setting the argument `estimate.map = TRUE`. The function applies the
-multi-locus hidden Markov model technology of ([Lander and Green
-1987](#ref-lg87)) to perform its calculations. Unfortunately this
-technology is computationally cumbersome if there are many markers on a
-linkage group and becomes more so if there are many missing allele calls
-and genotyping errors present.
+A recurring requirement in linkage map construction is the merging of
+cross objects, for instance where two maps of the same population have
+been built independently from markers on different platforms.
+[`combineMap()`](https://drj001.github.io/ASMap/reference/combineMap.md)
+addresses this, merging maps on the basis of their map information so
+that the combined linkage groups are ready for reconstruction by
+[`mstmap.cross()`](https://drj001.github.io/ASMap/reference/mstmap.cross.md).
 
-R/ASMap contains a small map estimation function that circumvents this
-computational burden.
+Any number of maps may be supplied. They must share the same cross class
+structure and the same genotype identifier `id`, and marker names must
+be unique across all of the maps supplied.
 
-``` r
+Merging proceeds in two stages. Maps are first merged on the genotypes
+they have in common: with `keep.all = TRUE` the combined map is padded
+with missing values where genotypes are not shared, whereas with
+`keep.all = FALSE` it is reduced to those genotypes common to every map.
+Linkage groups bearing the same name across maps are then merged, and
+groups whose names are not shared are retained separately.
 
-quickEst(object, chr, map.function = "kosambi", ...)
-```
-
-The function makes use of another function in R/qtl called
-[`argmax.geno()`](https://rdrr.io/pkg/qtl/man/argmax.geno.html). This
-function is also a multi-locus hidden Markov algorithm that uses the
-observed markers present in a linkage group to impute pseudo-markers at
-any chosen cM genetic distance. In this case, we only require a
-reconstruction or imputation at the markers themselves. For the most
-accurate imputation to occur there needs to be an estimate of genetic
-distance already in place. To obtain an initial estimate of distance
-[`est.rf()`](https://rdrr.io/pkg/qtl/man/est.rf.html) is called within
-each linkage group defined by `chr` and recombination fractions are
-converted to genetic distances based on `map.function`. Unlike
-[`est.map()`](https://rdrr.io/pkg/qtl/man/est.map.html) the
-[`quickEst()`](https://drj001.github.io/ASMap/reference/quickEst.md)
-function lives up to its namesake by providing the quickest genetic
-distance calculations for large linkage maps.
+The example below duplicates `mapDH`, renames ten of its linkage groups
+and alters the marker names within each group to ensure uniqueness.
 
 ``` r
 
-map1 <- est.map(mapDH, map.function = "kosambi")
-map1 <- subset(map1, chr = names(nmar(map1))[6:15])
-map2 <- quickEst(mapDH, map.function = "kosambi")
-map2 <- subset(map2, chr = names(nmar(map2))[6:15])
-plotMap(map1, map2)
+mapDH1 <- mapDH
+names(mapDH1$geno)[5:14] <- paste("L", 1:10, sep = "")
+mapDH1$geno <- lapply(mapDH1$geno, function(el) {
+  names(el$map) <- dimnames(el$data)[[2]] <- paste(names(el$map), "A", sep = "")
+  el
+})
+mapDHc <- combineMap(mapDH, mapDH1)
+nmar(mapDHc)
 ```
 
-![Comparison of \`mapDH\` using \`est.map\` and
-\`quickEst\`.](manipulating-maps_files/figure-html/quick2-1.png)
+     1A 1B1 1B2  1D  2A  2B 2D1 2D2  3A  3B  3D  4A  4B  4D  5A  5B  5D  6A  6B  6D 
+     82  10  66  20  40  35   8  13  37  30   6  30  32   6 108 112  12  54  82  30 
+     7A  7B  7D  L1  L2  L3  L4  L5  L6  L7  L8  L9 L10 
+     66  74   8  40  35   8  13  37  30   6  30  32   6 
 
-Comparison of `mapDH` using `est.map` and `quickEst`.
+The combined map holds a merged marker set for those linkage groups that
+shared a name, and distinct groups for those that did not.
 
-The linkage map `mapDH` was re-estimated using
-[`est.map()`](https://rdrr.io/pkg/qtl/man/est.map.html) and
-[`quickEst()`](https://drj001.github.io/ASMap/reference/quickEst.md) and
-a comparison of the resulting maps are given in the figure below. The
-graphic indicates that there negligible changes in marker placement and
-overall linkage group distances between the two linkage maps.
+> [`combineMap()`](https://drj001.github.io/ASMap/reference/combineMap.md)
+> merges maps but does not reconstruct the result, and it applies no
+> consensus map algorithm. Chromosome identity and genetic distances are
+> taken from the first appearance of a marker across the maps supplied.
+> Run
+> [`mstmap()`](https://drj001.github.io/ASMap/reference/mstmap.cross.md)
+> afterwards.
 
-### Subsetting in R/ASMap
+The value of combining before reconstructing is not immediately obvious.
+Reconstructing the union of several maps directly would discard the
+identity of the linkage groups; combining first preserves it.
+Applications of this in practice are given in [Worked example
+II](https://drj001.github.io/ASMap/articles/worked-example-refinement.md).
 
-The functions
+## Subsetting
+
 [`pullCross()`](https://drj001.github.io/ASMap/reference/pullCross.md)
 and
 [`pushCross()`](https://drj001.github.io/ASMap/reference/pushCross.md)
-described in section Pulling and pushing markers are used to create and
-manipulate extra list elements `"co.located"`, `"seg.distortion"` and
-`"missing"` associated with different marker types. Each element
-contains a data element consisting of a marker matrix equivalent in row
-dimension to the marker elements of the linkage map they were pulled
-from. Unfortunately, these list elements are not recognized by the
-native R/qtl functions. If the R/qtl function `subset.cross()` is used
-to subset the object to a reduced number of individuals then the data
-component of each of these elements will not be subsetted accordingly.
-In addition, the statistics in the table component of the elements
-`"seg.distortion"` and `"missing"` will be incorrect for the newly
-subsetted linkage map.
+create the additional list elements `"co.located"`, `"seg.distortion"`
+and `"missing"`, each holding a marker matrix whose row dimension
+matches the marker elements of the map it was drawn from. These elements
+are not known to R/qtl.
 
-The
+> Using `subset.cross()` on an object carrying those elements will
+> subset the map but **not** the elements within it. Their data
+> components will retain the removed individuals, and the statistics in
+> the tables of the `"seg.distortion"` and `"missing"` elements will no
+> longer describe the map. Nothing reports this.
+
 [`subsetCross()`](https://drj001.github.io/ASMap/reference/subsetCross.md)
-function available in the R/ASMap package contains identical
-functionality to `subset.cross` but also ensures the data components of
-the extra list elements `"co.located"`, `"seg.distortion"` and
-`"missing"` are subsetted to match the linkage map. In addition, for
-elements `"seg.distortion"` and `"missing"` it also updates the table
-components to reflect the newly subsetted map. This update ensures that
+provides the functionality of `subset.cross()` while subsetting those
+data components to match, and additionally recalculates the table
+components of the `"seg.distortion"` and `"missing"` elements. That
+recalculation matters, because
 [`pushCross()`](https://drj001.github.io/ASMap/reference/pushCross.md)
-uses the most accurate information when deciding which markers to push
-back into the linkage map.
-
-Using the default `seg.thresh = 0.05` for the linkage map `mapDH`,
-distorted markers are pulled from the map
+consults those statistics when deciding which markers to restore.
 
 ``` r
 
@@ -181,79 +166,63 @@ dim(mapDH.s$seg.distortion$data)[1]
 
     [1] 216
 
-In this example the use of
-[`subsetCross()`](https://drj001.github.io/ASMap/reference/subsetCross.md)
-ensures that the data component of the `"seg.distortion"` element is the
-same dimension as the map. The table element is also updated to ensure
-the statistics are correct for the reduced subset of lines.
+The data component of the `"seg.distortion"` element now has the same
+dimension as the map.
 
-### Combining maps
+## Rapid genetic distance estimation
 
-Over the period of time that I have been involved in linkage map
-construction there has been many occasions where I have required a
-function that could merge R/qtl cross objects together in an intelligent
-manner. For example, the merging of two linkage maps from the same
-population that were independently built with markers from two different
-platforms. This idea was the motivation behind the
-[`combineMap()`](https://drj001.github.io/ASMap/reference/combineMap.md)
-function in the R/ASMap package. The aim of the function was to merge
-linkage maps based on map information, readying the combined linkage
-groups for reconstruction through an efficient linkage map construction
-process such as
-[`mstmap.cross()`](https://drj001.github.io/ASMap/reference/mstmap.cross.md).
+The map estimation function of R/qtl,
+[`est.map()`](https://rdrr.io/pkg/qtl/man/est.map.html), applies the
+multi-locus hidden Markov model of Lander and Green ([1987](#ref-lg87)).
+That approach is computationally demanding for linkage groups carrying
+many markers, and increasingly so in the presence of missing allele
+calls and genotyping errors.
 
-``` r
-
-combineMap(..., id = "Genotype", keep.all = TRUE)
-```
-
-The function takes an unlimited number of maps through the `...`
-argument. The linkage maps must all have the same cross class structure
-and contain the same genotype identifier `id`. At the current stage of
-writing this vignette the function required unique maker names across
-all linkage maps. This is expected to be relaxed at a later date so
-linkage maps that share markers, such as nested association mapping
-populations, can be merged effectively.
-
-The merging of the maps happens intelligently using several components
-of the map. Firstly the linkage maps are merged based on commonality
-between the genotypes. If `keep.all = TRUE` the new combined linkage map
-is “padded out” with missing values where genotypes are not shared. If
-`keep.all= FALSE` the combined map is reduced to genotypes that are
-shared among all linkage maps. Secondly, if linkage group names are
-shared between maps then the markers from the shared linkage groups are
-merged. To exemplify its use a duplicate of `mapDH` is made and 10
-linkage group names have been altered, with the marker names inside each
-of the linkage groups also altered to ensure they are unique.
+[`quickEst()`](https://drj001.github.io/ASMap/reference/quickEst.md)
+circumvents this by a different route. It calls
+[`argmax.geno()`](https://rdrr.io/pkg/qtl/man/argmax.geno.html) from
+R/qtl, itself a multi-locus hidden Markov algorithm, but requires
+reconstruction only at the markers themselves rather than at imputed
+pseudo-markers. Accurate imputation requires an initial estimate of
+genetic distance, which is obtained by calling
+[`est.rf()`](https://rdrr.io/pkg/qtl/man/est.rf.html) within each
+linkage group nominated by `chr` and converting the recombination
+fractions to distances according to `map.function`.
 
 ``` r
 
-mapDH1 <- mapDH
-names(mapDH1$geno)[5:14] <- paste("L",1:10, sep = "")
-mapDH1$geno <- lapply(mapDH1$geno, function(el){
-  names(el$map) <- dimnames(el$data)[[2]] <- paste(names(el$map), "A", sep = "")
-  el})
-mapDHc <- combineMap(mapDH, mapDH1)
-nmar(mapDHc)
+map1 <- est.map(mapDH, map.function = "kosambi")
+map1 <- subset(map1, chr = names(nmar(map1))[6:15])
+map2 <- quickEst(mapDH, map.function = "kosambi")
+map2 <- subset(map2, chr = names(nmar(map2))[6:15])
+plotMap(map1, map2)
 ```
 
-     1A 1B1 1B2  1D  2A  2B 2D1 2D2  3A  3B  3D  4A  4B  4D  5A  5B  5D  6A  6B  6D 
-     82  10  66  20  40  35   8  13  37  30   6  30  32   6 108 112  12  54  82  30 
-     7A  7B  7D  L1  L2  L3  L4  L5  L6  L7  L8  L9 L10 
-     66  74   8  40  35   8  13  37  30   6  30  32   6 
+![Comparison of mapDH estimated using est.map() and using
+quickEst().](manipulating-maps_files/figure-html/quick2-1.png)
 
-The resulting combined map includes a combined marker set for the
-linkage groups that shared the same name and distinct linkage groups for
-unshared names. Again, note the function only merges the linkage maps
-and does not reconstruct the final combined linkage map.
+Comparison of `mapDH` estimated using
+[`est.map()`](https://rdrr.io/pkg/qtl/man/est.map.html) and using
+[`quickEst()`](https://drj001.github.io/ASMap/reference/quickEst.md).
 
-The advantages of this function may not be obvious at a first glance. If
-an attempt is made to completely reconstruct the super set of linkage
-maps, rather than combine them first, the identification of linkage
-groups is lost. This function serves to preserve the important identity
-of linkage groups. More examples of its use in common map construction
-procedures will be explored in section chapter Post-construction linkage
-map development of the next chapter.
+The comparison shows negligible differences in marker placement and in
+overall linkage group distances between the two methods.
+
+## Further reading
+
+- [Pulling and pushing
+  markers](https://drj001.github.io/ASMap/articles/pulling-and-pushing.md)
+  — the elements that make
+  [`subsetCross()`](https://drj001.github.io/ASMap/reference/subsetCross.md)
+  necessary
+- [Worked example
+  II](https://drj001.github.io/ASMap/articles/worked-example-refinement.md)
+  — merging linkage groups and combining maps in practice
+- [Constructing a linkage
+  map](https://drj001.github.io/ASMap/articles/constructing-a-map.md) —
+  reconstruction after any of these operations
+
+## References
 
 Lander, E. S, and P Green. 1987. “Construction of Multilocus Genetic
 Linkage Maps in Humans.” *Proceedings of the National Academy of

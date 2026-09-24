@@ -61,15 +61,15 @@
       <div class="section-desc"></div>
 
       <dl><dt><a href="constructing-a-map.html">Constructing a linkage map</a></dt>
-        <dd><p>The two construction functions, for a data frame of marker scores and for an R/qtl cross object, and the MSTmap parameters they share.</p>
+        <dd><p>The two construction functions, for a data frame of marker scores and for an R/qtl cross object, and the arguments that govern their behaviour.</p>
         </dd><dt><a href="pulling-and-pushing.html">Pulling and pushing markers</a></dt>
         <dd><p>Setting problematic markers aside before construction and reintroducing them afterwards, in place of their permanent removal.</p>
         </dd><dt><a href="diagnostics.html">Diagnosing genotypes and markers</a></dt>
-        <dd><p>Numerical and graphical profiling of individual genotypes, markers and intervals, and the identification of genetic clones.</p>
+        <dd><p>Numerical and graphical profiling of individual genotypes, of markers and of intervals, and the detection of genetic clones.</p>
         </dd><dt><a href="heat-maps.html">Heat maps</a></dt>
-        <dd><p>Displaying pairwise recombination fractions and LOD scores of linkage together, with a separate legend for each.</p>
+        <dd><p>Displaying pairwise recombination fractions and LOD scores of linkage together, with an independent legend for each.</p>
         </dd><dt><a href="manipulating-maps.html">Manipulating linkage maps</a></dt>
-        <dd><p>Breaking, merging, subsetting and combining linkage maps, and fast estimation of genetic distances.</p>
+        <dd><p>Breaking, merging, combining and subsetting linkage maps, and rapid estimation of genetic distances.</p>
       </dd></dl></div>
     <div class="section ">
       <h3>Worked example</h3>
@@ -78,7 +78,7 @@
       <dl><dt><a href="worked-example-construction.html">Worked example I: construction</a></dt>
         <dd><p>A barley backcross marker set taken from 3,023 unassigned markers through pre-construction diagnosis to a constructed map of nine linkage groups.</p>
         </dd><dt><a href="worked-example-refinement.html">Worked example II: refinement</a></dt>
-        <dd><p>Continuing the barley backcross example: pushing the held-back markers into the map, merging linkage groups to the expected seven, and post-construction development including fine mapping.</p>
+        <dd><p>Continuing the barley backcross example: reintroducing the markers held aside, merging linkage groups to the expected seven, and post-construction development including fine mapping.</p>
       </dd></dl></div>
     <div class="section ">
       <h3>Background</h3>
@@ -87,7 +87,7 @@
       <dl><dt><a href="mstmap-algorithm.html">How the MSTmap algorithm works</a></dt>
         <dd><p>The minimum spanning tree formulation underlying ASMap: the clustering of markers into linkage groups, the determination of an optimal order within a group, and the imputation of missing scores and detection of genotyping errors that are integrated with it.</p>
         </dd><dt><a href="algorithm-notes.html">Notes on the MSTmap algorithm</a></dt>
-        <dd><p>How genetic distances are calculated, and what the mvest.bc and detectBadData arguments actually do.</p>
+        <dd><p>How genetic distances may become inflated, and what the mvest.bc and detectBadData arguments do in practice.</p>
       </dd></dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
