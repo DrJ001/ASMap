@@ -92,20 +92,47 @@ devtools::install_github("DrJ001/ASMap")
 
 ------------------------------------------------------------------------
 
-## Vignette
+## Articles
 
-A book-length guide to the package, including a fully worked barley
-backcross example that runs from pre-construction diagnostics through
-construction to post-construction map improvement, fine mapping and map
-combining.
+Full documentation is published at
+**[drj001.github.io/ASMap](https://drj001.github.io/ASMap/)**, as a set
+of articles covering every function in the package, the technical basis
+of the MSTmap algorithm, and a worked example taking an unconstructed
+3,023 marker barley backcross through to a diagnosed seven linkage group
+map.
 
-| Vignette | Description |
+#### Getting started
+
+| Article | Description |
 |----|----|
-| [Efficient linkage map construction using R/ASMap](https://cran.r-project.org/web/packages/ASMap/vignettes/asmapvignette.pdf) | Complete treatment of every function in the package, the technical basis of the MSTmap algorithm, and a worked example taking an unconstructed 3,023 marker barley backcross marker set through to a diagnosed 7 linkage group map. Also available offline via `vignette("asmapvignette", package = "ASMap")`. |
+| [Getting started with ASMap](https://drj001.github.io/ASMap/articles/getting-started.html) | Construct a linkage map from a set of marker scores, the choice of `p.value`, and an orientation to the remaining documentation. |
 
-The vignette is succinctly summarised in the *Journal of Statistical
-Software* paper [Taylor & Butler
-(2017)](https://doi.org/10.18637/jss.v079.i06).
+#### Function guides
+
+| Article | Description |
+|----|----|
+| [Constructing a linkage map](https://drj001.github.io/ASMap/articles/constructing-a-map.html) | The two construction functions, the population types and allele codings they accept, and the four modes of reconstruction. |
+| [Pulling and pushing markers](https://drj001.github.io/ASMap/articles/pulling-and-pushing.html) | Setting problematic markers aside before construction and reintroducing them afterwards, and the reversal of the thresholds between the two. |
+| [Diagnosing genotypes and markers](https://drj001.github.io/ASMap/articles/diagnostics.html) | Numerical and graphical profiling of genotypes, markers and intervals, and the detection of genetic clones. |
+| [Heat maps](https://drj001.github.io/ASMap/articles/heat-maps.html) | Displaying pairwise recombination fractions and LOD scores together, and matching the two scales. |
+| [Manipulating linkage maps](https://drj001.github.io/ASMap/articles/manipulating-maps.html) | Breaking, merging, combining and subsetting maps, and rapid estimation of genetic distances. |
+
+#### Worked example
+
+| Article | Description |
+|----|----|
+| [Worked example I: construction](https://drj001.github.io/ASMap/articles/worked-example-construction.html) | A barley backcross taken from 3,023 unassigned markers through pre-construction diagnosis to a constructed map of nine linkage groups. |
+| [Worked example II: refinement](https://drj001.github.io/ASMap/articles/worked-example-refinement.html) | Reintroducing the markers held aside, merging to the expected seven linkage groups, and post-construction development including fine mapping. |
+
+#### Background
+
+| Article | Description |
+|----|----|
+| [How the MSTmap algorithm works](https://drj001.github.io/ASMap/articles/mstmap-algorithm.html) | The minimum spanning tree formulation, clustering, marker ordering, imputation of missing scores and detection of genotyping errors. |
+| [Notes on the MSTmap algorithm](https://drj001.github.io/ASMap/articles/algorithm-notes.html) | How genetic distances become inflated, and what `mvest.bc` and `detectBadData` do in practice. |
+
+The documentation is summarised in the *Journal of Statistical Software*
+paper [Taylor & Butler (2017)](https://doi.org/10.18637/jss.v079.i06).
 
 ------------------------------------------------------------------------
 

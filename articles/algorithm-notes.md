@@ -351,3 +351,7 @@ linkage groups to lengths comparable with those of the final map
   — the map these notes refer to
 
 ## References
+
+Taylor, Julian, and David Butler. 2017. “R Package ASMap: Efficient
+Genetic Linkage Map Construction and Diagnosis.” *Journal of Statistical
+Software* 79 (6): 1–29. <https://doi.org/10.18637/jss.v079.i06>.

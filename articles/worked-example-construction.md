@@ -386,3 +386,7 @@ II](https://drj001.github.io/ASMap/articles/worked-example-refinement.md).
 
 Lyttle, T. W. 1991. “Segregation Distorters.” *Annula Reviews of
 Genetics* 25: 511–86.
+
+Taylor, Julian, and David Butler. 2017. “R Package ASMap: Efficient
+Genetic Linkage Map Construction and Diagnosis.” *Journal of Statistical
+Software* 79 (6): 1–29. <https://doi.org/10.18637/jss.v079.i06>.

@@ -213,25 +213,113 @@
 <hr>
 </div>
 <div class="section level2">
-<h2 id="vignette">Vignette<a class="anchor" aria-label="anchor" href="#vignette"></a>
+<h2 id="articles">Articles<a class="anchor" aria-label="anchor" href="#articles"></a>
 </h2>
-<p>A book-length guide to the package, including a fully worked barley backcross example that runs from pre-construction diagnostics through construction to post-construction map improvement, fine mapping and map combining.</p>
+<p>Full documentation is published at <strong><a href="https://drj001.github.io/ASMap/">drj001.github.io/ASMap</a></strong>, as a set of articles covering every function in the package, the technical basis of the MSTmap algorithm, and a worked example taking an unconstructed 3,023 marker barley backcross through to a diagnosed seven linkage group map.</p>
+<div class="section level4">
+<h4 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h4>
 <table class="table">
 <colgroup>
 <col width="50%">
 <col width="50%">
 </colgroup>
 <thead><tr>
-<th>Vignette</th>
+<th>Article</th>
 <th>Description</th>
 </tr></thead>
 <tbody><tr>
-<td><a href="https://cran.r-project.org/web/packages/ASMap/vignettes/asmapvignette.pdf" class="external-link">Efficient linkage map construction using R/ASMap</a></td>
-<td>Complete treatment of every function in the package, the technical basis of the MSTmap algorithm, and a worked example taking an unconstructed 3,023 marker barley backcross marker set through to a diagnosed 7 linkage group map. Also available offline via <code>vignette("asmapvignette", package = "ASMap")</code>.</td>
+<td><a href="https://drj001.github.io/ASMap/articles/getting-started.html">Getting started with ASMap</a></td>
+<td>Construct a linkage map from a set of marker scores, the choice of <code>p.value</code>, and an orientation to the remaining documentation.</td>
 </tr></tbody>
 </table>
-<p>The vignette is succinctly summarised in the <em>Journal of Statistical Software</em> paper <a href="https://doi.org/10.18637/jss.v079.i06" class="external-link">Taylor &amp; Butler (2017)</a>.</p>
+</div>
+<div class="section level4">
+<h4 id="function-guides">Function guides<a class="anchor" aria-label="anchor" href="#function-guides"></a>
+</h4>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Article</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><a href="https://drj001.github.io/ASMap/articles/constructing-a-map.html">Constructing a linkage map</a></td>
+<td>The two construction functions, the population types and allele codings they accept, and the four modes of reconstruction.</td>
+</tr>
+<tr>
+<td><a href="https://drj001.github.io/ASMap/articles/pulling-and-pushing.html">Pulling and pushing markers</a></td>
+<td>Setting problematic markers aside before construction and reintroducing them afterwards, and the reversal of the thresholds between the two.</td>
+</tr>
+<tr>
+<td><a href="https://drj001.github.io/ASMap/articles/diagnostics.html">Diagnosing genotypes and markers</a></td>
+<td>Numerical and graphical profiling of genotypes, markers and intervals, and the detection of genetic clones.</td>
+</tr>
+<tr>
+<td><a href="https://drj001.github.io/ASMap/articles/heat-maps.html">Heat maps</a></td>
+<td>Displaying pairwise recombination fractions and LOD scores together, and matching the two scales.</td>
+</tr>
+<tr>
+<td><a href="https://drj001.github.io/ASMap/articles/manipulating-maps.html">Manipulating linkage maps</a></td>
+<td>Breaking, merging, combining and subsetting maps, and rapid estimation of genetic distances.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="worked-example">Worked example<a class="anchor" aria-label="anchor" href="#worked-example"></a>
+</h4>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Article</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><a href="https://drj001.github.io/ASMap/articles/worked-example-construction.html">Worked example I: construction</a></td>
+<td>A barley backcross taken from 3,023 unassigned markers through pre-construction diagnosis to a constructed map of nine linkage groups.</td>
+</tr>
+<tr>
+<td><a href="https://drj001.github.io/ASMap/articles/worked-example-refinement.html">Worked example II: refinement</a></td>
+<td>Reintroducing the markers held aside, merging to the expected seven linkage groups, and post-construction development including fine mapping.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
+</h4>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Article</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><a href="https://drj001.github.io/ASMap/articles/mstmap-algorithm.html">How the MSTmap algorithm works</a></td>
+<td>The minimum spanning tree formulation, clustering, marker ordering, imputation of missing scores and detection of genotyping errors.</td>
+</tr>
+<tr>
+<td><a href="https://drj001.github.io/ASMap/articles/algorithm-notes.html">Notes on the MSTmap algorithm</a></td>
+<td>How genetic distances become inflated, and what <code>mvest.bc</code> and <code>detectBadData</code> do in practice.</td>
+</tr>
+</tbody>
+</table>
+<p>The documentation is summarised in the <em>Journal of Statistical Software</em> paper <a href="https://doi.org/10.18637/jss.v079.i06" class="external-link">Taylor &amp; Butler (2017)</a>.</p>
 <hr>
+</div>
 </div>
 <div class="section level2">
 <h2 id="part-1---pre-construction-diagnosis-and-marker-curation">Part 1 - Pre-construction: Diagnosis and Marker Curation<a class="anchor" aria-label="anchor" href="#part-1---pre-construction-diagnosis-and-marker-curation"></a>

@@ -227,3 +227,7 @@ overall linkage group distances between the two methods.
 Lander, E. S, and P Green. 1987. “Construction of Multilocus Genetic
 Linkage Maps in Humans.” *Proceedings of the National Academy of
 Science* 84: 2363–67.
+
+Taylor, Julian, and David Butler. 2017. “R Package ASMap: Efficient
+Genetic Linkage Map Construction and Diagnosis.” *Journal of Statistical
+Software* 79 (6): 1–29. <https://doi.org/10.18637/jss.v079.i06>.
