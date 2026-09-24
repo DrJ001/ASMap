@@ -31,7 +31,7 @@ to represent marker positions. If \code{FALSE} then markers are placed
 equidistant from each other.
 }
 \item{map.function}{
-Character string of either \code{"koasmbi"}, \code{"haldane"},
+Character string of either \code{"kosambi"}, \code{"haldane"},
 \code{"morgan"} or \code{"cf"} defining the map
 function to be used for interval related statistics.
 }

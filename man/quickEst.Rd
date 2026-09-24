@@ -18,7 +18,7 @@ A character string of linkage group names that require (re)estimation of
 their genetic map distances.
 }
 \item{map.function}{
-Character string of either \code{"koasmbi"}, \code{"haldane"},
+Character string of either \code{"kosambi"}, \code{"haldane"},
 \code{"morgan"} or \code{"cf"} defining the mapping
 function to be used.
 }

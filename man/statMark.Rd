@@ -25,7 +25,7 @@ produces individual marker related statistics and \code{"interval"} produces
 interval related statistics for the current map order (see Details).
 }
 \item{map.function}{
-Character string of either \code{"koasmbi"}, \code{"haldane"},
+Character string of either \code{"kosambi"}, \code{"haldane"},
 \code{"morgan"} or \code{"cf"} defining the map
 function to be used for interval related statistics.
 }

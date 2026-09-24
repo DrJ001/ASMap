@@ -18,7 +18,7 @@ Numeric range of genetic distances in cM.
 Numeric range of population sizes.
 }
 \item{map.function}{
-Character string of either \code{"koasmbi"}, \code{"haldane"},
+Character string of either \code{"kosambi"}, \code{"haldane"},
 \code{"morgan"} or \code{"cf"} defining the mapping function to be used.
 }
 \item{LOD}{
@@ -29,7 +29,7 @@ hoeffding inequality is calculated (defaults to \code{FALSE}).
 }
 \details{
 This function provides the ability to create a user specified p-value
-plot similar to Figure 1.1 in the vignette for the package.
+plot, as discussed in \code{vignette("ASMap")}.
 }
 \value{
 A plot is displayed showing minus log10 pvalue (or LOD score) of linkage vs the
